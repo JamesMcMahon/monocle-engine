@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Monocle
 {

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using System.Xml;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Monocle
 {
