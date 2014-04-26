@@ -78,6 +78,7 @@
     <Compile Include="Audio\SFXVaried.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
+    <Compile Include="Input\VirtualIntegerAxis.cs" />
     <Compile Include="Util\Camera.cs" />
     <Compile Include="Colliders\Circle.cs" />
     <Compile Include="Colliders\Collider.cs" />

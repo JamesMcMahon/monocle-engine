@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Monocle.Input
+namespace Monocle
 {
     public class VirtualIntegerAxis : VirtualInput
     {
