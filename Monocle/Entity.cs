@@ -16,27 +16,24 @@ namespace Monocle
         public Scene Scene { get; internal set; }
         public List<Component> Components { get; private set; }
         public List<int> Tags { get; private set; }
-        public bool MarkedForRemoval { get; internal set; }
-        public bool Updating { get; private set; }
-
+        
         private Collider collider;
         private HashSet<Component> toAdd;
         private int toRemove;
-        private int layerIndex;
+        private bool updating;
 
         internal int depth = 0;
         internal float actualDepth = 0;
 
-        public Entity(Vector2 position, int layerIndex = 0)
+        public Entity(Vector2 position)
         {
-            this.layerIndex = layerIndex;
             Position = position;
 
             Tags = new List<int>();
         }
 
-        public Entity(int layerIndex = 0)
-            : this(Vector2.Zero, layerIndex)
+        public Entity()
+            : this(Vector2.Zero)
         {
 
         }
@@ -76,11 +73,11 @@ namespace Monocle
         {
             if (Components != null)
             {
-                Updating = true;
+                updating = true;
                 foreach (var c in Components)
                     if (c.Active)
                         c.Update();
-                Updating = false;
+                updating = false;
                 UpdateComponentList();
             }
         }
@@ -460,7 +457,7 @@ namespace Monocle
                 throw new Exception("Component added that is already in an Entity");
 #endif
             InitComponents();
-            if (!Updating)
+            if (!updating)
             {
                 Components.Add(component);
                 component.Entity = this;
@@ -484,7 +481,7 @@ namespace Monocle
             if (Components == null || component.Entity != this)
                 throw new Exception("Removing Component that is not in the Entity");
 #endif
-            if (!Updating)
+            if (!updating)
             {
                 Components.Remove(component);
                 component.Removed();
@@ -526,7 +523,7 @@ namespace Monocle
         {
             if (Components != null)
             {
-                if (!Updating)
+                if (!updating)
                 {
                     foreach (var c in Components)
                     {

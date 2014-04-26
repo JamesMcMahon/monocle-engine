@@ -12,8 +12,8 @@ namespace Monocle
         private Particle[] particles;
         private int nextSlot;
 
-        public ParticleSystem(int layerIndex, int depth, int maxParticles)
-            : base(layerIndex)
+        public ParticleSystem(int depth, int maxParticles)
+            : base()
         {
             particles = new Particle[maxParticles];
             Depth = depth;
