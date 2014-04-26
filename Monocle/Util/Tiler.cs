@@ -179,7 +179,6 @@ namespace Monocle
         public int[] InsideTopRight;
         public int[] InsideBottomLeft;
         public int[] InsideBottomRight;
-        public TileLightData[] TileLightDatas;
 
         public AutotileData(XmlElement xml)
         {
@@ -208,11 +207,6 @@ namespace Monocle
             InsideTopRight = Calc.ReadCSVInt(xml.ChildText("InsideTopRight", ""));
             InsideBottomLeft = Calc.ReadCSVInt(xml.ChildText("InsideBottomLeft", ""));
             InsideBottomRight = Calc.ReadCSVInt(xml.ChildText("InsideBottomRight", ""));
-
-            var lightDatas = xml.GetElementsByTagName("Lights");
-            TileLightDatas = new TileLightData[lightDatas.Count];
-            for (int i = 0; i < lightDatas.Count; i++)
-                TileLightDatas[i] = new TileLightData(lightDatas[i] as XmlElement);
         }
 
         public int TileHandler()
@@ -278,20 +272,6 @@ namespace Monocle
                 return choices[0];
             else
                 return Calc.Random.Choose(choices);
-        }
-    }
-
-    public struct TileLightData
-    {
-        public int[] Tiles;
-        public Color Color;
-        public float Radius;
-
-        public TileLightData(XmlElement xml)
-        {
-            Tiles = Calc.ReadCSVInt(xml.InnerText);
-            Color = xml.AttrHexColor("color");
-            Radius = xml.AttrFloat("radius", 12);
         }
     }
 }

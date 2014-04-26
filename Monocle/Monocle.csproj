@@ -120,7 +120,6 @@
     <Compile Include="Textures\SpriteData.cs" />
     <Compile Include="Textures\Subtexture.cs" />
     <Compile Include="Textures\Texture.cs" />
-    <Compile Include="Textures\TextureData.cs" />
     <Compile Include="Util\MInput.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleSystem.cs" />
