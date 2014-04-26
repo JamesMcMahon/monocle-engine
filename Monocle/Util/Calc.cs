@@ -423,6 +423,14 @@ namespace Monocle
             return MathHelper.Clamp((num - zeroAt) / oneAt, 0, 1);
         }
 
+        static public float SignThreshold(float value, float threshold)
+        {
+            if (Math.Abs(value) >= threshold)
+                return Math.Sign(value);
+            else
+                return 0;
+        }
+
         static public float Min(params float[] values)
         {
             float min = values[0];

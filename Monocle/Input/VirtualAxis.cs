@@ -9,20 +9,17 @@ namespace Monocle
     public class VirtualAxis : VirtualInput
     {
         public List<VirtualAxisNode> Nodes;
-        public bool Normalized;
 
-        public VirtualAxis(bool normalized)
+        public VirtualAxis()
             : base()
         {
             Nodes = new List<VirtualAxisNode>();
-            Normalized = normalized;
         }
 
-        public VirtualAxis(bool normalized, params VirtualAxisNode[] nodes)
+        public VirtualAxis(params VirtualAxisNode[] nodes)
             : base()
         {
             Nodes = new List<VirtualAxisNode>(nodes);
-            Normalized = normalized;
         }
 
         public override void Update()
@@ -50,6 +47,82 @@ namespace Monocle
     public abstract class VirtualAxisNode : VirtualInputNode
     {
         public abstract float Value { get; }
+    }
+
+    public class VirtualAxisPadLeftStickX : VirtualAxisNode
+    {
+        public int GamepadIndex;
+        public float Deadzone;
+
+        public VirtualAxisPadLeftStickX(int gamepadIndex, float deadzone)
+        {
+
+        }
+
+        public override float Value
+        {
+            get
+            {
+                return Calc.SignThreshold(MInput.GamePads[GamepadIndex].GetLeftStick().X, Deadzone);
+            }
+        }
+    }
+
+    public class VirtualAxisPadLeftStickY : VirtualAxisNode
+    {
+        public int GamepadIndex;
+        public float Deadzone;
+
+        public VirtualAxisPadLeftStickY(int gamepadIndex, float deadzone)
+        {
+
+        }
+
+        public override float Value
+        {
+            get
+            {
+                return Calc.SignThreshold(MInput.GamePads[GamepadIndex].GetLeftStick().Y, Deadzone);
+            }
+        }
+    }
+
+    public class VirtualAxisPadRightStickX : VirtualAxisNode
+    {
+        public int GamepadIndex;
+        public float Deadzone;
+
+        public VirtualAxisPadRightStickX(int gamepadIndex, float deadzone)
+        {
+
+        }
+
+        public override float Value
+        {
+            get
+            {
+                return Calc.SignThreshold(MInput.GamePads[GamepadIndex].GetRightStick().X, Deadzone);
+            }
+        }
+    }
+
+    public class VirtualAxisPadRightStickY : VirtualAxisNode
+    {
+        public int GamepadIndex;
+        public float Deadzone;
+
+        public VirtualAxisPadRightStickY(int gamepadIndex, float deadzone)
+        {
+
+        }
+
+        public override float Value
+        {
+            get
+            {
+                return Calc.SignThreshold(MInput.GamePads[GamepadIndex].GetRightStick().Y, Deadzone);
+            }
+        }
     }
 
     public class VirtualAxisKeys : VirtualAxisNode

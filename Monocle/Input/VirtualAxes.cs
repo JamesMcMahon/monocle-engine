@@ -77,6 +77,26 @@ namespace Monocle
         }
     }
 
+    public class VirtualAxesPadRightStick : VirtualAxesNode
+    {
+        public int GamepadIndex;
+        public float Deadzone;
+
+        public VirtualAxesPadRightStick(int gamepadIndex, float deadzone)
+        {
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
+        }
+
+        public override Vector2 Value
+        {
+            get
+            {
+                return MInput.GamePads[GamepadIndex].GetRightStick(Deadzone);
+            }
+        }
+    }
+
     public class VirtualAxesKeys : VirtualAxesNode
     {
         public enum OverlapBehaviors { CancelOut, TakeOlder, TakeNewer };
