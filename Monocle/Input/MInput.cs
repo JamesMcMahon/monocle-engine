@@ -9,9 +9,11 @@ namespace Monocle
 {
     static public class MInput
     {
-        static public KeyboardData Keyboard;
-        static public MouseData Mouse;
-        static public GamePadData[] GamePads;
+        static public KeyboardData Keyboard { get; private set; }
+        static public MouseData Mouse { get; private set; }
+        static public GamePadData[] GamePads { get; private set; }
+
+        static internal List<VirtualInput> VirtualInputs;
 
         static internal void Initialize()
         {
@@ -21,6 +23,7 @@ namespace Monocle
             GamePads = new GamePadData[4];
             for (int i = 0; i < 4; i++)
                 GamePads[i] = new GamePadData((PlayerIndex)i);
+            VirtualInputs = new List<VirtualInput>();
         }
 
         static internal void Update()
@@ -48,6 +51,9 @@ namespace Monocle
                 for (int i = 0; i < 4; i++)
                     GamePads[i].UpdateNull();
             }
+
+            foreach (var virtualInput in VirtualInputs)
+                virtualInput.Update();
         }
 
         #region Keyboard

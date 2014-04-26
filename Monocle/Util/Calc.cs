@@ -495,7 +495,7 @@ namespace Monocle
                 return ret;
         }
 
-        static public Vector2 SafeNormalize(this Vector2 vec)
+        static public Vector2 SafeNormalize(Vector2 vec)
         {
             if (vec == Vector2.Zero)
                 return Vector2.UnitX;

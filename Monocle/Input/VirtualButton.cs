@@ -6,20 +6,26 @@ using System.Text;
 
 namespace Monocle
 {
-    public class VirtualButton
+    public class VirtualButton : VirtualInput
     {
-        public List<VirtualButtonNode> Nodes { get; private set; }
+        public List<VirtualButtonNode> Nodes;
 
         public VirtualButton()
+            : base()
         {
             Nodes = new List<VirtualButtonNode>();
         }
 
         public VirtualButton(params VirtualButtonNode[] nodes)
-            : this()
+            : base()
         {
-            foreach (var node in nodes)
-                Nodes.Add(node);
+            Nodes = new List<VirtualButtonNode>(nodes);
+        }
+
+        public override void Update()
+        {
+            foreach (var node in Nodes)
+                node.Update();
         }
 
         public bool Check
@@ -56,7 +62,7 @@ namespace Monocle
         }
     }
 
-    public abstract class VirtualButtonNode
+    public abstract class VirtualButtonNode : VirtualInputNode
     {
         public abstract bool Check { get; }
         public abstract bool Pressed { get; }

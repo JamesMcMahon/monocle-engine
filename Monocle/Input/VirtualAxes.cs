@@ -7,44 +7,52 @@ using System.Text;
 
 namespace Monocle
 {
-    public class VirtualAxes
+    public class VirtualAxes : VirtualInput
     {
         public List<VirtualAxesNode> Nodes;
+        public bool Normalized;
 
-        public VirtualAxes()
+        public VirtualAxes(bool normalized)
+            : base()
         {
             Nodes = new List<VirtualAxesNode>();
+            Normalized = normalized;
         }
 
-        public VirtualAxes(params VirtualAxesNode[] nodes)
-            : this()
+        public VirtualAxes(bool normalized, params VirtualAxesNode[] nodes)
+            : base()
         {
-            foreach (var node in nodes)
-                Nodes.Add(node);
+            Nodes = new List<VirtualAxesNode>(nodes);
+            Normalized = normalized;
+        }
+
+        public override void Update()
+        {
+            foreach (var node in Nodes)
+                node.Update();
         }
 
         public Vector2 Value
         {
             get
             {
-                Vector2 value = Vector2.Zero;
-
                 foreach (var node in Nodes)
                 {
-                    Vector2 nodeValue = node.Value;
-                    if (nodeValue != Vector2.Zero)
+                    Vector2 value = node.Value;
+                    if (value != Vector2.Zero)
                     {
-                        value = nodeValue;
-                        break;
+                        if (Normalized)
+                            value.Normalize();
+                        return value;
                     }
                 }
 
-                return value;
+                return Vector2.Zero;
             }
         }
     }
 
-    public abstract class VirtualAxesNode
+    public abstract class VirtualAxesNode : VirtualInputNode
     {
         public abstract Vector2 Value { get; }
     }
@@ -79,7 +87,9 @@ namespace Monocle
         public Keys Up;
         public Keys Down;
 
-        private Vector2 previousValue;
+        private bool turnedX;
+        private bool turnedY;
+        private Vector2 value;
 
         public VirtualAxesKeys(OverlapBehaviors overlapBehavior, Keys left, Keys right, Keys up, Keys down)
         {
@@ -90,71 +100,96 @@ namespace Monocle
             Down = down;
         }
 
+        public override void Update()
+        {
+            //X Axis
+            if (MInput.Keyboard.Check(Left))
+            {
+                if (MInput.Keyboard.Check(Right))
+                {
+                    switch (OverlapBehavior)
+                    {
+                        default:
+                        case OverlapBehaviors.CancelOut:
+                            value.X = 0;
+                            break;
+
+                        case OverlapBehaviors.TakeNewer:
+                            if (!turnedX)
+                            {
+                                value.X *= -1;
+                                turnedX = true;
+                            }
+                            break;
+
+                        case OverlapBehaviors.TakeOlder:
+                            //X stays the same
+                            break;
+                    }
+                }
+                else
+                {
+                    turnedX = false;
+                    value.X = -1;
+                }
+            }
+            else if (MInput.Keyboard.Check(Right))
+            {
+                turnedX = false;
+                value.X = 1;
+            }
+            else
+            {
+                turnedX = false;
+                value.X = 0;
+            }
+
+            //Y Axis
+            if (MInput.Keyboard.Check(Up))
+            {
+                if (MInput.Keyboard.Check(Down))
+                {
+                    switch (OverlapBehavior)
+                    {
+                        default:
+                        case OverlapBehaviors.CancelOut:
+                            value.Y = 0;
+                            break;
+
+                        case OverlapBehaviors.TakeNewer:
+                            if (!turnedY)
+                            {
+                                value.Y *= -1;
+                                turnedY = true;
+                            }
+                            break;
+
+                        case OverlapBehaviors.TakeOlder:
+                            //Y stays the same
+                            break;
+                    }
+                }
+                else
+                {
+                    turnedY = false;
+                    value.Y = -1;
+                }
+            }
+            else if (MInput.Keyboard.Check(Down))
+            {
+                turnedY = false;
+                value.Y = 1;
+            }
+            else
+            {
+                turnedY = false;
+                value.Y = 0;
+            }
+        }
+
         public override Vector2 Value
         {
-            get
-            {
-                Vector2 value = Vector2.Zero;
-
-                //X Axis
-                if (MInput.Keyboard.Check(Left))
-                {
-                    if (MInput.Keyboard.Check(Right))
-                    {
-                        switch (OverlapBehavior)
-                        {
-                            case OverlapBehaviors.CancelOut:
-                                value.X = 0;
-                                break;
-
-                            case OverlapBehaviors.TakeNewer:
-                                value.X = -previousValue.X;
-                                break;
-
-                            case OverlapBehaviors.TakeOlder:
-                                value.X = previousValue.X;
-                                break;
-                        }
-                    }
-                    else
-                        value.X = -1;
-                }
-                else if (MInput.Keyboard.Check(Right))
-                    value.X = 1;
-                else
-                    value.X = 0;
-
-                //Y Axis
-                if (MInput.Keyboard.Check(Up))
-                {
-                    if (MInput.Keyboard.Check(Down))
-                    {
-                        switch (OverlapBehavior)
-                        {
-                            case OverlapBehaviors.CancelOut:
-                                value.Y = 0;
-                                break;
-
-                            case OverlapBehaviors.TakeNewer:
-                                value.Y = -previousValue.Y;
-                                break;
-
-                            case OverlapBehaviors.TakeOlder:
-                                value.Y = previousValue.Y;
-                                break;
-                        }
-                    }
-                    else
-                        value.Y = -1;
-                }
-                else if (MInput.Keyboard.Check(Down))
-                    value.Y = 1;
-                else
-                    value.Y = 0;
-
-                previousValue = value;
-                return value;
-            }
+            get { return value; }
         }
     }
 }
