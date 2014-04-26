@@ -138,6 +138,7 @@
     <Compile Include="Util\Commands.cs" />
     <Compile Include="Util\Draw.cs" />
     <Compile Include="Util\Ease.cs" />
+    <Compile Include="Util\SpecEntity.cs" />
     <Compile Include="Util\Tiler.cs" />
     <Compile Include="Input\VirtualAxes.cs" />
     <Compile Include="Input\VirtualButton.cs" />

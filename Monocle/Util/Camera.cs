@@ -30,10 +30,10 @@ namespace Monocle
 
         public override string ToString()
         {
-            return "Camera:\n\tViewport: { " + Viewport.X + ", " + Viewport.Y + ", " + Viewport.Width + ", " + Viewport.Height + 
-                " }\n\tPosition: { " + position.X + ", " + position.Y + 
+            return "Camera:\n\tViewport: { " + Viewport.X + ", " + Viewport.Y + ", " + Viewport.Width + ", " + Viewport.Height +
+                " }\n\tPosition: { " + position.X + ", " + position.Y +
                 " }\n\tOrigin: { " + origin.X + ", " + origin.Y +
-                " }\n\tZoom: { " + zoom.X + ", " + zoom.Y + 
+                " }\n\tZoom: { " + zoom.X + ", " + zoom.Y +
                 " }\n\tAngle: " + angle;
         }
 
@@ -127,6 +127,70 @@ namespace Monocle
             {
                 changed = true;
                 angle = value;
+            }
+        }
+
+        public float Left
+        {
+            get
+            {
+                if (changed)
+                    UpdateMatrices();
+                return Vector2.Transform(Vector2.Zero, Inverse).X;
+            }
+
+            set
+            {
+                if (changed)
+                    UpdateMatrices();
+                X = Vector2.Transform(Vector2.UnitX * value, Matrix).X;
+            }
+        }
+
+        public float Right
+        {
+            get
+            {
+                if (changed)
+                    UpdateMatrices();
+                return Vector2.Transform(Vector2.UnitX * Viewport.Width, Inverse).X;
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public float Top
+        {
+            get
+            {
+                if (changed)
+                    UpdateMatrices();
+                return Vector2.Transform(Vector2.Zero, Inverse).Y;
+            }
+
+            set
+            {
+                if (changed)
+                    UpdateMatrices();
+                Y = Vector2.Transform(Vector2.UnitY * value, Matrix).Y;
+            }
+        }
+
+        public float Bottom
+        {
+            get
+            {
+                if (changed)
+                    UpdateMatrices();
+                return Vector2.Transform(Vector2.UnitY * Viewport.Height, Inverse).Y;
+            }
+
+            set
+            {
+                throw new NotImplementedException();
             }
         }
 

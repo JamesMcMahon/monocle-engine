@@ -108,6 +108,11 @@ namespace Monocle
             SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
         }
 
+        static public void Rect(Collider collider, Color color)
+        {
+            Rect(collider.AbsoluteLeft, collider.AbsoluteTop, collider.Width, collider.Height, color);
+        }
+
         static public void HollowRect(float x, float y, float width, float height, Color color)
         {
             rect.X = (int)x;
@@ -176,7 +181,7 @@ namespace Monocle
 
         static public void OutlineTextCentered(SpriteFont font, string text, Vector2 position, Color color, float scale)
         {
-            Vector2 origin = font.MeasureString(text)/2;
+            Vector2 origin = font.MeasureString(text) / 2;
 
             for (int i = -1; i < 2; i++)
                 for (int j = -1; j < 2; j++)
@@ -306,7 +311,7 @@ namespace Monocle
 
         static public void TextureCentered(Subtexture subTexture, Vector2 position, Color color, float scale, float rotation)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, new Vector2(subTexture.Rect.Width/2, subTexture.Rect.Height/2), scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), scale, SpriteEffects.None, 0);
         }
 
         static public void TextureCentered(Subtexture subTexture, Vector2 position, Color color, Vector2 scale, float rotation)

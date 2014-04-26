@@ -56,7 +56,8 @@ namespace Monocle
 
         public VirtualAxisPadLeftStickX(int gamepadIndex, float deadzone)
         {
-
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
         }
 
         public override float Value
@@ -75,7 +76,8 @@ namespace Monocle
 
         public VirtualAxisPadLeftStickY(int gamepadIndex, float deadzone)
         {
-
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
         }
 
         public override float Value
@@ -94,7 +96,8 @@ namespace Monocle
 
         public VirtualAxisPadRightStickX(int gamepadIndex, float deadzone)
         {
-
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
         }
 
         public override float Value
@@ -113,7 +116,8 @@ namespace Monocle
 
         public VirtualAxisPadRightStickY(int gamepadIndex, float deadzone)
         {
-
+            GamepadIndex = gamepadIndex;
+            Deadzone = deadzone;
         }
 
         public override float Value
