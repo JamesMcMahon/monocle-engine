@@ -28,14 +28,14 @@ namespace Monocle
             actualDepthLookup = new Dictionary<int, float>();
         }
 
-        public virtual void Begin() 
+        public virtual void Begin()
         {
             Focused = true;
             foreach (var entity in Entities)
                 entity.SceneBegin();
         }
 
-        public virtual void End() 
+        public virtual void End()
         {
             Focused = false;
             foreach (var entity in Entities)
@@ -366,6 +366,28 @@ namespace Monocle
         IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        #endregion
+
+        #region Renderer Shortcuts
+
+        /// <summary>
+        /// Shortcut function to add a Renderer to the Renderer list
+        /// </summary>
+        /// <param name="renderer">The Renderer to add</param>
+        public void Add(Renderer renderer)
+        {
+            Renderers.Add(renderer);
+        }
+
+        /// <summary>
+        /// Shortcut function to remove a Renderer from the Renderer list
+        /// </summary>
+        /// <param name="renderer">The Renderer to remove</param>
+        public void Remove(Renderer renderer)
+        {
+            Renderers.Add(renderer);
         }
 
         #endregion
