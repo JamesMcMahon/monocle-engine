@@ -1,0 +1,16 @@
+syntax: glob
+*.suo
+*.csproj.user
+*.contentproj.user
+*.Debug.cachefile
+*.Release.cachefile
+*.db
+Monocle\obj
+Monocle\bin
+*.psess
+*.vsp
+_UpgradeReport_Files
+UpgradeLog.XML
+UpgradeLog.htm
+*.cachefile
+*.apk
