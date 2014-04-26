@@ -120,7 +120,7 @@
     <Compile Include="Textures\SpriteData.cs" />
     <Compile Include="Textures\Subtexture.cs" />
     <Compile Include="Textures\Texture.cs" />
-    <Compile Include="Util\MInput.cs" />
+    <Compile Include="Input\MInput.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleSystem.cs" />
     <Compile Include="Particles\ParticleType.cs" />
@@ -136,6 +136,8 @@
     <Compile Include="Util\Draw.cs" />
     <Compile Include="Util\Ease.cs" />
     <Compile Include="Util\Tiler.cs" />
+    <Compile Include="Input\VirtualAxes.cs" />
+    <Compile Include="Input\VirtualButton.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
