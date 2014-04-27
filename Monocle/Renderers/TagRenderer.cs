@@ -18,6 +18,11 @@ namespace Monocle
             Camera = new Camera();
         }
 
+        public override void BeforeRender(Scene scene)
+        {
+
+        }
+
         public override void Render(Scene scene)
         {
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix);
@@ -31,6 +36,11 @@ namespace Monocle
                     entity.DebugRender();
 
             Draw.SpriteBatch.End();
+        }
+
+        public override void AfterRender(Scene scene)
+        {
+
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Monocle
         private Scene scene;
         private Scene nextScene;
         private string windowTitle;
-        
+
 #if DEBUG
         private TimeSpan counterElapsed = TimeSpan.Zero;
         private int counterFrames = 0;
@@ -44,7 +44,7 @@ namespace Monocle
             base.Initialize();
 
             MInput.Initialize();
-            Screen.Initialize();           
+            Screen.Initialize();
             Graphics.DeviceReset += OnGraphicsReset;
             Window.Title = windowTitle;
             Commands = new Commands();
@@ -103,21 +103,21 @@ namespace Monocle
             if (Screen.RenderTarget.IsDisposed)
                 Screen.Initialize();
 
+            if (scene != null)
+                scene.BeforeRender();
+
             GraphicsDevice.SetRenderTarget(Screen.RenderTarget);
             GraphicsDevice.Clear(Screen.ClearColor);
 
             if (scene != null)
                 scene.Render();
 
-            if (scene != null)
-                scene.PostRender();
-
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
             Screen.Render();
 
             if (scene != null)
-                scene.PostScreen();
+                scene.AfterRender();
 
             base.Draw(gameTime);
             if (ConsoleEnabled && Commands.Open)

@@ -49,28 +49,36 @@ namespace Monocle
             SetEntityListLockMode(EntityList.LockModes.Open);
         }
 
-        public virtual void Render()
+        public virtual void BeforeRender()
         {
             SetEntityListLockMode(EntityList.LockModes.Error);
 
             foreach (var renderer in Renderers)
             {
                 Draw.Renderer = renderer;
+                renderer.BeforeRender(this);
+            }
+        }
+
+        public virtual void Render()
+        {
+            foreach (var renderer in Renderers)
+            {
+                Draw.Renderer = renderer;
                 renderer.Render(this);
             }
+        }
+
+        public virtual void AfterRender()
+        {
+            foreach (var renderer in Renderers)
+            {
+                Draw.Renderer = renderer;
+                renderer.AfterRender(this);
+            }
+
             Draw.Renderer = null;
-
             SetEntityListLockMode(EntityList.LockModes.Open);
-        }
-
-        public virtual void PostRender()
-        {
-
-        }
-
-        public virtual void PostScreen()
-        {
-
         }
 
         public virtual void HandleGraphicsReset()
