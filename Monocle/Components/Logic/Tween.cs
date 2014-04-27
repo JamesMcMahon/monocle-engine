@@ -40,10 +40,11 @@ namespace Monocle
             return tween;
         }
 
-        static public Tween Set(Entity entity, float duration, Ease.Easer easer, Action<Tween> onUpdate, TweenMode tweenMode = TweenMode.Oneshot)
+        static public Tween Set(Entity entity, TweenMode tweenMode, float duration, Ease.Easer easer, Action<Tween> onUpdate, Action<Tween> onComplete = null)
         {
             Tween tween = Tween.Create(tweenMode, easer, duration, true);
             tween.OnUpdate += onUpdate;
+            tween.OnComplete += onComplete;
             entity.Add(tween);
             return tween;
         }
