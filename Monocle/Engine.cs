@@ -11,7 +11,7 @@ namespace Monocle
         static public Engine Instance { get; private set; }
         static public float DeltaTime { get; private set; }
         static public float TimeRate = 1f;
-        static public bool ConsoleEnabled;
+        static public bool ConsoleEnabled = true;
 
         public GraphicsDeviceManager Graphics { get; private set; }
         public Commands Commands { get; private set; }
