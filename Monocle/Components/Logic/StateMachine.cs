@@ -6,9 +6,9 @@ namespace Monocle
     public class StateMachine : Component
     {
         private int state;
-        private Action[] enterStates;
+        private Action[] begins;
         private Func<int>[] updates;
-        private Action[] leaveStates;
+        private Action[] ends;
         private Func<IEnumerator>[] coroutines;
         private Coroutine currentCoroutine;
 
@@ -21,9 +21,9 @@ namespace Monocle
         {
             PreviousState = state = initialState;
 
-            enterStates = new Action[maxStates];
+            begins = new Action[maxStates];
             updates = new Func<int>[maxStates];
-            leaveStates = new Action[maxStates];
+            ends = new Action[maxStates];
             coroutines = new Func<IEnumerator>[maxStates];
 
             currentCoroutine = new Coroutine();
@@ -44,19 +44,19 @@ namespace Monocle
 #if DEBUG
                 if (value >= updates.Length || value < 0)
                     throw new Exception("StateMachine state out of range");
-#endif 
+#endif
                 if (state != value)
                 {
                     if (Log)
                         Calc.Log("Enter State " + value + " (leaving " + state + ")");
                     ChangedStates = true;
 
-                    if (leaveStates[state] != null)
-                        leaveStates[state]();
+                    if (ends[state] != null)
+                        ends[state]();
                     PreviousState = state;
                     state = value;
-                    if (enterStates[state] != null)
-                        enterStates[state]();
+                    if (begins[state] != null)
+                        begins[state]();
 
                     if (coroutines[state] != null)
                     {
@@ -73,16 +73,16 @@ namespace Monocle
         public void SetCallbacks(int state, Func<int> onUpdate, Func<IEnumerator> coroutine = null, Action onEnterState = null, Action onLeaveState = null)
         {
             updates[state] = onUpdate;
-            enterStates[state] = onEnterState;
-            leaveStates[state] = onLeaveState;
+            begins[state] = onEnterState;
+            ends[state] = onLeaveState;
             coroutines[state] = coroutine;
         }
 
         public void ReflectState(Entity from, int index, string name)
         {
             updates[index] = (Func<int>)Calc.GetMethod<Func<int>>(from, name + "Update");
-            enterStates[index] = (Action)Calc.GetMethod<Action>(from, name + "Enter");
-            leaveStates[index] = (Action)Calc.GetMethod<Action>(from, name + "Leave");
+            begins[index] = (Action)Calc.GetMethod<Action>(from, name + "Begin");
+            ends[index] = (Action)Calc.GetMethod<Action>(from, name + "End");
             coroutines[index] = (Func<IEnumerator>)Calc.GetMethod<Func<IEnumerator>>(from, name + "Coroutine");
         }
 
@@ -115,8 +115,8 @@ namespace Monocle
         {
             Calc.Log("State " + index + ": "
                 + (updates[index] != null ? "U" : "")
-                + (enterStates[index] != null ? "E" : "")
-                + (leaveStates[index] != null ? "L" : "")
+                + (begins[index] != null ? "B" : "")
+                + (ends[index] != null ? "E" : "")
                 + (coroutines[index] != null ? "C" : ""));
         }
     }
