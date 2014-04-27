@@ -9,7 +9,19 @@ namespace Monocle
         static public Renderer Renderer { get; internal set; }
         static public SpriteBatch SpriteBatch { get; private set; }
         static public SpriteFont DefaultFont { get; private set; }
+
+        /// <summary>
+        /// A subtexture used to draw rectangles and lines. 
+        /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
+        /// Should be a 1x1 white pixel
+        /// </summary>
         static public Subtexture Pixel;
+
+        /// <summary>
+        /// A subtexture used to draw particle systems.
+        /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
+        /// Should be a 2x2 white pixel
+        /// </summary>
         static public Subtexture Particle;
 
         static private Rectangle rect;

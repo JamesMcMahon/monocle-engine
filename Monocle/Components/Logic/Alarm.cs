@@ -17,7 +17,7 @@ namespace Monocle
 
         static private Stack<Alarm> cached = new Stack<Alarm>();
 
-        static public Alarm Create(AlarmMode mode, Action onComplete, int duration = 1, bool start = false)
+        static public Alarm Create(AlarmMode mode, Action onComplete, float duration = 1f, bool start = false)
         {
             Alarm alarm;
             if (cached.Count == 0)
@@ -29,7 +29,7 @@ namespace Monocle
             return alarm;
         }
 
-        static public Alarm Set(Entity entity, int duration, Action onComplete, AlarmMode alarmMode = AlarmMode.Oneshot)
+        static public Alarm Set(Entity entity, float duration, Action onComplete, AlarmMode alarmMode = AlarmMode.Oneshot)
         {
             Alarm alarm = Alarm.Create(alarmMode, onComplete, duration, true);
             entity.Add(alarm);
