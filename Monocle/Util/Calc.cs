@@ -503,8 +503,18 @@ namespace Monocle
 
         static public Vector2 SafeNormalize(Vector2 vec)
         {
+            return SafeNormalize(vec, Vector2.Zero);
+        }
+
+        static public Vector2 SafeNormalize(Vector2 vec, float length)
+        {
+            return SafeNormalize(vec, Vector2.Zero, length);
+        }
+
+        static public Vector2 SafeNormalize(Vector2 vec, Vector2 ifZero)
+        {
             if (vec == Vector2.Zero)
-                return Vector2.UnitX;
+                return ifZero;
             else
             {
                 vec.Normalize();
@@ -512,10 +522,10 @@ namespace Monocle
             }
         }
 
-        static public Vector2 SafeNormalize(this Vector2 vec, float length)
+        static public Vector2 SafeNormalize(this Vector2 vec, Vector2 ifZero, float length)
         {
             if (vec == Vector2.Zero)
-                return Vector2.UnitX * length;
+                return ifZero * length;
             else
             {
                 vec.Normalize();
@@ -704,7 +714,7 @@ namespace Monocle
             return new Vector2(Math.Abs(val.X), Math.Abs(val.Y));
         }
 
-        static public Vector2 Approach(this Vector2 val, Vector2 target, float maxMove)
+        static public Vector2 Approach(Vector2 val, Vector2 target, float maxMove)
         {
             if (maxMove == 0 || val == target)
                 return val;
