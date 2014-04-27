@@ -277,19 +277,19 @@ namespace Monocle
             return choices[random.Next(choices.Count)];
         }
 
-        static public int Range(this Random random, int min, int add)
+        static public int Range(this Random random, int min, int max)
         {
-            return min + random.Next(add);
+            return min + random.Next(max - min);
         }
 
-        static public float Range(this Random random, float min, float add)
+        static public float Range(this Random random, float min, float max)
         {
-            return min + add * random.NextFloat();
+            return min + random.NextFloat(max - min);
         }
 
-        static public Vector2 Range(this Random random, Vector2 min, Vector2 add)
+        static public Vector2 Range(this Random random, Vector2 min, Vector2 max)
         {
-            return min + new Vector2(add.X * random.NextFloat(), add.Y * random.NextFloat());
+            return min + new Vector2(random.NextFloat(max.X - min.X), random.NextFloat(max.Y - min.Y));
         }
 
         static public bool Chance(this Random random, float chance)

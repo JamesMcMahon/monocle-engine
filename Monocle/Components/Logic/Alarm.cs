@@ -47,8 +47,8 @@ namespace Monocle
         private void Init(AlarmMode mode, Action onComplete, float duration = 1f, bool start = false)
         {
 #if DEBUG
-            if (duration < 1)
-                throw new Exception("Alarm duration cannot be less than 1");
+            if (duration <= 0)
+                throw new Exception("Alarm duration cannot be less than zero");
 #endif
             Mode = mode;
             Duration = duration;

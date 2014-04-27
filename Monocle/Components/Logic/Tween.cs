@@ -68,11 +68,11 @@ namespace Monocle
         private void Init(TweenMode mode, Ease.Easer easer, float duration, bool start)
         {
 #if DEBUG
-            if (duration < 1)
-                throw new Exception("Tween duration cannot be less than 1");
+            if (duration <= 0)
+                throw new Exception("Tween duration cannot be less than zero");
 #else
-            if (duration < 1)
-                duration = 1;
+            if (duration <= 0)
+                duration = .000001f;
 #endif
 
             Mode = mode;
