@@ -129,7 +129,6 @@
     <Compile Include="Particles\ParticleType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene.cs" />
-    <Compile Include="Screen.cs" />
     <Compile Include="Util\Bezier.cs" />
     <Compile Include="Util\Cache.cs" />
     <Compile Include="Util\Calc.cs" />
