@@ -14,8 +14,9 @@ namespace Monocle
         static public bool ConsoleEnabled;
 
         public GraphicsDeviceManager Graphics { get; private set; }
-        public Screen Screen { get; private set; }
         public Commands Commands { get; private set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         private Scene scene;
         private Scene nextScene;
@@ -26,16 +27,22 @@ namespace Monocle
         private int counterFrames = 0;
 #endif
 
-        public Engine(int width, int height, float scale, string windowTitle)
+        public Engine(int width, int height, string windowTitle)
         {
-            this.windowTitle = windowTitle;
-
             Instance = this;
+
+            Width = width;
+            Height = height;
+            Window.Title = this.windowTitle = windowTitle;
+
             Graphics = new GraphicsDeviceManager(this);
             Graphics.SynchronizeWithVerticalRetrace = false;
-            IsMouseVisible = false;
-            Screen = new Screen(this, width, height, scale);
+            Graphics.DeviceReset += OnGraphicsReset;
+            Graphics.IsFullScreen = false;
+            Graphics.PreferredBackBufferWidth = Width;
+            Graphics.PreferredBackBufferHeight = Height;
 
+            IsMouseVisible = false;
             IsFixedTimeStep = false;
         }
 
@@ -44,9 +51,6 @@ namespace Monocle
             base.Initialize();
 
             MInput.Initialize();
-            Screen.Initialize();
-            Graphics.DeviceReset += OnGraphicsReset;
-            Window.Title = windowTitle;
             Commands = new Commands();
         }
 
@@ -60,8 +64,6 @@ namespace Monocle
 
         private void OnGraphicsReset(object sender, EventArgs e)
         {
-            Screen.Initialize();
-
             if (scene != null)
                 scene.HandleGraphicsReset();
             if (nextScene != null)
@@ -100,21 +102,14 @@ namespace Monocle
 
         protected override void Draw(GameTime gameTime)
         {
-            if (Screen.RenderTarget.IsDisposed)
-                Screen.Initialize();
-
             if (scene != null)
                 scene.BeforeRender();
 
-            GraphicsDevice.SetRenderTarget(Screen.RenderTarget);
-            GraphicsDevice.Clear(Screen.ClearColor);
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Black);
 
             if (scene != null)
                 scene.Render();
-
-            GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.Black);
-            Screen.Render();
 
             if (scene != null)
                 scene.AfterRender();

@@ -9,7 +9,7 @@ namespace Monocle
     {
         private const float UNDERSCORE_TIME = .5f;
         private const float REPEAT_DELAY = .5f;
-        private const float REPEAT_EVERY = 1/30f;
+        private const float REPEAT_EVERY = 1 / 30f;
 
         static private Commands Instance;
         static private string[] Args;
@@ -17,7 +17,7 @@ namespace Monocle
         private KeyboardState oldState;
         private KeyboardState currentState;
 
-        private string currentText = "";        
+        private string currentText = "";
         private List<string> drawCommands;
 
         private bool underscore;
@@ -56,13 +56,6 @@ namespace Monocle
                     Log("Provide a float (0-1.0) to set console opacity (eg: 'opacity 0.8').");
                 else
                     Opacity = ArgFloat(0, .8f);
-            });
-            RegisterCommand("fullscreen", () =>
-            {
-                if (Engine.Instance.Screen.IsFullscreen)
-                    Engine.Instance.Screen.DisableFullscreen();
-                else
-                    Engine.Instance.Screen.EnableFullscreen(Screen.FullscreenMode.LargestIntegerScale);
             });
             RegisterCommand("close", () =>
             {
@@ -452,8 +445,8 @@ namespace Monocle
 
         internal void Render()
         {
-            int screenWidth = (int)(Engine.Instance.Screen.Width * Engine.Instance.Screen.Scale);
-            int screenHeight = (int)(Engine.Instance.Screen.Height * Engine.Instance.Screen.Scale);
+            int screenWidth = (int)Engine.Instance.Width;
+            int screenHeight = (int)Engine.Instance.Height;
 
             Draw.SpriteBatch.Begin();
 

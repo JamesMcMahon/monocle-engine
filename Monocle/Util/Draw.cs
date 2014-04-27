@@ -59,7 +59,7 @@ namespace Monocle
 
         static public void ResetTarget()
         {
-            Engine.Instance.GraphicsDevice.SetRenderTarget(Engine.Instance.Screen.RenderTarget);
+            Engine.Instance.GraphicsDevice.SetRenderTarget(null);
         }
 
         static public void Clear(Color color)
