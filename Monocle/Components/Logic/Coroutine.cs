@@ -69,7 +69,7 @@ namespace Monocle
             Active = true;
             Finished = false;
             waitTimer = 0;
-            enumerators.Clear();           
+            enumerators.Clear();
             enumerators.Push(functionCall);
 
             ended = true;

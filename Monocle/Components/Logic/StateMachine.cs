@@ -16,10 +16,10 @@ namespace Monocle
         public bool Log;
         public int PreviousState { get; private set; }
 
-        public StateMachine(int initialState, int maxStates = 10)
+        public StateMachine(int maxStates = 10)
             : base(true, false)
         {
-            PreviousState = state = initialState;
+            PreviousState = state = -1;
 
             begins = new Action[maxStates];
             updates = new Func<int>[maxStates];
@@ -30,10 +30,20 @@ namespace Monocle
             currentCoroutine.RemoveOnComplete = false;
         }
 
-        public StateMachine(int maxStates = 10)
-            : this(0, maxStates)
+        public override void Added()
         {
+            base.Added();
 
+            if (Entity.Scene != null && state == -1)
+                State = 0;
+        }
+
+        public override void EntityAdded()
+        {
+            base.EntityAdded();
+
+            if (state == -1)
+                State = 0;
         }
 
         public int State
@@ -51,7 +61,7 @@ namespace Monocle
                         Calc.Log("Enter State " + value + " (leaving " + state + ")");
                     ChangedStates = true;
 
-                    if (ends[state] != null)
+                    if (state != -1 && ends[state] != null)
                         ends[state]();
                     PreviousState = state;
                     state = value;

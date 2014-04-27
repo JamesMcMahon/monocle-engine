@@ -187,6 +187,12 @@ namespace Monocle
             Active = false;
         }
 
+        public void Reset()
+        {
+            TimeLeft = Duration;
+            Eased = Percent = Reverse ? 1 : 0;
+        }
+
         public IEnumerator Wait()
         {
             while (Active)
