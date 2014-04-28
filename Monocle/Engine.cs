@@ -17,6 +17,7 @@ namespace Monocle
         public Commands Commands { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public Color ClearColor;
 
         private Scene scene;
         private Scene nextScene;
@@ -34,6 +35,7 @@ namespace Monocle
             Width = width;
             Height = height;
             Window.Title = this.windowTitle = windowTitle;
+            ClearColor = Color.Black;
 
             Graphics = new GraphicsDeviceManager(this);
             Graphics.SynchronizeWithVerticalRetrace = false;
@@ -105,11 +107,7 @@ namespace Monocle
             if (scene != null)
                 scene.BeforeRender();
 
-            GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.Black);
-
-            if (scene != null)
-                scene.Render();
+            RenderCore();
 
             if (scene != null)
                 scene.AfterRender();
@@ -128,6 +126,15 @@ namespace Monocle
                 counterElapsed -= TimeSpan.FromSeconds(1);
             }
 #endif
+        }
+
+        public virtual void RenderCore()
+        {
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(ClearColor);
+
+            if (scene != null)
+                scene.Render();
         }
 
         public Scene Scene
