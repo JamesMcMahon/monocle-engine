@@ -107,7 +107,6 @@
     <Compile Include="Components\Logic\Alarm.cs" />
     <Compile Include="Components\Logic\Coroutine.cs" />
     <Compile Include="Components\Logic\CoroutineHolder.cs" />
-    <Compile Include="Components\Logic\Counter.cs" />
     <Compile Include="Components\Logic\SineWave.cs" />
     <Compile Include="Components\Logic\StateMachine.cs" />
     <Compile Include="Components\Logic\Tween.cs" />
