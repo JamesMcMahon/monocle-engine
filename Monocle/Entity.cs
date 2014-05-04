@@ -1,25 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Monocle
 {
-    public class Entity : IComponentHolder
+    public class Entity : IEnumerable<Component>, IEnumerable
     {
         public bool Active = true;
         public bool Visible = true;
         public bool Collidable = true;
         public Vector2 Position;
 
-        public Scene Scene { get; internal set; }
-        public List<Component> Components { get; private set; }
+        public Scene Scene { get; private set; }
+        public ComponentList Components { get; private set; }
         public List<int> Tags { get; private set; }
 
         private Collider collider;
-        private HashSet<Component> toAdd;
-        private int toRemove;
-        private bool updating;
-
         internal int depth = 0;
         internal float actualDepth = 0;
 
@@ -27,6 +24,7 @@ namespace Monocle
         {
             Position = position;
 
+            Components = new ComponentList(this);
             Tags = new List<int>();
         }
 
@@ -69,23 +67,12 @@ namespace Monocle
 
         public virtual void Update()
         {
-            if (Components != null)
-            {
-                updating = true;
-                foreach (var c in Components)
-                    if (c.Active)
-                        c.Update();
-                updating = false;
-                UpdateComponentList();
-            }
+            Components.Update();
         }
 
         public virtual void Render()
         {
-            if (Components != null)
-                foreach (var c in Components)
-                    if (c.Visible)
-                        c.Render();
+            Components.Render();
         }
 
         public virtual void DebugRender()
@@ -96,18 +83,13 @@ namespace Monocle
 
         public virtual void HandleGraphicsReset()
         {
-            if (Components != null)
-                foreach (var c in Components)
-                    c.HandleGraphicsReset();
+            Components.HandleGraphicsReset();
         }
 
         public void RemoveSelf()
         {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Entity cannot remove itself because it is not in a Scene!");
-#endif
-            Scene.Entities.Remove(this);
+            if (Scene != null)
+                Scene.Entities.Remove(this);
         }
 
         public int Depth
@@ -435,203 +417,6 @@ namespace Monocle
 
         #endregion
 
-        #region Components
-
-        private void InitComponents()
-        {
-            if (Components == null)
-            {
-                Components = new List<Component>();
-                toAdd = new HashSet<Component>();
-            }
-        }
-
-        public Component Add(Component component)
-        {
-#if DEBUG
-            if (component == null)
-                throw new Exception("Adding a null Component");
-            if (component.Entity != null)
-                throw new Exception("Component added that is already in an Entity");
-#endif
-            InitComponents();
-            if (!updating)
-            {
-                Components.Add(component);
-                component.Entity = this;
-                component.Parent = this;
-                component.Added();
-            }
-            else
-                toAdd.Add(component);
-            return component;
-        }
-
-        public void Add(params Component[] components)
-        {
-            foreach (var component in components)
-                Add(component);
-        }
-
-        public Component Remove(Component component)
-        {
-#if DEBUG
-            if (Components == null || component.Entity != this)
-                throw new Exception("Removing Component that is not in the Entity");
-#endif
-            if (!updating)
-            {
-                Components.Remove(component);
-                component.Removed();
-                component.Entity = null;
-                component.Parent = null;
-                component.MarkedForRemoval = false;
-            }
-            else if (!component.MarkedForRemoval)
-            {
-                toRemove++;
-                component.MarkedForRemoval = true;
-            }
-            return component;
-        }
-
-        public void Remove(params Component[] components)
-        {
-            foreach (var component in components)
-                Remove(component);
-        }
-
-        public Component Remove(int index)
-        {
-#if DEBUG
-            if (index < 0 || index >= Components.Count)
-                throw new Exception("Component index out of bounds");
-#endif
-            return Remove(Components[index]);
-        }
-
-        public void Remove<T>() where T : Component
-        {
-            for (int i = 0; i < Components.Count; i++)
-                if (Components[i] is T)
-                    Remove(i);
-        }
-
-        public void RemoveAll()
-        {
-            if (Components != null)
-            {
-                if (!updating)
-                {
-                    foreach (var c in Components)
-                    {
-                        c.Removed();
-                        c.Entity = null;
-                        c.Parent = null;
-                        c.MarkedForRemoval = false;
-                    }
-                    Components.Clear();
-                }
-                else
-                {
-                    foreach (var c in Components)
-                        Remove(c);
-                }
-            }
-        }
-
-        public int ComponentCount
-        {
-            get
-            {
-                if (Components == null)
-                    return 0;
-                else
-                    return Components.Count;
-            }
-        }
-
-        public bool Contains(Component component)
-        {
-            return Components != null && Components.Contains(component);
-        }
-
-        public bool Contains<T>()
-        {
-            if (Components != null)
-                for (int i = 0; i < Components.Count; i++)
-                    if (Components[i] is T)
-                        return true;
-            return false;
-        }
-
-        public T GetFirst<T>() where T : Component
-        {
-            if (Components != null)
-                for (int i = 0; i < Components.Count; i++)
-                    if (Components[i] is T)
-                        return (T)Components[i];
-
-            return null;
-        }
-
-        public List<T> GetList<T>(List<T> list) where T : Component
-        {
-            if (Components != null)
-                for (int i = 0; i < Components.Count; i++)
-                    if (Components[i] is T)
-                        list.Add((T)Components[i]);
-            return list;
-        }
-
-        public List<T> GetList<T>() where T : Component
-        {
-            return GetList<T>(new List<T>());
-        }
-
-        public void UpdateComponentList()
-        {
-            if (Components != null)
-            {
-                if (toRemove > 0)
-                {
-                    for (int i = 0; i < Components.Count; i++)
-                    {
-                        if (Components[i].MarkedForRemoval)
-                        {
-                            Component c = Components[i];
-                            Components.RemoveAt(i);
-
-                            c.Removed();
-                            c.MarkedForRemoval = false;
-                            c.Entity = null;
-                            c.Parent = null;
-
-                            toRemove--;
-                            if (toRemove <= 0)
-                                break;
-                            i--;
-                        }
-                    }
-                }
-
-                if (toAdd.Count > 0)
-                {
-                    foreach (var c in toAdd)
-                    {
-                        Components.Add(c);
-                        c.Entity = this;
-                        c.Parent = this;
-                        c.Added();
-                    }
-
-                    toAdd.Clear();
-                }
-            }
-        }
-
-        #endregion
-
         #region Tags
 
         public void Tag(int tag)
@@ -668,7 +453,7 @@ namespace Monocle
 
         #endregion
 
-        #region Collision Convenience Functions
+        #region Collision Shortcuts
 
         #region Collide Check
 
@@ -939,6 +724,82 @@ namespace Monocle
         public bool CollideLine(Vector2 from, Vector2 to)
         {
             return Collider.Collide(from, to);
+        }
+
+        #endregion
+
+        #region Components Shortcuts
+
+        /// <summary>
+        /// Shortcut function for adding a Component to the Entity's Components list
+        /// </summary>
+        /// <param name="component">The Component to add</param>
+        public void Add(Component component)
+        {
+            Components.Add(component);
+        }
+
+        /// <summary>
+        /// Shortcut function for removing an Component from the Entity's Components list
+        /// </summary>
+        /// <param name="component">The Component to remove</param>
+        public void Remove(Component component)
+        {
+            Components.Remove(component);
+        }
+
+        /// <summary>
+        /// Shortcut function for adding a set of Components from the Entity's Components list
+        /// </summary>
+        /// <param name="components">The Components to add</param>
+        public void Add(IEnumerable<Component> components)
+        {
+            Components.Add(components);
+        }
+
+        /// <summary>
+        /// Shortcut function for removing a set of Components from the Entity's Components list
+        /// </summary>
+        /// <param name="components">The Components to remove</param>
+        public void Remove(IEnumerable<Component> components)
+        {
+            Components.Remove(components);
+        }
+
+        /// <summary>
+        /// Shortcut function for adding a set of Components from the Entity's Components list
+        /// </summary>
+        /// <param name="components">The Components to add</param>
+        public void Add(params Component[] components)
+        {
+            Components.Add(components);
+        }
+
+        /// <summary>
+        /// Shortcut function for removing a set of Components from the Entity's Components list
+        /// </summary>
+        /// <param name="components">The Components to remove</param>
+        public void Remove(params Component[] components)
+        {
+            Components.Remove(components);
+        }
+
+        /// <summary>
+        /// Allows you to iterate through all Components in the Entity
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<Component> GetEnumerator()
+        {
+            return Components.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Allows you to iterate through all Components in the Entity
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         #endregion

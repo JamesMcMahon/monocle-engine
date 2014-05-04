@@ -1,240 +1,118 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Monocle
 {
-    public class CompositeComponent : Component, IComponentHolder
+    public class CompositeComponent : Component, IEnumerable<Component>, IEnumerable
     {
-        public List<Component> Components { get; private set; }
-        public bool Updating { get; private set; }
-
-        private HashSet<Component> toAdd;
-        private int toRemove;
+        public ComponentList Components { get; private set; }
 
         public CompositeComponent(bool active, bool visible)
             : base(active, visible)
         {
-            Components = new List<Component>();
-            toAdd = new HashSet<Component>();
+            Components = new ComponentList(Entity);
         }
 
-        public override void Added()
+        public override void Added(ComponentList container)
         {
-            base.Added();
-
-            foreach (var c in Components)
-                c.Entity = Entity;
+            base.Added(container);
+            Components.Entity = Entity;
         }
 
-        public override void Removed()
+        public override void Removed(ComponentList container)
         {
-            base.Removed();
-
-            foreach (var c in Components)
-                c.Entity = null;
+            base.Removed(container);
+            Components.Entity = null;
         }
 
         override public void Update()
         {
-            if (Components != null)
-            {
-                Updating = true;
-                foreach (var c in Components)
-                    if (c.Active)
-                        c.Update();
-                Updating = false;
-                UpdateComponentList();
-            }
+            Components.Update();
         }
 
         override public void Render()
         {
-            if (Components != null)
-                foreach (var c in Components)
-                    if (c.Visible)
-                        c.Render();
+            Components.Render();
         }
 
-        #region Components
-
-        public Component Add(Component component)
+        public override void HandleGraphicsReset()
         {
-#if DEBUG
-            if (component == null)
-                throw new Exception("Adding a null Component");
-            if (component.Entity != null)
-                throw new Exception("Component added that is already in an Entity");
-#endif
-            if (!Updating)
-            {
-                Components.Add(component);
-                component.Entity = Entity;
-                component.Parent = this;
-                component.Added();
-            }
-            else
-                toAdd.Add(component);
-            return component;
+            Components.HandleGraphicsReset();
         }
 
+        #region Components Shortcuts
+
+        /// <summary>
+        /// Shortcut function for adding a Component to the CompositeComponent's Components list
+        /// </summary>
+        /// <param name="component">The Component to add</param>
+        public void Add(Component component)
+        {
+            Components.Add(component);
+        }
+
+        /// <summary>
+        /// Shortcut function for removing an Component from the CompositeComponent's Components list
+        /// </summary>
+        /// <param name="component">The Component to remove</param>
+        public void Remove(Component component)
+        {
+            Components.Remove(component);
+        }
+
+        /// <summary>
+        /// Shortcut function for adding a set of Components from the CompositeComponent's Components list
+        /// </summary>
+        /// <param name="components">The Components to add</param>
+        public void Add(IEnumerable<Component> components)
+        {
+            Components.Add(components);
+        }
+
+        /// <summary>
+        /// Shortcut function for removing a set of Components from the CompositeComponent's Components list
+        /// </summary>
+        /// <param name="components">The Components to remove</param>
+        public void Remove(IEnumerable<Component> components)
+        {
+            Components.Remove(components);
+        }
+
+        /// <summary>
+        /// Shortcut function for adding a set of Components from the CompositeComponent's Components list
+        /// </summary>
+        /// <param name="components">The Components to add</param>
         public void Add(params Component[] components)
         {
-            foreach (var component in components)
-                Add(component);
+            Components.Add(components);
         }
 
-        public Component Remove(Component component)
-        {
-#if DEBUG
-            if (Components == null || component.Parent != this)
-                throw new Exception("Removing Component that is not in the Entity");
-#endif
-            if (!Updating)
-            {
-                Components.Remove(component);
-                component.Removed();
-                component.Entity = null;
-                component.Parent = null;
-                component.MarkedForRemoval = false;
-            }
-            else if (!component.MarkedForRemoval)
-            {
-                toRemove++;
-                component.MarkedForRemoval = true;
-            }
-            return component;
-        }
-
+        /// <summary>
+        /// Shortcut function for removing a set of Components from the CompositeComponent's Components list
+        /// </summary>
+        /// <param name="components">The Components to remove</param>
         public void Remove(params Component[] components)
         {
-            foreach (var component in components)
-                Remove(component);
+            Components.Remove(components);
         }
 
-        public Component Remove(int index)
+        /// <summary>
+        /// Allows you to iterate through all Components in the CompositeComponent
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<Component> GetEnumerator()
         {
-#if DEBUG
-            if (index < 0 || index >= Components.Count)
-                throw new Exception("Component index out of bounds");
-#endif
-            return Remove(Components[index]);
+            return Components.GetEnumerator();
         }
 
-        public void Remove<T>() where T : Component
+        /// <summary>
+        /// Allows you to iterate through all Components in the CompositeComponent
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            for (int i = 0; i < Components.Count; i++)
-                if (Components[i] is T)
-                    Remove(i);
-        }
-
-        public void RemoveAll()
-        {
-            if (Components != null)
-            {
-                if (!Updating)
-                {
-                    foreach (var c in Components)
-                    {
-                        c.Removed();
-                        c.Entity = null;
-                        c.Parent = null;
-                        c.MarkedForRemoval = false;
-                    }
-                    Components.Clear();
-                }
-                else
-                {
-                    foreach (var c in Components)
-                        Remove(c);
-                }
-            }
-        }
-
-        public int ComponentCount
-        {
-            get
-            {
-                if (Components == null)
-                    return 0;
-                else
-                    return Components.Count;
-            }
-        }
-
-        public bool Contains(Component component)
-        {
-            return Components != null && Components.Contains(component);
-        }
-
-        public bool Contains<T>()
-        {
-            if (Components != null)
-                for (int i = 0; i < Components.Count; i++)
-                    if (Components[i] is T)
-                        return true;
-            return false;
-        }
-
-        public T GetFirst<T>() where T : Component
-        {
-            if (Components != null)
-                for (int i = 0; i < Components.Count; i++)
-                    if (Components[i] is T)
-                        return (T)Components[i];
-
-            return null;
-        }
-
-        public List<T> GetList<T>(List<T> list) where T : Component
-        {
-            if (Components != null)
-                for (int i = 0; i < Components.Count; i++)
-                    if (Components[i] is T)
-                        list.Add((T)Components[i]);
-            return list;
-        }
-
-        public List<T> GetList<T>() where T : Component
-        {
-            return GetList<T>(new List<T>());
-        }
-
-        public void UpdateComponentList()
-        {
-            if (toRemove > 0)
-            {
-                for (int i = 0; i < Components.Count; i++)
-                {
-                    if (Components[i].MarkedForRemoval)
-                    {
-                        Component c = Components[i];
-                        Components.RemoveAt(i);
-
-                        c.Removed();
-                        c.MarkedForRemoval = false;
-                        c.Entity = null;
-                        c.Parent = null;
-
-                        toRemove--;
-                        if (toRemove <= 0)
-                            break;
-                        i--;
-                    }
-                }
-            }
-
-            if (toAdd.Count > 0)
-            {
-                foreach (var c in toAdd)
-                {
-                    Components.Add(c);
-                    c.Entity = Entity;
-                    c.Parent = this;
-                    c.Added();
-                }
-
-                toAdd.Clear();
-            }
+            return GetEnumerator();
         }
 
         #endregion

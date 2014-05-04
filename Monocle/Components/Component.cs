@@ -3,9 +3,7 @@ namespace Monocle
 {
     public class Component
     {
-        public Entity Entity { get; internal set; }
-        public IComponentHolder Parent { get; internal set; }
-        public bool MarkedForRemoval { get; internal set; }
+        public ComponentList Container { get; private set; }
         public bool Active;
         public bool Visible;
 
@@ -15,14 +13,14 @@ namespace Monocle
             Visible = visible;
         }
 
-        public virtual void Added()
+        public virtual void Added(ComponentList container)
         {
-
+            Container = container;
         }
 
-        public virtual void Removed()
+        public virtual void Removed(ComponentList container)
         {
-
+            Container = null;
         }
 
         public virtual void EntityAdded()
@@ -52,13 +50,18 @@ namespace Monocle
 
         public void RemoveSelf()
         {
-            if (Parent != null)
-                Parent.Remove(this);
+            if (Container != null)
+                Container.Remove(this);
+        }
+
+        public Entity Entity
+        {
+            get { return Container != null ? Container.Entity : null; }
         }
 
         public Scene Scene
         {
-            get { return Entity != null ? Entity.Scene : Engine.Instance.Scene; }
+            get { return Container != null ? Container.Entity.Scene : null; }
         }
     }
 }

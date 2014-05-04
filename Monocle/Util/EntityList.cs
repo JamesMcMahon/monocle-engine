@@ -16,14 +16,14 @@ namespace Monocle
         private bool unsorted;
         private Scene entityEventScene;
 
-        public EntityList()
+        internal EntityList()
         {
             entities = new List<Entity>();
             toAdd = new List<Entity>();
             toRemove = new List<Entity>();
         }
 
-        public EntityList(Scene entityEventScene)
+        internal EntityList(Scene entityEventScene)
             : this()
         {
             this.entityEventScene = entityEventScene;

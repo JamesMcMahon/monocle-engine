@@ -103,7 +103,6 @@
     <Compile Include="Components\Graphics\Text\TimerText.cs" />
     <Compile Include="Components\Graphics\TiledImage.cs" />
     <Compile Include="Components\Graphics\Tilemap.cs" />
-    <Compile Include="Components\IComponentHolder.cs" />
     <Compile Include="Components\Logic\Alarm.cs" />
     <Compile Include="Components\Logic\Coroutine.cs" />
     <Compile Include="Components\Logic\CoroutineHolder.cs" />
@@ -111,7 +110,7 @@
     <Compile Include="Components\Logic\StateMachine.cs" />
     <Compile Include="Components\Logic\Tween.cs" />
     <Compile Include="Components\Logic\Wiggler.cs" />
-    <Compile Include="EntityList.cs" />
+    <Compile Include="Util\EntityList.cs" />
     <Compile Include="Renderers\EverythingRenderer.cs" />
     <Compile Include="Renderers\Renderer.cs" />
     <Compile Include="Renderers\TagRenderer.cs" />
@@ -136,6 +135,7 @@
     <Compile Include="Util\Commands.cs" />
     <Compile Include="Util\Draw.cs" />
     <Compile Include="Util\Ease.cs" />
+    <Compile Include="Util\ComponentList.cs" />
     <Compile Include="Util\SpecEntity.cs" />
     <Compile Include="Util\Tiler.cs" />
     <Compile Include="Input\VirtualAxes.cs" />

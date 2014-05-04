@@ -88,9 +88,9 @@ namespace Monocle
                 Start();
         }
 
-        public override void Removed()
+        public override void Removed(ComponentList container)
         {
-            base.Removed();
+            base.Removed(container);
             cached.Push(this);
         }
 

@@ -12,7 +12,7 @@ namespace Monocle
         private float sineCounter;
 
         private float increment;
-        private float sineAdd;       
+        private float sineAdd;
         private Ease.Easer easer;
         private Action<float> onChange;
         private bool removeSelfOnFinish;
@@ -54,9 +54,9 @@ namespace Monocle
                 Active = false;
         }
 
-        public override void Removed()
+        public override void Removed(ComponentList container)
         {
-            base.Removed();
+            base.Removed(container);
             cache.Push(this);
         }
 

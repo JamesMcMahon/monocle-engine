@@ -43,9 +43,9 @@ namespace Monocle
             TimeActive += Engine.DeltaTime;
 
             SetEntityListLockMode(EntityList.LockModes.Locked);
-            foreach (var entity in Entities)
-                if (entity.Active)
-                    entity.Update();
+            for (int i = 0; i < Entities.Count; i++)
+                if (Entities[i].Active)
+                    Entities[i].Update();
             SetEntityListLockMode(EntityList.LockModes.Open);
         }
 
@@ -53,28 +53,28 @@ namespace Monocle
         {
             SetEntityListLockMode(EntityList.LockModes.Error);
 
-            foreach (var renderer in Renderers)
+            for (int i = 0; i < Renderers.Count; i++)
             {
-                Draw.Renderer = renderer;
-                renderer.BeforeRender(this);
+                Draw.Renderer = Renderers[i];
+                Renderers[i].BeforeRender(this);
             }
         }
 
         public virtual void Render()
         {
-            foreach (var renderer in Renderers)
+            for (int i = 0; i < Renderers.Count; i++)
             {
-                Draw.Renderer = renderer;
-                renderer.Render(this);
+                Draw.Renderer = Renderers[i];
+                Renderers[i].Render(this);
             }
         }
 
         public virtual void AfterRender()
         {
-            foreach (var renderer in Renderers)
+            for (int i = 0; i < Renderers.Count; i++)
             {
-                Draw.Renderer = renderer;
-                renderer.AfterRender(this);
+                Draw.Renderer = Renderers[i];
+                Renderers[i].AfterRender(this);
             }
 
             Draw.Renderer = null;
@@ -83,8 +83,10 @@ namespace Monocle
 
         public virtual void HandleGraphicsReset()
         {
-            foreach (var entity in Entities)
-                entity.HandleGraphicsReset();
+            SetEntityListLockMode(EntityList.LockModes.Error);
+            for (int i = 0; i < Entities.Count; i++)
+                Entities[i].HandleGraphicsReset();
+            SetEntityListLockMode(EntityList.LockModes.Open);
         }
 
         public void RenderAllEntities()
