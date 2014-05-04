@@ -23,7 +23,7 @@ namespace Monocle
         public override void Render()
         {
             Vector2 renderAt;
-            if (Entity)
+            if (Entity != null)
                 renderAt = Entity.Position + new Vector2(X, Y);
             else
                 renderAt = new Vector2(X, Y);

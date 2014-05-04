@@ -14,7 +14,7 @@ namespace Monocle
         public Scene Scene { get; internal set; }
         public List<Component> Components { get; private set; }
         public List<int> Tags { get; private set; }
-        
+
         private Collider collider;
         private HashSet<Component> toAdd;
         private int toRemove;
@@ -273,7 +273,7 @@ namespace Monocle
                 if (Collider == null)
                     throw new Exception("Can't get the CenterX of a Collider-less Entity");
 #endif
-                return Position.X + Collider.Left + Collider.Width/2f;
+                return Position.X + Collider.Left + Collider.Width / 2f;
             }
 
             set
@@ -282,7 +282,7 @@ namespace Monocle
                 if (Collider == null)
                     throw new Exception("Can't set the CenterX of a Collider-less Entity");
 #endif
-                Position.X = value - (Collider.Left + Collider.Width/2f);
+                Position.X = value - (Collider.Left + Collider.Width / 2f);
             }
         }
 
@@ -989,10 +989,5 @@ namespace Monocle
         }
 
         #endregion
-
-        static public implicit operator bool(Entity entity)
-        {
-            return entity != null;
-        }
     }
 }

@@ -60,10 +60,5 @@ namespace Monocle
         {
             get { return Entity != null ? Entity.Scene : Engine.Instance.Scene; }
         }
-
-        static public implicit operator bool(Component component)
-        {
-            return component != null;
-        }
     }
 }

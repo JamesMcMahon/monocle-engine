@@ -86,7 +86,7 @@ namespace Monocle
         public Component Remove(Component component)
         {
 #if DEBUG
-            if (Components == null || component.Entity != this)
+            if (Components == null || component.Parent != this)
                 throw new Exception("Removing Component that is not in the Entity");
 #endif
             if (!Updating)
