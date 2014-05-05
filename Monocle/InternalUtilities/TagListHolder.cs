@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Monocle
 {
-    public class TagListHolder
+    public class TagListHolder : IEnumerable<EntityList>, IEnumerable
     {
         private EntityList[] lists;
         private int highest;
 
-        public TagListHolder()
+        internal TagListHolder()
         {
             lists = new EntityList[Engine.MAX_TAG];
             highest = -1;
+        }
+
+        internal void SetLockMode(EntityList.LockModes lockMode)
+        {
+            for (int i = 0; i <= highest; i++)
+                if (lists[i] != null)
+                    lists[i].LockMode = lockMode;
         }
 
         public EntityList this[int index]
@@ -29,11 +37,18 @@ namespace Monocle
             }
         }
 
-        public void SetLockMode(EntityList.LockModes lockMode)
+        public IEnumerator<EntityList> GetEnumerator()
         {
             for (int i = 0; i <= highest; i++)
                 if (lists[i] != null)
-                    lists[i].LockMode = lockMode;
+                    yield return lists[i];
         }
+
+        IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+
     }
 }
