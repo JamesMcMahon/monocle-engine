@@ -36,6 +36,11 @@ namespace Monocle
             Components.Render();
         }
 
+        public override void DebugRender()
+        {
+            Components.DebugRender();
+        }
+
         public override void HandleGraphicsReset()
         {
             Components.HandleGraphicsReset();

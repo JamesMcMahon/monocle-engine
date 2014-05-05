@@ -170,26 +170,34 @@ namespace Monocle
         internal void Update()
         {
             LockMode = ComponentList.LockModes.Locked;
-            for (int i = 0; i < components.Count; i++)
-                if (components[i].Active)
-                    components[i].Update();
+            foreach (var component in components)
+                if (component.Active)
+                    component.Update();
             LockMode = ComponentList.LockModes.Open;
         }
 
         internal void Render()
         {
             LockMode = ComponentList.LockModes.Error;
-            for (int i = 0; i < components.Count; i++)
-                if (components[i].Visible)
-                    components[i].Render();
+            foreach (var component in components)
+                if (component.Visible)
+                    component.Render();
+            LockMode = ComponentList.LockModes.Open;
+        }
+
+        internal void DebugRender()
+        {
+            LockMode = ComponentList.LockModes.Error;
+            foreach (var component in components)
+                component.DebugRender();
             LockMode = ComponentList.LockModes.Open;
         }
 
         internal void HandleGraphicsReset()
         {
             LockMode = ComponentList.LockModes.Error;
-            for (int i = 0; i < components.Count; i++)
-                components[i].HandleGraphicsReset();
+            foreach (var component in components)
+                component.HandleGraphicsReset();
             LockMode = ComponentList.LockModes.Open;
         }
     }

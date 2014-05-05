@@ -84,40 +84,6 @@ namespace Monocle
             }
         }
 
-        public void Update()
-        {
-            LockMode = LockModes.Locked;
-            for (int i = 0; i < entities.Count; i++)
-                if (entities[i].Active)
-                    entities[i].Update();
-            LockMode = LockModes.Open;
-        }
-
-        public void Render()
-        {
-            LockMode = LockModes.Error;
-            for (int i = 0; i < entities.Count; i++)
-                if (entities[i].Visible)
-                    entities[i].Render();
-            LockMode = LockModes.Open;
-        }
-
-        public void DebugRender()
-        {
-            LockMode = LockModes.Error;
-            for (int i = 0; i < entities.Count; i++)
-                entities[i].DebugRender();
-            LockMode = LockModes.Open;
-        }
-
-        public void HandleGraphicsReset()
-        {
-            LockMode = LockModes.Error;
-            for (int i = 0; i < entities.Count; i++)
-                entities[i].HandleGraphicsReset();
-            LockMode = LockModes.Open;
-        }
-
         public void Add(Entity entity)
         {
             switch (lockMode)
@@ -221,6 +187,40 @@ namespace Monocle
         public Entity[] ToArray()
         {
             return entities.ToArray<Entity>();
+        }
+
+        internal void Update()
+        {
+            LockMode = LockModes.Locked;
+            foreach (var entity in entities)
+                if (entity.Active)
+                    entity.Update();
+            LockMode = LockModes.Open;
+        }
+
+        public void Render()
+        {
+            LockMode = LockModes.Error;
+            foreach (var entity in entities)
+                if (entity.Visible)
+                    entity.Render();
+            LockMode = LockModes.Open;
+        }
+
+        public void DebugRender()
+        {
+            LockMode = LockModes.Error;
+            foreach (var entity in entities)
+                entity.DebugRender();
+            LockMode = LockModes.Open;
+        }
+
+        internal void HandleGraphicsReset()
+        {
+            LockMode = LockModes.Error;
+            foreach (var entity in entities)
+                entity.HandleGraphicsReset();
+            LockMode = LockModes.Open;
         }
 
         #region Static

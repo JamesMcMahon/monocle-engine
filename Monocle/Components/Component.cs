@@ -43,6 +43,11 @@ namespace Monocle
 
         }
 
+        public virtual void DebugRender()
+        {
+
+        }
+
         public virtual void HandleGraphicsReset()
         {
 

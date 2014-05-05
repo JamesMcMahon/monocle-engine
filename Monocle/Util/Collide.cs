@@ -136,7 +136,7 @@ namespace Monocle
             return First(a, b, new Vector2(aX, aY));
         }
 
-        static public List<Entity> All(Collider a, List<Entity> b, List<Entity> into)
+        static public List<Entity> Into(Collider a, List<Entity> b, List<Entity> into)
         {
             foreach (var e in b)
             {
@@ -147,33 +147,33 @@ namespace Monocle
             return into;
         }
 
-        static public List<Entity> All(Collider a, List<Entity> b, List<Entity> into, Vector2 aPos)
+        static public List<Entity> Into(Collider a, List<Entity> b, List<Entity> into, Vector2 aPos)
         {
             Vector2 old = a.Position;
             a.Position = aPos;
-            List<Entity> ret = All(a, b, into);
+            List<Entity> ret = Into(a, b, into);
             a.Position = old;
             return ret;
         }
 
-        static public List<Entity> All(Collider a, List<Entity> b, List<Entity> into, float aX, float aY)
+        static public List<Entity> Into(Collider a, List<Entity> b, List<Entity> into, float aX, float aY)
         {
-            return All(a, b, into, new Vector2(aX, aY));
+            return Into(a, b, into, new Vector2(aX, aY));
         }
 
         static public List<Entity> All(Collider a, List<Entity> b)
         {
-            return All(a, b, new List<Entity>());
+            return Into(a, b, new List<Entity>());
         }
 
         static public List<Entity> All(Collider a, List<Entity> b, Vector2 aPos)
         {
-            return All(a, b, new List<Entity>(), aPos);
+            return Into(a, b, new List<Entity>(), aPos);
         }
 
         static public List<Entity> All(Collider a, List<Entity> b, float aX, float aY)
         {
-            return All(a, b, new List<Entity>(), aX, aY);
+            return Into(a, b, new List<Entity>(), aX, aY);
         }
 
         #endregion
