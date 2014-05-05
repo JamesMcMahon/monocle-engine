@@ -3,6 +3,8 @@ namespace Monocle
 {
     public abstract class VirtualInput
     {
+        public enum OverlapBehaviors { CancelOut, TakeOlder, TakeNewer };
+
         public VirtualInput()
         {
             MInput.VirtualInputs.Add(this);

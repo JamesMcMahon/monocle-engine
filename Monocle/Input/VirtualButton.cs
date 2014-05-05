@@ -5,18 +5,18 @@ namespace Monocle
 {
     public class VirtualButton : VirtualInput
     {
-        public List<VirtualButtonNode> Nodes;
+        public List<Node> Nodes;
 
         public VirtualButton()
             : base()
         {
-            Nodes = new List<VirtualButtonNode>();
+            Nodes = new List<Node>();
         }
 
-        public VirtualButton(params VirtualButtonNode[] nodes)
+        public VirtualButton(params Node[] nodes)
             : base()
         {
-            Nodes = new List<VirtualButtonNode>(nodes);
+            Nodes = new List<Node>(nodes);
         }
 
         public override void Update()
@@ -57,64 +57,64 @@ namespace Monocle
                 return false;
             }
         }
-    }
 
-    public abstract class VirtualButtonNode : VirtualInputNode
-    {
-        public abstract bool Check { get; }
-        public abstract bool Pressed { get; }
-        public abstract bool Released { get; }
-    }
-
-    public class VirtualButtonKey : VirtualButtonNode
-    {
-        public Keys Key;
-
-        public VirtualButtonKey(Keys key)
+        public abstract class Node : VirtualInputNode
         {
-            Key = key;
+            public abstract bool Check { get; }
+            public abstract bool Pressed { get; }
+            public abstract bool Released { get; }
         }
 
-        public override bool Check
+        public class KeyboardKey : Node
         {
-            get { return MInput.Keyboard.Check(Key); }
+            public Keys Key;
+
+            public KeyboardKey(Keys key)
+            {
+                Key = key;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.Keyboard.Check(Key); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.Keyboard.Pressed(Key); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.Keyboard.Released(Key); }
+            }
         }
 
-        public override bool Pressed
+        public class PadButton : Node
         {
-            get { return MInput.Keyboard.Pressed(Key); }
-        }
+            public int GamepadIndex;
+            public Buttons Button;
 
-        public override bool Released
-        {
-            get { return MInput.Keyboard.Released(Key); }
-        }
-    }
+            public PadButton(int gamepadIndex, Buttons button)
+            {
+                GamepadIndex = gamepadIndex;
+                Button = button;
+            }
 
-    public class VirtualButtonPadButton : VirtualButtonNode
-    {
-        public int GamepadIndex;
-        public Buttons Button;
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].Check(Button); }
+            }
 
-        public VirtualButtonPadButton(int gamepadIndex, Buttons button)
-        {
-            GamepadIndex = gamepadIndex;
-            Button = button;
-        }
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].Pressed(Button); }
+            }
 
-        public override bool Check
-        {
-            get { return MInput.GamePads[GamepadIndex].Check(Button); }
-        }
-
-        public override bool Pressed
-        {
-            get { return MInput.GamePads[GamepadIndex].Pressed(Button); }
-        }
-
-        public override bool Released
-        {
-            get { return MInput.GamePads[GamepadIndex].Released(Button); }
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].Released(Button); }
+            }
         }
     }
 }

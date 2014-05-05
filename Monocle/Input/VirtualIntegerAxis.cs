@@ -5,18 +5,18 @@ namespace Monocle
 {
     public class VirtualIntegerAxis : VirtualInput
     {
-        public List<VirtualAxisNode> Nodes;
+        public List<VirtualAxis.Node> Nodes;
 
         public VirtualIntegerAxis()
             : base()
         {
-            Nodes = new List<VirtualAxisNode>();
+            Nodes = new List<VirtualAxis.Node>();
         }
 
-        public VirtualIntegerAxis(params VirtualAxisNode[] nodes)
+        public VirtualIntegerAxis(params VirtualAxis.Node[] nodes)
             : base()
         {
-            Nodes = new List<VirtualAxisNode>(nodes);
+            Nodes = new List<VirtualAxis.Node>(nodes);
         }
 
         public override void Update()
