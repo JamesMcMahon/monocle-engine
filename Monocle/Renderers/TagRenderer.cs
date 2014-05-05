@@ -28,7 +28,7 @@ namespace Monocle
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix);
 
             scene.TagLists[Tag].Render();
-            if (Engine.Instance.Commands.Open)
+            if (Engine.Commands.Open)
                 scene.TagLists[Tag].DebugRender();
 
             Draw.SpriteBatch.End();

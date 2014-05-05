@@ -512,8 +512,8 @@ namespace Monocle
 
         internal void Render()
         {
-            int screenWidth = (int)Engine.Instance.Width;
-            int screenHeight = (int)Engine.Instance.Height;
+            int screenWidth = (int)Engine.Width;
+            int screenHeight = (int)Engine.Height;
 
             Draw.SpriteBatch.Begin();
 

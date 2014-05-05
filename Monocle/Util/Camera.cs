@@ -20,8 +20,8 @@ namespace Monocle
         public Camera()
         {
             Viewport = new Viewport();
-            Viewport.Width = Engine.Instance.Width;
-            Viewport.Height = Engine.Instance.Height;
+            Viewport.Width = Engine.Width;
+            Viewport.Height = Engine.Height;
             UpdateMatrices();
         }
 

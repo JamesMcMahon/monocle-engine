@@ -11,12 +11,11 @@ namespace Monocle
         static public Engine Instance { get; private set; }
         static public float DeltaTime { get; private set; }
         static public float TimeRate = 1f;
-
-        public GraphicsDeviceManager Graphics { get; private set; }
-        public Commands Commands { get; private set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public Color ClearColor;
+        static public GraphicsDeviceManager Graphics { get; private set; }
+        static public Commands Commands { get; private set; }
+        static public int Width { get; private set; }
+        static public int Height { get; private set; }
+        static public Color ClearColor;
 
         private Scene scene;
         private Scene nextScene;
@@ -47,6 +46,14 @@ namespace Monocle
             IsFixedTimeStep = false;
         }
 
+        private void OnGraphicsReset(object sender, EventArgs e)
+        {
+            if (scene != null)
+                scene.HandleGraphicsReset();
+            if (nextScene != null)
+                nextScene.HandleGraphicsReset();
+        }
+
         protected override void Initialize()
         {
             base.Initialize();
@@ -61,14 +68,6 @@ namespace Monocle
 
             Content.RootDirectory = @"Content\";
             Monocle.Draw.Initialize(GraphicsDevice);
-        }
-
-        private void OnGraphicsReset(object sender, EventArgs e)
-        {
-            if (scene != null)
-                scene.HandleGraphicsReset();
-            if (nextScene != null)
-                nextScene.HandleGraphicsReset();
         }
 
         protected override void Update(GameTime gameTime)
@@ -128,7 +127,11 @@ namespace Monocle
 #endif
         }
 
-        public virtual void RenderCore()
+        /// <summary>
+        /// Override if you want to change the core rendering functionality of Monocle Engine.
+        /// By default, this simply sets the render target to null, clears the screen, and renders the current Scene
+        /// </summary>
+        protected virtual void RenderCore()
         {
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(ClearColor);
@@ -137,12 +140,18 @@ namespace Monocle
                 scene.Render();
         }
 
+        /// <summary>
+        /// Called after a Scene ends, before the next Scene begins
+        /// </summary>
         protected virtual void OnSceneTransition()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
 
+        /// <summary>
+        /// The currently active Scene. Note that if set, the Scene will not actually change until the end of the Update
+        /// </summary>
         static public Scene Scene
         {
             get { return Instance.scene; }

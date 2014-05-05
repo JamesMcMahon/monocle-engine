@@ -28,7 +28,7 @@ namespace Monocle
         {
             if (Engine.Instance.IsActive)
             {
-                if (Engine.Instance.Commands.Open)
+                if (Engine.Commands.Open)
                 {
                     Keyboard.UpdateNull();
                     Mouse.UpdateNull();
