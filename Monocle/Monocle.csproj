@@ -70,12 +70,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\Audio.cs" />
-    <Compile Include="Audio\AudioLibrary.cs" />
-    <Compile Include="Audio\SFX.cs" />
-    <Compile Include="Audio\SFXInstanced.cs" />
-    <Compile Include="Audio\SFXLooped.cs" />
-    <Compile Include="Audio\SFXVaried.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />

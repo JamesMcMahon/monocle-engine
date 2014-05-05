@@ -75,7 +75,10 @@ namespace Monocle
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds * TimeRate;
 
+            //Update input
             MInput.Update();
+
+            //Update current scene
             if (scene != null)
                 scene.Update();
 
@@ -85,6 +88,7 @@ namespace Monocle
             else if (Commands.Enabled)
                 Commands.UpdateClosed();
 
+            //Changing scenes
             if (scene != nextScene)
             {
                 if (scene != null)
@@ -133,16 +137,16 @@ namespace Monocle
                 scene.Render();
         }
 
-        public Scene Scene
-        {
-            get { return scene; }
-            set { nextScene = value; }
-        }
-
         protected virtual void OnSceneTransition()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+        static public Scene Scene
+        {
+            get { return Instance.scene; }
+            set { Instance.nextScene = value; }
         }
     }
 }

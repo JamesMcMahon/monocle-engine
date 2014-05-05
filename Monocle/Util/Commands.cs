@@ -51,9 +51,9 @@ namespace Monocle
 
                     int arg = ArgInt(0, -1);
                     if (arg == -1)
-                        Log(Engine.Instance.Scene.Entities.Count.ToString());
+                        Log(Engine.Scene.Entities.Count.ToString());
                     else
-                        Log(Engine.Instance.Scene.TagLists[arg].Count.ToString());
+                        Log(Engine.Scene.TagLists[arg].Count.ToString());
 
                 },
                 "[tagIndex]",
