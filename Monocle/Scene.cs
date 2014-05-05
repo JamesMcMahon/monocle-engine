@@ -12,6 +12,7 @@ namespace Monocle
         public EntityList Entities { get; private set; }
         public EntityList[] TagLists { get; private set; }
         public List<Renderer> Renderers { get; private set; }
+        public Entity HelperEntity { get; private set; }
 
         private Dictionary<int, float> actualDepthLookup;
 
@@ -22,6 +23,9 @@ namespace Monocle
             Renderers = new List<Renderer>();
 
             actualDepthLookup = new Dictionary<int, float>();
+
+            HelperEntity = new Entity();
+            Entities.Add(HelperEntity);
         }
 
         public virtual void Begin()
