@@ -46,17 +46,13 @@ namespace Monocle
         {
             TimeActive += Engine.DeltaTime;
 
-            SetEntityListLockMode(EntityList.LockModes.Locked);
-            for (int i = 0; i < Entities.Count; i++)
-                if (Entities[i].Active)
-                    Entities[i].Update();
-            SetEntityListLockMode(EntityList.LockModes.Open);
+            TagLists.SetLockMode(EntityList.LockModes.Locked);
+            Entities.Update();
+            TagLists.SetLockMode(EntityList.LockModes.Open);
         }
 
         public virtual void BeforeRender()
         {
-            SetEntityListLockMode(EntityList.LockModes.Error);
-
             for (int i = 0; i < Renderers.Count; i++)
             {
                 Draw.Renderer = Renderers[i];
@@ -82,29 +78,11 @@ namespace Monocle
             }
 
             Draw.Renderer = null;
-            SetEntityListLockMode(EntityList.LockModes.Open);
         }
 
         public virtual void HandleGraphicsReset()
         {
-            SetEntityListLockMode(EntityList.LockModes.Error);
-            for (int i = 0; i < Entities.Count; i++)
-                Entities[i].HandleGraphicsReset();
-            SetEntityListLockMode(EntityList.LockModes.Open);
-        }
-
-        public void RenderAllEntities()
-        {
-            foreach (var entity in Entities)
-                if (entity.Visible)
-                    entity.Render();
-        }
-
-        public void RenderTaggedEntities(int tag)
-        {
-            foreach (var entity in TagLists[tag])
-                if (entity.Visible)
-                    entity.Render();
+            Entities.HandleGraphicsReset();
         }
 
         /// <summary>
@@ -278,12 +256,6 @@ namespace Monocle
         #endregion
 
         #region Utils
-
-        private void SetEntityListLockMode(EntityList.LockModes lockMode)
-        {
-            Entities.LockMode = lockMode;
-            TagLists.SetLockMode(lockMode);
-        }
 
         internal void SetActualDepth(Entity entity)
         {

@@ -27,13 +27,9 @@ namespace Monocle
         {
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix);
 
-            foreach (var entity in scene.TagLists[Tag])
-                if (entity.Visible)
-                    entity.Render();
-
+            scene.TagLists[Tag].Render();
             if (Engine.Instance.Commands.Open)
-                foreach (var entity in scene.Entities)
-                    entity.DebugRender();
+                scene.TagLists[Tag].DebugRender();
 
             Draw.SpriteBatch.End();
         }
