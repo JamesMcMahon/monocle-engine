@@ -179,14 +179,14 @@ namespace Monocle
 
         public void Add(params Entity[] entities)
         {
-            foreach (var entity in entities)
-                Add(entity);
+            for (int i = 0; i < entities.Length; i++)
+                Add(entities[i]);
         }
 
         public void Remove(params Entity[] entities)
         {
-            foreach (var entity in entities)
-                Remove(entity);
+            for (int i = 0; i < entities.Length; i++)
+                Remove(entities[i]);
         }
 
         public int Count
