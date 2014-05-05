@@ -10,7 +10,7 @@ namespace Monocle
         public float TimeActive { get; private set; }
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
-        public EntityList[] TagLists { get; private set; }
+        public TagListHolder TagLists { get; private set; }
         public List<Renderer> Renderers { get; private set; }
         public Entity HelperEntity { get; private set; }
 
@@ -19,7 +19,7 @@ namespace Monocle
         public Scene()
         {
             Entities = new EntityList(this);
-            TagLists = new EntityList[Engine.MAX_TAG];
+            TagLists = new TagListHolder();
             Renderers = new List<Renderer>();
 
             actualDepthLookup = new Dictionary<int, float>();
@@ -121,71 +121,89 @@ namespace Monocle
 
         public bool CollideCheck(Vector2 point, int tag)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(point))
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(point))
                     return true;
             return false;
         }
 
         public bool CollideCheck(Vector2 from, Vector2 to, int tag)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideLine(from, to))
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
                     return true;
             return false;
         }
 
         public bool CollideCheck(Rectangle rect, int tag)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(rect))
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(rect))
                     return true;
             return false;
         }
 
         public Entity CollideFirst(Vector2 point, int tag)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(point))
-                    return e;
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(point))
+                    return list[i];
             return null;
         }
 
         public Entity CollideFirst(Vector2 from, Vector2 to, int tag)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideLine(from, to))
-                    return e;
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    return list[i];
             return null;
         }
 
         public Entity CollideFirst(Rectangle rect, int tag)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(rect))
-                    return e;
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(rect))
+                    return list[i];
             return null;
         }
 
-        public void CollideInto(Vector2 point, int tag, List<Entity> list)
+        public void CollideInto(Vector2 point, int tag, List<Entity> hits)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(point))
-                    list.Add(e);
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(point))
+                    hits.Add(list[i]);
         }
 
-        public void CollideInto(Vector2 from, Vector2 to, int tag, List<Entity> list)
+        public void CollideInto(Vector2 from, Vector2 to, int tag, List<Entity> hits)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideLine(from, to))
-                    list.Add(e);
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    hits.Add(list[i]);
         }
 
-        public void CollideInto(Rectangle rect, int tag, List<Entity> list)
+        public void CollideInto(Rectangle rect, int tag, List<Entity> hits)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(rect))
-                    list.Add(e);
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(rect))
+                    list.Add(list[i]);
         }
 
         public List<Entity> CollideAll(Vector2 point, int tag)
@@ -211,26 +229,32 @@ namespace Monocle
 
         public void CollideDo(Vector2 point, int tag, Action<Entity> action)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(point))
-                    action(e);
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(point))
+                    action(list[i]);
         }
 
         public void CollideDo(Vector2 from, Vector2 to, int tag, Action<Entity> action)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideLine(from, to))
-                    action(e);
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    action(list[i]);
         }
 
         public void CollideDo(Rectangle rect, int tag, Action<Entity> action)
         {
-            foreach (var e in TagLists[(int)tag])
-                if (e.Collidable && e.CollideCheck(rect))
-                    action(e);
+            var list = TagLists[(int)tag];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideCheck(rect))
+                    action(list[i]);
         }
 
-        public Vector2 LineCheck(Vector2 from, Vector2 to, int tag, float precision)
+        public Vector2 LineWalkCheck(Vector2 from, Vector2 to, int tag, float precision)
         {
             Vector2 add = to - from;
             add.Normalize();
@@ -258,9 +282,7 @@ namespace Monocle
         private void SetEntityListLockMode(EntityList.LockModes lockMode)
         {
             Entities.LockMode = lockMode;
-            foreach (var list in TagLists)
-                if (list != null)
-                    list.LockMode = lockMode;
+            TagLists.SetLockMode(lockMode);
         }
 
         internal void SetActualDepth(Entity entity)
@@ -282,8 +304,6 @@ namespace Monocle
 
         internal void TagEntity(int tag, Entity entity)
         {
-            if (TagLists[tag] == null)
-                TagLists[tag] = new EntityList();
             TagLists[tag].Add(entity);
         }
 
@@ -300,8 +320,6 @@ namespace Monocle
         {
             get
             {
-                if (TagLists[(int)tag] == null)
-                    TagLists[(int)tag] = new EntityList();
                 return TagLists[(int)tag];
             }
         }

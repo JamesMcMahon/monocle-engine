@@ -110,7 +110,7 @@
     <Compile Include="Components\Logic\StateMachine.cs" />
     <Compile Include="Components\Logic\Tween.cs" />
     <Compile Include="Components\Logic\Wiggler.cs" />
-    <Compile Include="Util\EntityList.cs" />
+    <Compile Include="InternalUtilities\EntityList.cs" />
     <Compile Include="Renderers\EverythingRenderer.cs" />
     <Compile Include="Renderers\Renderer.cs" />
     <Compile Include="Renderers\TagRenderer.cs" />
@@ -135,8 +135,9 @@
     <Compile Include="Util\Commands.cs" />
     <Compile Include="Util\Draw.cs" />
     <Compile Include="Util\Ease.cs" />
-    <Compile Include="Util\ComponentList.cs" />
+    <Compile Include="InternalUtilities\ComponentList.cs" />
     <Compile Include="Util\SpecEntity.cs" />
+    <Compile Include="InternalUtilities\TagListHolder.cs" />
     <Compile Include="Util\Tiler.cs" />
     <Compile Include="Input\VirtualAxes.cs" />
     <Compile Include="Input\VirtualButton.cs" />

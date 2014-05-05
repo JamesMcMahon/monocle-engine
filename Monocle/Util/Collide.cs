@@ -10,11 +10,10 @@ namespace Monocle
 
         static public bool Check(Entity a, Entity b)
         {
-#if DEBUG
             if (a.Collider == null)
-                throw new Exception("The Entity does not have a collider!");
-#endif
-            return a != b && b.Collidable && a.Collider.Collide(b);
+                return false;
+            else
+                return a != b && b.Collidable && a.Collider.Collide(b);
         }
 
         static public bool Check(Entity a, Entity b, Vector2 aPos)
@@ -37,11 +36,10 @@ namespace Monocle
 
         static public bool Check(Entity a, Vector2 point)
         {
-#if DEBUG
             if (a.Collider == null)
-                throw new Exception("The Entity does not have a collider!");
-#endif
-            return a.Collider.Collide(point);
+                return false;
+            else
+                return a.Collider.Collide(point);
         }
 
         static public bool Check(Entity a, Vector2 point, Vector2 aPos)
@@ -64,11 +62,10 @@ namespace Monocle
 
         static public bool Check(Entity a, Rectangle rect)
         {
-#if DEBUG
             if (a.Collider == null)
-                throw new Exception("The Entity does not have a collider!");
-#endif
-            return a.Collider.Collide(rect);
+                return false;
+            else
+                return a.Collider.Collide(rect);
         }
 
         static public bool Check(Entity a, Rectangle rect, Vector2 aPos)
