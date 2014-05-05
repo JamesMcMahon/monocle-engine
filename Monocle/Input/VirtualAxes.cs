@@ -93,6 +93,36 @@ namespace Monocle
             }
         }
 
+        public class PadDpad : Node
+        {
+            public int GamepadIndex;
+
+            public PadDpad(int gamepadIndex)
+            {
+                GamepadIndex = gamepadIndex;
+            }
+
+            public override Vector2 Value
+            {
+                get
+                {
+                    Vector2 value = Vector2.Zero;
+
+                    if (MInput.GamePads[GamepadIndex].DPadRightCheck)
+                        value.X = 1f;
+                    else if (MInput.GamePads[GamepadIndex].DPadLeftCheck)
+                        value.X = -1f;
+
+                    if (MInput.GamePads[GamepadIndex].DPadDownCheck)
+                        value.Y = 1f;
+                    else if (MInput.GamePads[GamepadIndex].DPadUpCheck)
+                        value.Y = -1f;
+
+                    return value;
+                }
+            }
+        }
+
         public class KeyboardKeys : Node
         {
             public OverlapBehaviors OverlapBehavior;

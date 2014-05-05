@@ -116,5 +116,59 @@ namespace Monocle
                 get { return MInput.GamePads[GamepadIndex].Released(Button); }
             }
         }
+
+        public class PadLeftTrigger : Node
+        {
+            public int GamepadIndex;
+            public float Threshold;
+
+            public PadLeftTrigger(int gamepadIndex, float threshold)
+            {
+                GamepadIndex = gamepadIndex;
+                Threshold = threshold;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftTriggerCheck(Threshold); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftTriggerPressed(Threshold); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftTriggerReleased(Threshold); }
+            }
+        }
+
+        public class PadRightTrigger : Node
+        {
+            public int GamepadIndex;
+            public float Threshold;
+
+            public PadRightTrigger(int gamepadIndex, float threshold)
+            {
+                GamepadIndex = gamepadIndex;
+                Threshold = threshold;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].RightTriggerCheck(Threshold); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].RightTriggerPressed(Threshold); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].RightTriggerReleased(Threshold); }
+            }
+        }
     }
 }
