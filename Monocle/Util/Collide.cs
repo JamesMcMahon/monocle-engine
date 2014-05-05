@@ -88,9 +88,11 @@ namespace Monocle
 
         static public bool Check(Collider a, List<Entity> b)
         {
-            for (int i = 0; i < b.Count; i++)
-                if (a.Collide(b[i]))
+            foreach (var e in b)
+            {
+                if (a.Collide(e))
                     return true;
+            }
 
             return false;
         }
@@ -111,9 +113,11 @@ namespace Monocle
 
         static public Entity First(Collider a, List<Entity> b)
         {
-            for (int i = 0; i < b.Count; i++)
-                if (a.Collide(b[i]))
-                    return b[i];
+            foreach (var e in b)
+            {
+                if (a.Collide(e))
+                    return e;
+            }
 
             return null;
         }
@@ -132,45 +136,44 @@ namespace Monocle
             return First(a, b, new Vector2(aX, aY));
         }
 
-        static public void Into(Collider a, List<Entity> b, List<Entity> into)
+        static public List<Entity> All(Collider a, List<Entity> b, List<Entity> into)
         {
-            for (int i = 0; i < b.Count; i++)
-                if (a.Collide(b[i]))
-                    into.Add(b[i]);
+            foreach (var e in b)
+            {
+                if (a.Collide(e))
+                    into.Add(e);
+            }
+
+            return into;
         }
 
-        static public void Into(Collider a, List<Entity> b, List<Entity> into, Vector2 aPos)
+        static public List<Entity> All(Collider a, List<Entity> b, List<Entity> into, Vector2 aPos)
         {
             Vector2 old = a.Position;
             a.Position = aPos;
-            Into(a, b, into);
+            List<Entity> ret = All(a, b, into);
             a.Position = old;
+            return ret;
         }
 
-        static public void Into(Collider a, List<Entity> b, List<Entity> into, float aX, float aY)
+        static public List<Entity> All(Collider a, List<Entity> b, List<Entity> into, float aX, float aY)
         {
-            Into(a, b, into, new Vector2(aX, aY));
+            return All(a, b, into, new Vector2(aX, aY));
         }
 
         static public List<Entity> All(Collider a, List<Entity> b)
         {
-            var list = new List<Entity>();
-            Into(a, b, list);
-            return list;
+            return All(a, b, new List<Entity>());
         }
 
         static public List<Entity> All(Collider a, List<Entity> b, Vector2 aPos)
         {
-            var list = new List<Entity>();
-            Into(a, b, list, aPos);
-            return list;
+            return All(a, b, new List<Entity>(), aPos);
         }
 
         static public List<Entity> All(Collider a, List<Entity> b, float aX, float aY)
         {
-            var list = new List<Entity>();
-            Into(a, b, list, aX, aY);
-            return list;
+            return All(a, b, new List<Entity>(), aX, aY);
         }
 
         #endregion
