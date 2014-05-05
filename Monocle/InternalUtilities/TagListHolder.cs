@@ -48,7 +48,5 @@ namespace Monocle
         {
             return GetEnumerator();
         }
-
-
     }
 }

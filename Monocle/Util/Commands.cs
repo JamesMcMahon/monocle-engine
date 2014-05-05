@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Monocle
 {
@@ -10,57 +11,89 @@ namespace Monocle
         private const float UNDERSCORE_TIME = .5f;
         private const float REPEAT_DELAY = .5f;
         private const float REPEAT_EVERY = 1 / 30f;
+        private const float OPACITY = .65f;
 
-        static private Commands Instance;
         static private string[] Args;
+
+        public bool Enabled = true;
+        public bool Open { get; internal set; }
+        public Action[] FunctionKeyActions { get; private set; }
+
+        private Dictionary<string, CommandInfo> commands;
+        private List<string> sorted;
 
         private KeyboardState oldState;
         private KeyboardState currentState;
-
         private string currentText = "";
         private List<string> drawCommands;
-
         private bool underscore;
         private float underscoreCounter;
-
         private List<string> commandHistory;
         private int seekIndex = -1;
-
         private int tabIndex = -1;
         private string tabSearch;
-
         private float repeatCounter = 0;
         private Keys? repeatKey = null;
-
-        private Dictionary<string, Action> commands;
-        private List<string> sorted;
-
-        public bool Open;
-        public float Opacity = .8f;
         private bool canOpen;
 
         public Commands()
         {
-            Instance = this;
-
             commandHistory = new List<string>();
             drawCommands = new List<string>();
-            commands = new Dictionary<string, Action>();
+            commands = new Dictionary<string, CommandInfo>();
             sorted = new List<string>();
 
-            RegisterCommand("clear", () => { Clear(); });
-            RegisterCommand("exit", () => { Engine.Instance.Exit(); });
-            RegisterCommand("opacity", () =>
-            {
-                if (ArgAmount == 0)
-                    Log("Provide a float (0-1.0) to set console opacity (eg: 'opacity 0.8').");
-                else
-                    Opacity = ArgFloat(0, .8f);
-            });
-            RegisterCommand("close", () =>
-            {
-                Open = false;
-            });
+            RegisterCommand("clear", () => { Clear(); }, null, "Clears the terminal. By default, you can also press F1 with the terminal open to clear it");
+            RegisterCommand("exit", () => { Engine.Instance.Exit(); }, null, "Exits the game");
+
+            RegisterCommand("count", () =>
+                {
+
+                    int arg = ArgInt(0, -1);
+                    if (arg == -1)
+                        Log(Engine.Instance.Scene.Entities.Count.ToString());
+                    else
+                        Log(Engine.Instance.Scene.TagLists[arg].Count.ToString());
+
+                },
+                "[tagIndex]",
+                "Prints amount of Entities in the current Scene. Pass a tagIndex to count only Entities with that tag");
+
+            RegisterCommand("help", () =>
+                {
+                    string arg = ArgString(0);
+                    if (sorted.Contains(arg))
+                    {
+                        StringBuilder str = new StringBuilder();
+
+                        str.Append(arg);
+
+                        if (commands[arg].HelpUsage != null)
+                        {
+                            str.Append(" ");
+                            str.Append(commands[arg].HelpUsage);
+                        }
+
+                        str.Append(" : ");
+
+                        if (commands[arg].HelpAbout == null)
+                            str.Append("No help info set");
+                        else
+                            str.Append(commands[arg].HelpAbout);
+                        Log(str.ToString());
+                    }
+                    else
+                    {
+                        StringBuilder str = new StringBuilder();
+                        str.Append("Commands list: ");
+                        str.Append(string.Join(", ", sorted));
+                        Log(str.ToString());
+                        Log("Type 'help command' for more info on that command!");
+                    }
+                }, null, "Shows usage for the given command");
+
+            FunctionKeyActions = new Action[12];
+            FunctionKeyActions[0] = Clear;
         }
 
         private void EnterCommand()
@@ -78,7 +111,7 @@ namespace Monocle
             ExecuteCommand(data[0].ToLower(), args);
         }
 
-        public void RegisterCommand(string command, Action action)
+        public void RegisterCommand(string command, Action action, string helpUsage = null, string helpAbout = null)
         {
             command = command.ToLower();
 
@@ -92,7 +125,7 @@ namespace Monocle
             }
             else
             {
-                commands[command] = action;
+                commands[command] = new CommandInfo(action, helpUsage, helpAbout);
                 if (!sorted.Contains(command))
                 {
                     int i;
@@ -109,9 +142,18 @@ namespace Monocle
             Args = args;
 
             if (commands.ContainsKey(command))
-                commands[command]();
+            {
+                try
+                {
+                    commands[command].Action();
+                }
+                catch (Exception e)
+                {
+                    Log("'" + e.GetType() + "' encountered in command!");
+                }
+            }
             else
-                Log("Command '" + command + "' not found");
+                Log("Command '" + command + "' not found! Type 'help' for list of commands");
         }
 
         public void Clear()
@@ -119,8 +161,10 @@ namespace Monocle
             drawCommands.Clear();
         }
 
-        public void Log(string str)
+        public void Log(object obj)
         {
+            string str = obj.ToString();
+
             //Split the string if you overlow horizontally
             int maxWidth = Engine.Instance.Window.ClientBounds.Width - 40;
             while (Draw.DefaultFont.MeasureString(str).X > maxWidth)
@@ -150,11 +194,6 @@ namespace Monocle
             int maxCommands = (Engine.Instance.Window.ClientBounds.Height - 100) / 30;
             while (drawCommands.Count > maxCommands)
                 drawCommands.RemoveAt(drawCommands.Count - 1);
-        }
-
-        static public void Trace(Object obj)
-        {
-            Instance.Log(obj.ToString());
         }
 
         internal void UpdateClosed()
@@ -412,6 +451,34 @@ namespace Monocle
                         currentText = sorted[tabIndex];
                     break;
 
+                case Keys.F1:
+                case Keys.F2:
+                case Keys.F3:
+                case Keys.F4:
+                case Keys.F5:
+                case Keys.F6:
+                case Keys.F7:
+                case Keys.F8:
+                case Keys.F9:
+                case Keys.F10:
+                case Keys.F11:
+                case Keys.F12:
+                    {
+                        int num = (int)(key - Keys.F1);
+                        if (FunctionKeyActions[num] != null)
+                        {
+                            try
+                            {
+                                FunctionKeyActions[num]();
+                            }
+                            catch (Exception e)
+                            {
+                                Log("'" + e.GetType() + "' encountered in command!");
+                            }
+                        }
+                    }
+                    break;
+
                 case Keys.Enter:
                     if (currentText.Length > 0)
                         EnterCommand();
@@ -450,7 +517,7 @@ namespace Monocle
 
             Draw.SpriteBatch.Begin();
 
-            Draw.Rect(10, screenHeight - 50, screenWidth - 20, 40, Color.Black * Opacity);
+            Draw.Rect(10, screenHeight - 50, screenWidth - 20, 40, Color.Black * OPACITY);
             if (underscore)
                 Draw.SpriteBatch.DrawString(Draw.DefaultFont, ">" + currentText + "_", new Vector2(20, screenHeight - 42), Color.White);
             else
@@ -459,7 +526,7 @@ namespace Monocle
             if (drawCommands.Count > 0)
             {
                 int height = 10 + (30 * drawCommands.Count);
-                Draw.Rect(10, screenHeight - height - 60, screenWidth - 20, height, Color.Black * Opacity);
+                Draw.Rect(10, screenHeight - height - 60, screenWidth - 20, height, Color.Black * OPACITY);
                 for (int i = 0; i < drawCommands.Count; i++)
                     Draw.SpriteBatch.DrawString(Draw.DefaultFont, drawCommands[i], new Vector2(20, screenHeight - 92 - (30 * i)), drawCommands[i].IndexOf(">") == 0 ? Color.Yellow : Color.White);
             }
@@ -526,6 +593,20 @@ namespace Monocle
         }
 
         #endregion
+
+        private struct CommandInfo
+        {
+            public Action Action;
+            public string HelpUsage;
+            public string HelpAbout;
+
+            public CommandInfo(Action action, string helpUsage, string helpAbout)
+            {
+                Action = action;
+                HelpUsage = helpUsage;
+                HelpAbout = helpAbout;
+            }
+        }
     }
 }
 
