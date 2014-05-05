@@ -20,7 +20,6 @@ namespace Monocle
         private Scene scene;
         private Scene nextScene;
         private string windowTitle;
-
 #if DEBUG
         private TimeSpan counterElapsed = TimeSpan.Zero;
         private int counterFrames = 0;
