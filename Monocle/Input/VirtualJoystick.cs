@@ -4,19 +4,19 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
-    public class VirtualAxes : VirtualInput
+    public class VirtualJoystick : VirtualInput
     {
         public List<Node> Nodes;
         public bool Normalized;
 
-        public VirtualAxes(bool normalized)
+        public VirtualJoystick(bool normalized)
             : base()
         {
             Nodes = new List<Node>();
             Normalized = normalized;
         }
 
-        public VirtualAxes(bool normalized, params Node[] nodes)
+        public VirtualJoystick(bool normalized, params Node[] nodes)
             : base()
         {
             Nodes = new List<Node>(nodes);
