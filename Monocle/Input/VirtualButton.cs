@@ -6,23 +6,47 @@ namespace Monocle
     public class VirtualButton : VirtualInput
     {
         public List<Node> Nodes;
+        public float BufferTime;
 
-        public VirtualButton()
+        private float bufferCounter;
+
+        public VirtualButton(float bufferTime)
             : base()
         {
             Nodes = new List<Node>();
+            BufferTime = bufferTime;
         }
 
-        public VirtualButton(params Node[] nodes)
+        public VirtualButton()
+            : this(0)
+        {
+
+        }
+
+        public VirtualButton(float bufferTime, params Node[] nodes)
             : base()
         {
             Nodes = new List<Node>(nodes);
+            BufferTime = bufferTime;
+        }
+
+        public VirtualButton(params Node[] nodes)
+            : this(0, nodes)
+        {
+
         }
 
         public override void Update()
         {
+            if (bufferCounter > 0)
+                bufferCounter -= Engine.DeltaTime;
+
             foreach (var node in Nodes)
+            {
                 node.Update();
+                if (node.Pressed)
+                    bufferCounter = BufferTime;
+            }
         }
 
         public bool Check
@@ -40,6 +64,9 @@ namespace Monocle
         {
             get
             {
+                if (bufferCounter > 0)
+                    return true;
+
                 foreach (var node in Nodes)
                     if (node.Pressed)
                         return true;
@@ -56,6 +83,11 @@ namespace Monocle
                         return true;
                 return false;
             }
+        }
+
+        public void ConsumeBuffer()
+        {
+            BufferTime = 0;
         }
 
         public abstract class Node : VirtualInputNode

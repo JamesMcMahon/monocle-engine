@@ -95,6 +95,16 @@ namespace Monocle
             return (int)((TimeActive - Engine.DeltaTime) / interval) < (int)(TimeActive / interval);
         }
 
+        /// <summary>
+        /// Returns whether the Scene timer has passed the given time interval since the last frame. Ex: given 2.0f, this will return true once every 2 seconds
+        /// </summary>
+        /// <param name="interval">The time interval to check for</param>
+        /// <returns></returns>
+        public bool OnInterval(float interval, float offset)
+        {
+            return Math.Floor((TimeActive - offset - Engine.DeltaTime) / interval) < Math.Floor((TimeActive - offset) / interval);
+        }
+
         #region Collisions
 
         public bool CollideCheck(Vector2 point, int tag)

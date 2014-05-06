@@ -41,6 +41,8 @@ namespace Monocle
             Graphics.PreferredBackBufferWidth = Width;
             Graphics.PreferredBackBufferHeight = Height;
 
+            Content.RootDirectory = @"Content\";
+
             IsMouseVisible = false;
             IsFixedTimeStep = false;
         }
@@ -65,7 +67,6 @@ namespace Monocle
         {
             base.LoadContent();
 
-            Content.RootDirectory = @"Content\";
             Monocle.Draw.Initialize(GraphicsDevice);
         }
 
