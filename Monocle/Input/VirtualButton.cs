@@ -38,15 +38,23 @@ namespace Monocle
 
         public override void Update()
         {
-            if (bufferCounter > 0)
-                bufferCounter -= Engine.DeltaTime;
+            bufferCounter -= Engine.DeltaTime;
 
+            bool check = false;
             foreach (var node in Nodes)
             {
                 node.Update();
                 if (node.Pressed)
+                {
                     bufferCounter = BufferTime;
+                    check = true;
+                }
+                else if (node.Check)
+                    check = true;
             }
+
+            if (!check)
+                bufferCounter = 0;
         }
 
         public bool Check
@@ -87,7 +95,7 @@ namespace Monocle
 
         public void ConsumeBuffer()
         {
-            BufferTime = 0;
+            bufferCounter = 0;
         }
 
         public abstract class Node : VirtualInputNode
