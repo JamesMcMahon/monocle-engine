@@ -170,5 +170,59 @@ namespace Monocle
                 get { return MInput.GamePads[GamepadIndex].RightTriggerReleased(Threshold); }
             }
         }
+
+        public class MouseLeftButton : Node
+        {
+            public override bool Check
+            {
+                get { return MInput.Mouse.CheckLeftButton; }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.Mouse.PressedLeftButton; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.Mouse.ReleasedLeftButton; }
+            }
+        }
+
+        public class MouseRightButton : Node
+        {
+            public override bool Check
+            {
+                get { return MInput.Mouse.CheckRightButton; }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.Mouse.PressedRightButton; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.Mouse.ReleasedRightButton; }
+            }
+        }
+
+        public class MouseMiddleButton : Node
+        {
+            public override bool Check
+            {
+                get { return MInput.Mouse.CheckMiddleButton; }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.Mouse.PressedMiddleButton; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.Mouse.ReleasedMiddleButton; }
+            }
+        }
     }
 }
