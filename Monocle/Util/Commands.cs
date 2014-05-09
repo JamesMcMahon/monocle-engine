@@ -93,7 +93,6 @@ namespace Monocle
                 }, null, "Shows usage for the given command");
 
             FunctionKeyActions = new Action[12];
-            FunctionKeyActions[0] = Clear;
         }
 
         private void EnterCommand()
@@ -205,6 +204,10 @@ namespace Monocle
                 Open = true;
                 currentState = Keyboard.GetState();
             }
+
+            for (int i = 0; i < FunctionKeyActions.Length; i++)
+                if (MInput.Keyboard.Pressed((Keys)(Keys.F1 + i)))
+                    ExecuteFunctionKeyAction(i);
         }
 
         internal void UpdateOpen()
@@ -463,20 +466,7 @@ namespace Monocle
                 case Keys.F10:
                 case Keys.F11:
                 case Keys.F12:
-                    {
-                        int num = (int)(key - Keys.F1);
-                        if (FunctionKeyActions[num] != null)
-                        {
-                            try
-                            {
-                                FunctionKeyActions[num]();
-                            }
-                            catch (Exception e)
-                            {
-                                Log("'" + e.GetType() + "' encountered in command!");
-                            }
-                        }
-                    }
+                    ExecuteFunctionKeyAction((int)(key - Keys.F1));
                     break;
 
                 case Keys.Enter:
@@ -488,6 +478,21 @@ namespace Monocle
                 case Keys.OemTilde:
                     Open = canOpen = false;
                     break;
+            }
+        }
+
+        public void ExecuteFunctionKeyAction(int num)
+        {
+            if (FunctionKeyActions[num] != null)
+            {
+                try
+                {
+                    FunctionKeyActions[num]();
+                }
+                catch (Exception e)
+                {
+                    Log("'" + e.GetType() + "' encountered in command!");
+                }
             }
         }
 
