@@ -1485,6 +1485,11 @@ namespace Monocle
 
         #region Debug
 
+        static public void Log()
+        {
+            Debug.WriteLine("Log");
+        }
+
         static public void Log(params object[] obj)
         {
             foreach (var o in obj)
