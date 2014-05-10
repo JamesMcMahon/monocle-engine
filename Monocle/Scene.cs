@@ -42,12 +42,19 @@ namespace Monocle
                 entity.SceneEnd();
         }
 
-        public virtual void Update()
+        public virtual void BeforeUpdate()
         {
             TimeActive += Engine.DeltaTime;
-
             TagLists.SetLockMode(EntityList.LockModes.Locked);
+        }
+
+        public virtual void Update()
+        {
             Entities.Update();
+        }
+
+        public virtual void AfterUpdate()
+        {
             TagLists.SetLockMode(EntityList.LockModes.Open);
         }
 

@@ -79,7 +79,11 @@ namespace Monocle
 
             //Update current scene
             if (scene != null)
+            {
+                scene.BeforeUpdate();
                 scene.Update();
+                scene.AfterUpdate();
+            }
 
             //Debug Console
             if (Commands.Open)
