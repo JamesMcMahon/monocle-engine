@@ -686,6 +686,42 @@ namespace Monocle
 
         #endregion
 
+        #region Collide FirstOutside
+
+        public Entity CollideFirstOutside(int tag, float atX, float atY)
+        {
+#if DEBUG
+            if (Scene == null)
+                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
+#endif
+
+            foreach (var entity in Scene[tag])
+            {
+                if (!Collide.Check(this, entity) && Collide.Check(this, entity, atX, atY))
+                    return entity;
+            }
+
+            return null;
+        }
+
+        public Entity CollideFirstOutside(int tag, Vector2 at)
+        {
+#if DEBUG
+            if (Scene == null)
+                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
+#endif
+
+            foreach (var entity in Scene[tag])
+            {
+                if (!Collide.Check(this, entity) && Collide.Check(this, entity, at))
+                    return entity;
+            }
+
+            return null;
+        }
+
+        #endregion
+
         #region Collide All
 
         public List<Entity> CollideAll(int tag)
