@@ -29,6 +29,10 @@ namespace Monocle
             {
                 return Collide(collider as Hitbox);
             }
+            else if (collider is SlopeHitbox)
+            {
+                return Collide(collider as SlopeHitbox);
+            }
             else if (collider is Grid)
             {
                 return Collide(collider as Grid);
@@ -51,6 +55,7 @@ namespace Monocle
         public abstract bool Collide(Hitbox hitbox);
         public abstract bool Collide(Grid grid);
         public abstract bool Collide(Circle circle);
+        public abstract bool Collide(SlopeHitbox slope);
         public abstract bool Collide(ColliderList list);
         public abstract Collider Clone();
         public abstract void Render(Color color);
@@ -251,48 +256,48 @@ namespace Monocle
             }
         }
 
-        public float AbsoluteTop 
-        { 
-            get 
+        public float AbsoluteTop
+        {
+            get
             {
                 if (Entity != null)
                     return Top + Entity.Position.Y;
                 else
                     return Top;
-            } 
+            }
         }
 
-        public float AbsoluteBottom 
-        { 
-            get 
+        public float AbsoluteBottom
+        {
+            get
             {
                 if (Entity != null)
                     return Bottom + Entity.Position.Y;
                 else
                     return Bottom;
-            } 
+            }
         }
 
-        public float AbsoluteLeft 
-        { 
-            get 
+        public float AbsoluteLeft
+        {
+            get
             {
                 if (Entity != null)
                     return Left + Entity.Position.X;
                 else
                     return Left;
-            } 
+            }
         }
 
-        public float AbsoluteRight 
-        { 
-            get 
+        public float AbsoluteRight
+        {
+            get
             {
                 if (Entity != null)
                     return Right + Entity.Position.X;
                 else
                     return Right;
-            } 
+            }
         }
 
         public Rectangle Bounds

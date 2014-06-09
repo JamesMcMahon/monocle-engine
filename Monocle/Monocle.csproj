@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Colliders\SlopeHitbox.cs" />
     <Compile Include="Components\Logic\CounterSet.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />

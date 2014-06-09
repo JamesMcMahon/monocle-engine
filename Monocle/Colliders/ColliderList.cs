@@ -254,6 +254,15 @@ namespace Monocle
             return false;
         }
 
+        public override bool Collide(SlopeHitbox slope)
+        {
+            foreach (var c in colliders)
+                if (c.Collide(slope))
+                    return true;
+
+            return false;
+        }
+
         public override bool Collide(ColliderList list)
         {
             foreach (var c in colliders)
@@ -262,5 +271,5 @@ namespace Monocle
 
             return false;
         }
-    } 
+    }
 }
