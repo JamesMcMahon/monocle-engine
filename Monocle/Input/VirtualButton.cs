@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
+    /// <summary>
+    /// A virtual input that is represented as a boolean. As well as simply checking the current button state, you can ask whether it was just pressed or released this frame. You can also keep the button press stored in a buffer for a limited time, or until it is consumed by calling ConsumeBuffer()
+    /// </summary>
     public class VirtualButton : VirtualInput
     {
         public List<Node> Nodes;

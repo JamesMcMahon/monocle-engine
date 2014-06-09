@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
+    /// <summary>
+    /// A virtual input that is represented as a Vector2, with both X and Y as values between -1 and 1
+    /// </summary>
     public class VirtualJoystick : VirtualInput
     {
         public List<Node> Nodes;

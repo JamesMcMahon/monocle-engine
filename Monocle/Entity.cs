@@ -834,24 +834,6 @@ namespace Monocle
         /// Shortcut function for adding a set of Components from the Entity's Components list
         /// </summary>
         /// <param name="components">The Components to add</param>
-        public void Add(IEnumerable<Component> components)
-        {
-            Components.Add(components);
-        }
-
-        /// <summary>
-        /// Shortcut function for removing a set of Components from the Entity's Components list
-        /// </summary>
-        /// <param name="components">The Components to remove</param>
-        public void Remove(IEnumerable<Component> components)
-        {
-            Components.Remove(components);
-        }
-
-        /// <summary>
-        /// Shortcut function for adding a set of Components from the Entity's Components list
-        /// </summary>
-        /// <param name="components">The Components to add</param>
         public void Add(params Component[] components)
         {
             Components.Add(components);

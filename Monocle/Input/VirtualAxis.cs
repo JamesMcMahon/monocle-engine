@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
+    /// <summary>
+    /// A virtual input represented as a float between -1 and 1
+    /// </summary>
     public class VirtualAxis : VirtualInput
     {
         public List<Node> Nodes;

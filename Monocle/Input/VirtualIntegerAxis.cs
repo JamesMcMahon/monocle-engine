@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
+    /// <summary>
+    /// A virtual input that is represented as a int that is either -1, 0, or 1
+    /// </summary>
     public class VirtualIntegerAxis : VirtualInput
     {
         public List<VirtualAxis.Node> Nodes;
