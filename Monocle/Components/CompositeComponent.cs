@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
-    public class CompositeComponent : Component, IEnumerable<Component>, IEnumerable
+    public class CompositeComponent : Component
     {
         public ComponentList Components { get; private set; }
 
@@ -100,24 +100,6 @@ namespace Monocle
         public void Remove(params Component[] components)
         {
             Components.Remove(components);
-        }
-
-        /// <summary>
-        /// Allows you to iterate through all Components in the CompositeComponent
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<Component> GetEnumerator()
-        {
-            return Components.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Allows you to iterate through all Components in the CompositeComponent
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         #endregion
