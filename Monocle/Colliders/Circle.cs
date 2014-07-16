@@ -94,11 +94,6 @@ namespace Monocle
             throw new NotImplementedException();
         }
 
-        public override bool Collide(SlopeHitbox slope)
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool Collide(ColliderList list)
         {
             return list.Collide(this);

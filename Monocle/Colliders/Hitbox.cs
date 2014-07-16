@@ -238,11 +238,6 @@ namespace Monocle
             return list.Collide(this);
         }
 
-        public override bool Collide(SlopeHitbox slope)
-        {
-            return slope.Collide(this);
-        }
-
         /*
          *  Bitflags and helpers for using the Cohen–Sutherland algorithm
          *  http://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
