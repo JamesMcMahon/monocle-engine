@@ -53,7 +53,10 @@ namespace Monocle
                         {
                             entities.Add(entity);
                             if (entityEventScene != null)
+                            {
                                 entity.Added(entityEventScene);
+                                entityEventScene.Tracker.EntityAdded(entity);
+                            }
                         }
                     }
 
@@ -69,7 +72,10 @@ namespace Monocle
                         {
                             entities.Remove(entity);
                             if (entityEventScene != null)
+                            {
                                 entity.Removed(entityEventScene);
+                                entityEventScene.Tracker.EntityRemoved(entity);
+                            }
                         }
                     }
 
@@ -94,7 +100,10 @@ namespace Monocle
                     {
                         entities.Add(entity);
                         if (entityEventScene != null)
+                        {
                             entity.Added(entityEventScene);
+                            entityEventScene.Tracker.EntityAdded(entity);
+                        }
                     }
                     break;
 
@@ -117,7 +126,10 @@ namespace Monocle
                     {
                         entities.Remove(entity);
                         if (entityEventScene != null)
+                        {
                             entity.Removed(entityEventScene);
+                            entityEventScene.Tracker.EntityRemoved(entity);
+                        }
                     }
                     break;
 

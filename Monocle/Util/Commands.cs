@@ -48,7 +48,6 @@ namespace Monocle
 
             RegisterCommand("count", () =>
                 {
-
                     int arg = ArgInt(0, -1);
                     if (arg == -1)
                         Log(Engine.Scene.Entities.Count.ToString());
@@ -58,6 +57,29 @@ namespace Monocle
                 },
                 "[tagIndex]",
                 "Prints amount of Entities in the current Scene. Pass a tagIndex to count only Entities with that tag");
+
+            RegisterCommand("tracker", () =>
+                {
+                    switch (Commands.ArgString(0, "x"))
+                    {
+                        default:
+                            Log("-- Entities --");
+                            Engine.Scene.Tracker.LogEntities();
+                            Log("-- Components --");
+                            Engine.Scene.Tracker.LogComponents();
+                            break;
+
+                        case "e":
+                            Engine.Scene.Tracker.LogEntities();
+                            break;
+
+                        case "c":
+                            Engine.Scene.Tracker.LogComponents();
+                            break;
+                    }
+                },
+                "[e|c]",
+                "Logs all tracked objects in the scene. Pass 'e' for just entities or 'c' for just components");
 
             RegisterCommand("help", () =>
                 {

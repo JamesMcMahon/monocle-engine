@@ -200,5 +200,13 @@ namespace Monocle
                 component.HandleGraphicsReset();
             LockMode = ComponentList.LockModes.Open;
         }
+
+        public T Get<T>() where T : Component
+        {
+            foreach (var component in components)
+                if (component is T)
+                    return component as T;
+            return null;
+        }
     }
 }

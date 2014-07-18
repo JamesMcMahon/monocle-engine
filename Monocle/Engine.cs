@@ -60,6 +60,7 @@ namespace Monocle
             base.Initialize();
 
             MInput.Initialize();
+            Tracked.Initialize();
             Commands = new Commands();
         }
 

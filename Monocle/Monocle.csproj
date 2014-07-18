@@ -73,6 +73,8 @@
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
+    <Compile Include="InternalUtilities\Tracked.cs" />
+    <Compile Include="InternalUtilities\Tracker.cs" />
     <Compile Include="Util\Camera.cs" />
     <Compile Include="Colliders\Circle.cs" />
     <Compile Include="Colliders\Collider.cs" />
@@ -130,6 +132,7 @@
     <Compile Include="Util\Draw.cs" />
     <Compile Include="Util\Ease.cs" />
     <Compile Include="InternalUtilities\ComponentList.cs" />
+    <Compile Include="Util\MethodHandle.cs" />
     <Compile Include="Util\SpecEntity.cs" />
     <Compile Include="InternalUtilities\TagListHolder.cs" />
     <Compile Include="Util\Tiler.cs" />

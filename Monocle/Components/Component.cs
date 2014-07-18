@@ -16,21 +16,26 @@ namespace Monocle
         public virtual void Added(ComponentList container)
         {
             Container = container;
+            if (Scene != null)
+                Scene.Tracker.ComponentAdded(this);
         }
 
         public virtual void Removed(ComponentList container)
         {
             Container = null;
+            if (Scene != null)
+                Scene.Tracker.ComponentRemoved(this);
         }
 
         public virtual void EntityAdded()
         {
-
+            if (Scene != null)
+                Scene.Tracker.ComponentAdded(this);
         }
 
         public virtual void EntityRemoved()
         {
-
+            Scene.Tracker.ComponentRemoved(this);
         }
 
         public virtual void Update()

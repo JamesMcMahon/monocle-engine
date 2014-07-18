@@ -13,11 +13,13 @@ namespace Monocle
         public TagListHolder TagLists { get; private set; }
         public List<Renderer> Renderers { get; private set; }
         public Entity HelperEntity { get; private set; }
+        public Tracker Tracker { get; private set; }
 
         private Dictionary<int, float> actualDepthLookup;
 
         public Scene()
         {
+            Tracker = new Tracker();
             Entities = new EntityList(this);
             TagLists = new TagListHolder();
             Renderers = new List<Renderer>();
