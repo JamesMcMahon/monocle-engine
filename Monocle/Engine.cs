@@ -61,7 +61,7 @@ namespace Monocle
             base.Initialize();
 
             MInput.Initialize();
-            Tracked.Initialize();
+            Tracker.Initialize();
             Pooler = new Monocle.Pooler();
             Commands = new Commands();
         }

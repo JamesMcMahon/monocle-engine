@@ -28,6 +28,33 @@ namespace Monocle
             }
         }
 
+        public T Create<T>() where T : Entity, new()
+        {
+#if DEBUG
+            if (!Pools.ContainsKey(typeof(T)))
+                throw new Exception("The provided Entity type is not a Pooled type");
+#endif
+
+            var queue = Pools[typeof(T)];
+            if (queue.Count == 0)
+            {
+                Calc.Log("Create");
+                return new T();
+            }
+            else
+            {
+                Calc.Log("Fetch");
+                return queue.Dequeue() as T;
+            }
+        }
+
+        internal void EntityRemoved(Entity entity)
+        {
+            var type = entity.GetType();
+            if (Pools.ContainsKey(type))
+                Pools[type].Enqueue(entity);
+        }
+
         public void Log()
         {
             if (Pools.Count == 0)
@@ -38,33 +65,6 @@ namespace Monocle
                 string output = kv.Key.Name + " : " + kv.Value.Count;
                 Engine.Commands.Log(output);
             }
-        }
-
-        public T Create<T>() where T : Entity, new()
-        {
-#if DEBUG
-            if (!Pools.ContainsKey(typeof(T)))
-                throw new Exception("The provided Entity type is not a Pooled type");
-#endif
-
-            var stack = Pools[typeof(T)];
-            if (stack.Count == 0)
-            {
-                Calc.Log("Create");
-                return new T();
-            }
-            else
-            {
-                Calc.Log("Fetch");
-                return stack.Dequeue() as T;
-            }
-        }
-
-        internal void EntityRemoved(Entity entity)
-        {
-            var type = entity.GetType();
-            if (Pools.ContainsKey(type))
-                Pools[type].Enqueue(entity);
         }
     }
 
