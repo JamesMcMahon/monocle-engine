@@ -81,6 +81,11 @@ namespace Monocle
                 "[e|c]",
                 "Logs all tracked objects in the scene. Pass 'e' for just entities or 'c' for just components");
 
+            RegisterCommand("pooler",
+                Engine.Pooler.Log,
+                null,
+                "Logs the pooled Entity counts");
+
             RegisterCommand("help", () =>
                 {
                     string arg = ArgString(0);

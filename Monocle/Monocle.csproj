@@ -73,8 +73,9 @@
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
-    <Compile Include="InternalUtilities\Tracked.cs" />
-    <Compile Include="InternalUtilities\Tracker.cs" />
+    <Compile Include="Util\Pooler.cs" />
+    <Compile Include="Util\Tracked.cs" />
+    <Compile Include="Util\Tracker.cs" />
     <Compile Include="Util\Camera.cs" />
     <Compile Include="Colliders\Circle.cs" />
     <Compile Include="Colliders\Collider.cs" />

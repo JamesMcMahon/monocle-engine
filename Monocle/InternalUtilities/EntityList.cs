@@ -75,6 +75,7 @@ namespace Monocle
                             {
                                 entity.Removed(entityEventScene);
                                 entityEventScene.Tracker.EntityRemoved(entity);
+                                Engine.Pooler.EntityRemoved(entity);
                             }
                         }
                     }
@@ -129,6 +130,7 @@ namespace Monocle
                         {
                             entity.Removed(entityEventScene);
                             entityEventScene.Tracker.EntityRemoved(entity);
+                            Engine.Pooler.EntityRemoved(entity);
                         }
                     }
                     break;

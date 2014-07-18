@@ -13,6 +13,7 @@ namespace Monocle
         static public float TimeRate = 1f;
         static public GraphicsDeviceManager Graphics { get; private set; }
         static public Commands Commands { get; private set; }
+        static public Pooler Pooler { get; private set; }
         static public int Width { get; private set; }
         static public int Height { get; private set; }
         static public Color ClearColor;
@@ -61,6 +62,7 @@ namespace Monocle
 
             MInput.Initialize();
             Tracked.Initialize();
+            Pooler = new Monocle.Pooler();
             Commands = new Commands();
         }
 

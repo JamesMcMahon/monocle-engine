@@ -12,7 +12,7 @@ namespace Monocle
         static public HashSet<Type> ComponentTypes { get; private set; }
 
         static public void Initialize()
-        {          
+        {
             EntityTypes = new HashSet<Type>();
             ComponentTypes = new HashSet<Type>();
 
@@ -24,6 +24,8 @@ namespace Monocle
                         EntityTypes.Add(type);
                     else if (typeof(Component).IsAssignableFrom(type))
                         ComponentTypes.Add(type);
+                    else
+                        throw new Exception("Type '" + type.Name + "' cannot be Tracked because it does not derive from Entity or Component");
                 }
             }
         }
