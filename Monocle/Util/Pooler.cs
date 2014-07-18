@@ -37,15 +37,9 @@ namespace Monocle
 
             var queue = Pools[typeof(T)];
             if (queue.Count == 0)
-            {
-                Calc.Log("Create");
                 return new T();
-            }
             else
-            {
-                Calc.Log("Fetch");
                 return queue.Dequeue() as T;
-            }
         }
 
         internal void EntityRemoved(Entity entity)
