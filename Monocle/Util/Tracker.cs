@@ -51,7 +51,7 @@ namespace Monocle
         public T GetEntity<T>() where T : Entity
         {
 #if DEBUG
-            if (!EntityTypes.Contains(typeof(T)))
+            if (!Entities.ContainsKey(typeof(T)))
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
@@ -65,7 +65,7 @@ namespace Monocle
         public List<T> GetEntities<T>() where T : Entity
         {
 #if DEBUG
-            if (!EntityTypes.Contains(typeof(T)))
+            if (!Entities.ContainsKey(typeof(T)))
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
@@ -75,7 +75,7 @@ namespace Monocle
         public T GetComponent<T>() where T : Component
         {
 #if DEBUG
-            if (!EntityTypes.Contains(typeof(T)))
+            if (!Components.ContainsKey(typeof(T)))
                 throw new Exception("Provided Component type is not marked with the Tracked attribute!");
 #endif
 
@@ -89,11 +89,11 @@ namespace Monocle
         public List<T> GetComponents<T>() where T : Component
         {
 #if DEBUG
-            if (!EntityTypes.Contains(typeof(T)))
+            if (!Components.ContainsKey(typeof(T)))
                 throw new Exception("Provided Component type is not marked with the Tracked attribute!");
 #endif
 
-            return Entities[typeof(T)] as List<T>;
+            return Components[typeof(T)] as List<T>;
         }
 
         internal void EntityAdded(Entity entity)
@@ -145,6 +145,11 @@ namespace Monocle
 
     public class Tracked : Attribute
     {
+        public bool Inherited;
 
+        public Tracked(bool inherited = false)
+        {
+            Inherited = inherited;
+        }
     }
 }
