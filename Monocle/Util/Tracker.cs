@@ -10,26 +10,74 @@ namespace Monocle
     {
         #region Static
 
-        static public HashSet<Type> EntityTypes { get; private set; }
-        static public HashSet<Type> ComponentTypes { get; private set; }
+        static public Dictionary<Type, List<Type>> TrackedEntityTypes { get; private set; }
+        static public Dictionary<Type, List<Type>> TrackedComponentTypes { get; private set; }
+        static public HashSet<Type> StoredEntityTypes { get; private set; }
+        static public HashSet<Type> StoredComponentTypes { get; private set; }
 
         static public void Initialize()
         {
-            EntityTypes = new HashSet<Type>();
-            ComponentTypes = new HashSet<Type>();
+            TrackedEntityTypes = new Dictionary<Type, List<Type>>();
+            TrackedComponentTypes = new Dictionary<Type, List<Type>>();
+            StoredEntityTypes = new HashSet<Type>();
+            StoredComponentTypes = new HashSet<Type>();
 
             foreach (var type in Assembly.GetEntryAssembly().GetTypes())
             {
-                if (type.GetCustomAttributes(typeof(Tracked), false).Length > 0)
+                var attrs = type.GetCustomAttributes(typeof(Tracked), false);
+                if (attrs.Length > 0)
                 {
+                    bool inherited = (attrs[0] as Tracked).Inherited;
+
                     if (typeof(Entity).IsAssignableFrom(type))
-                        EntityTypes.Add(type);
+                    {
+                        if (!TrackedEntityTypes.ContainsKey(type))
+                            TrackedEntityTypes.Add(type, new List<Type>());
+                        TrackedEntityTypes[type].Add(type);
+                        StoredEntityTypes.Add(type);
+
+                        if (inherited)
+                        {
+                            foreach (var subclass in GetSubclasses(type))
+                            {
+                                if (!TrackedEntityTypes.ContainsKey(subclass))
+                                    TrackedEntityTypes.Add(subclass, new List<Type>());
+                                TrackedEntityTypes[subclass].Add(type);
+                            }
+                        }
+                    }
                     else if (typeof(Component).IsAssignableFrom(type))
-                        ComponentTypes.Add(type);
+                    {
+                        if (!TrackedComponentTypes.ContainsKey(type))
+                            TrackedComponentTypes.Add(type, new List<Type>());
+                        TrackedComponentTypes[type].Add(type);
+                        StoredComponentTypes.Add(type);
+
+                        if (inherited)
+                        {
+                            foreach (var subclass in GetSubclasses(type))
+                            {
+                                if (!TrackedComponentTypes.ContainsKey(subclass))
+                                    TrackedComponentTypes.Add(subclass, new List<Type>());
+                                TrackedComponentTypes[subclass].Add(type);
+                            }
+                        }
+                    }
                     else
                         throw new Exception("Type '" + type.Name + "' cannot be Tracked because it does not derive from Entity or Component");
                 }
             }
+        }
+
+        static private List<Type> GetSubclasses(Type type)
+        {
+            List<Type> matches = new List<Type>();
+
+            foreach (var check in Assembly.GetEntryAssembly().GetTypes())
+                if (type != check && type.IsAssignableFrom(check))
+                    matches.Add(check);
+
+            return matches;
         }
 
         #endregion
@@ -39,12 +87,12 @@ namespace Monocle
 
         public Tracker()
         {
-            Entities = new Dictionary<Type, List<Entity>>(EntityTypes.Count);
-            foreach (var type in EntityTypes)
+            Entities = new Dictionary<Type, List<Entity>>(TrackedEntityTypes.Count);
+            foreach (var type in StoredEntityTypes)
                 Entities.Add(type, new List<Entity>());
 
-            Components = new Dictionary<Type, List<Component>>(ComponentTypes.Count);
-            foreach (var type in ComponentTypes)
+            Components = new Dictionary<Type, List<Component>>(TrackedComponentTypes.Count);
+            foreach (var type in StoredComponentTypes)
                 Components.Add(type, new List<Component>());
         }
 
@@ -99,29 +147,41 @@ namespace Monocle
         internal void EntityAdded(Entity entity)
         {
             var type = entity.GetType();
-            if (EntityTypes.Contains(type))
-                Entities[type].Add(entity);
+            List<Type> trackAs;
+
+            if (TrackedEntityTypes.TryGetValue(type, out trackAs))
+                foreach (var track in trackAs)
+                    Entities[track].Add(entity);
         }
 
         internal void EntityRemoved(Entity entity)
         {
             var type = entity.GetType();
-            if (EntityTypes.Contains(type))
-                Entities[type].Remove(entity);
+            List<Type> trackAs;
+
+            if (TrackedEntityTypes.TryGetValue(type, out trackAs))
+                foreach (var track in trackAs)
+                    Entities[track].Remove(entity);
         }
 
         internal void ComponentAdded(Component component)
         {
             var type = component.GetType();
-            if (ComponentTypes.Contains(type))
-                Components[type].Add(component);
+            List<Type> trackAs;
+
+            if (TrackedComponentTypes.TryGetValue(type, out trackAs))
+                foreach (var track in trackAs)
+                    Components[track].Add(component);
         }
 
         internal void ComponentRemoved(Component component)
         {
             var type = component.GetType();
-            if (ComponentTypes.Contains(type))
-                Components[type].Remove(component);
+            List<Type> trackAs;
+
+            if (TrackedComponentTypes.TryGetValue(type, out trackAs))
+                foreach (var track in trackAs)
+                    Components[track].Remove(component);
         }
 
         public void LogEntities()
