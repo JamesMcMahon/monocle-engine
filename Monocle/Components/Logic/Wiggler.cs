@@ -54,9 +54,9 @@ namespace Monocle
                 Active = false;
         }
 
-        public override void Removed(ComponentList container)
+        public override void Removed(Entity entity)
         {
-            base.Removed(container);
+            base.Removed(entity);
             cache.Push(this);
         }
 

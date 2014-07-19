@@ -82,7 +82,6 @@
     <Compile Include="Colliders\Grid.cs" />
     <Compile Include="Colliders\Hitbox.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\CompositeComponent.cs" />
     <Compile Include="Components\Graphics\DrawRectangle.cs" />
     <Compile Include="Components\Graphics\FlashingImage.cs" />
     <Compile Include="Components\Graphics\GraphicsComponent.cs" />

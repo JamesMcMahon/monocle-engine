@@ -3,7 +3,7 @@ namespace Monocle
 {
     public class Component
     {
-        public ComponentList Container { get; private set; }
+        public Entity Entity { get; private set; }
         public bool Active;
         public bool Visible;
 
@@ -13,16 +13,16 @@ namespace Monocle
             Visible = visible;
         }
 
-        public virtual void Added(ComponentList container)
+        public virtual void Added(Entity entity)
         {
-            Container = container;
+            Entity = entity;
             if (Scene != null)
                 Scene.Tracker.ComponentAdded(this);
         }
 
-        public virtual void Removed(ComponentList container)
+        public virtual void Removed(Entity entity)
         {
-            Container = null;
+            Entity = null;
             if (Scene != null)
                 Scene.Tracker.ComponentRemoved(this);
         }
@@ -60,18 +60,13 @@ namespace Monocle
 
         public void RemoveSelf()
         {
-            if (Container != null)
-                Container.Remove(this);
-        }
-
-        public Entity Entity
-        {
-            get { return Container != null ? Container.Entity : null; }
+            if (Entity != null)
+                Entity.Remove(this);
         }
 
         public Scene Scene
         {
-            get { return Container != null ? Container.Entity.Scene : null; }
+            get { return Entity != null ? Entity.Scene : null; }
         }
     }
 }

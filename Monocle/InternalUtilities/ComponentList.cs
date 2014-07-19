@@ -42,7 +42,7 @@ namespace Monocle
                         if (!components.Contains(component))
                         {
                             components.Add(component);
-                            component.Added(this);
+                            component.Added(Entity);
                         }
                     }
 
@@ -56,7 +56,7 @@ namespace Monocle
                         if (components.Contains(component))
                         {
                             components.Remove(component);
-                            component.Removed(this);
+                            component.Removed(Entity);
                         }
                     }
 
@@ -73,7 +73,7 @@ namespace Monocle
                     if (!components.Contains(component))
                     {
                         components.Add(component);
-                        component.Added(this);
+                        component.Added(Entity);
                     }
                     break;
 
@@ -95,7 +95,7 @@ namespace Monocle
                     if (components.Contains(component))
                     {
                         components.Remove(component);
-                        component.Removed(this);
+                        component.Removed(Entity);
                     }
                     break;
 

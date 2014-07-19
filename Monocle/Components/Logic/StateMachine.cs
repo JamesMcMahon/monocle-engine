@@ -30,9 +30,9 @@ namespace Monocle
             currentCoroutine.RemoveOnComplete = false;
         }
 
-        public override void Added(ComponentList container)
+        public override void Added(Entity entity)
         {
-            base.Added(container);
+            base.Added(entity);
 
             if (Entity.Scene != null && state == -1)
                 State = 0;
