@@ -448,11 +448,6 @@ namespace Monocle
             return Collide.Check(this, other);
         }
 
-        public bool CollideCheck(Entity other, float atX, float atY)
-        {
-            return Collide.Check(this, other, atX, atY);
-        }
-
         public bool CollideCheck(Entity other, Vector2 at)
         {
             return Collide.Check(this, other, at);
@@ -461,11 +456,6 @@ namespace Monocle
         public bool CollideCheck(Vector2 point)
         {
             return Collide.Check(this, point);
-        }
-
-        public bool CollideCheck(Vector2 point, float atX, float atY)
-        {
-            return Collide.Check(this, point, atX, atY);
         }
 
         public bool CollideCheck(Vector2 point, Vector2 at)
@@ -483,11 +473,6 @@ namespace Monocle
             return Collide.Check(this, rect, at);
         }
 
-        public bool CollideCheck(Rectangle rect, float atX, float atY)
-        {
-            return Collide.Check(this, rect, atX, atY);
-        }
-
         public bool CollideCheck(int tag)
         {
 #if DEBUG
@@ -495,15 +480,6 @@ namespace Monocle
                 throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
 #endif
             return Collide.Check(this, Scene[tag]);
-        }
-
-        public bool CollideCheck(int tag, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
-#endif
-            return Collide.Check(this, Scene[tag], atX, atY);
         }
 
         public bool CollideCheck(int tag, Vector2 at)
@@ -527,18 +503,6 @@ namespace Monocle
             return false;
         }
 
-        public bool CollideCheck(int[] tags, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tag lists when it is not a member of a Scene");
-#endif
-            foreach (var tag in tags)
-                if (Collide.Check(this, Scene[tag], atX, atY))
-                    return true;
-            return false;
-        }
-
         public bool CollideCheck(int[] tags, Vector2 at)
         {
 #if DEBUG
@@ -555,30 +519,9 @@ namespace Monocle
 
         #region Collide CheckOutside
 
-        public bool CollideCheckOutside(Entity other, float atX, float atY)
-        {
-            return !Collide.Check(this, other) && Collide.Check(this, other, atX, atY);
-        }
-
         public bool CollideCheckOutside(Entity other, Vector2 at)
         {
             return !Collide.Check(this, other) && Collide.Check(this, other, at);
-        }
-
-        public bool CollideCheckOutside(int tag, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
-#endif
-
-            foreach (var entity in Scene[tag])
-            {
-                if (!Collide.Check(this, entity) && Collide.Check(this, entity, atX, atY))
-                    return true;
-            }
-
-            return false;
         }
 
         public bool CollideCheckOutside(int tag, Vector2 at)
@@ -610,15 +553,6 @@ namespace Monocle
             return Collide.First(this, Scene[tag]);
         }
 
-        public Entity CollideFirst(int tag, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
-#endif
-            return Collide.First(this, Scene[tag], atX, atY);
-        }
-
         public Entity CollideFirst(int tag, Vector2 at)
         {
 #if DEBUG
@@ -642,20 +576,6 @@ namespace Monocle
             return null;
         }
 
-        public Entity CollideFirst(int[] tags, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tag lists when it is not a member of a Scene");
-#endif
-            Entity hit;
-
-            foreach (var tag in tags)
-                if ((hit = Collide.First(this, Scene[tag], atX, atY)) != null)
-                    return hit;
-            return null;
-        }
-
         public Entity CollideFirst(int[] tags, Vector2 at)
         {
 #if DEBUG
@@ -673,22 +593,6 @@ namespace Monocle
         #endregion
 
         #region Collide FirstOutside
-
-        public Entity CollideFirstOutside(int tag, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
-#endif
-
-            foreach (var entity in Scene[tag])
-            {
-                if (!Collide.Check(this, entity) && Collide.Check(this, entity, atX, atY))
-                    return entity;
-            }
-
-            return null;
-        }
 
         public Entity CollideFirstOutside(int tag, Vector2 at)
         {
@@ -719,15 +623,6 @@ namespace Monocle
             return Collide.All(this, Scene[tag]);
         }
 
-        public List<Entity> CollideAll(int tag, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against a tag list when it is not a member of a Scene");
-#endif
-            return Collide.All(this, Scene[tag], atX, atY);
-        }
-
         public List<Entity> CollideAll(int tag, Vector2 at)
         {
 #if DEBUG
@@ -746,18 +641,6 @@ namespace Monocle
             List<Entity> list = new List<Entity>();
             foreach (var tag in tags)
                 Collide.All(this, Scene[tag], list);
-            return list;
-        }
-
-        public List<Entity> CollideAll(int[] tags, float atX, float atY)
-        {
-#if DEBUG
-            if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tag lists when it is not a member of a Scene");
-#endif
-            List<Entity> list = new List<Entity>();
-            foreach (var tag in tags)
-                Collide.All(this, Scene[tag], list, atX, atY);
             return list;
         }
 
@@ -793,6 +676,12 @@ namespace Monocle
         {
             return Collider.Collide(from, to);
         }
+
+        #region Against Tracked Entities
+
+
+
+        #endregion
 
         #endregion
 

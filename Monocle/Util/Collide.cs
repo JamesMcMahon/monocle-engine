@@ -10,7 +10,7 @@ namespace Monocle
 
         static public bool Check(Entity a, Entity b)
         {
-            if (a.Collider == null)
+            if (a.Collider == null || b.Collider == null)
                 return false;
             else
                 return a != b && b.Collidable && a.Collider.Collide(b);
@@ -23,11 +23,6 @@ namespace Monocle
             bool ret = Check(a, b);
             a.Position = old;
             return ret;
-        }
-
-        static public bool Check(Entity a, Entity b, float aX, float aY)
-        {
-            return Check(a, b, new Vector2(aX, aY));
         }
 
         #endregion
@@ -51,11 +46,6 @@ namespace Monocle
             return ret;
         }
 
-        static public bool Check(Entity a, Vector2 point, float aX, float aY)
-        {
-            return Check(a, point, new Vector2(aX, aY));
-        }
-
         #endregion
 
         #region Entity vs Rectangle
@@ -77,105 +67,6 @@ namespace Monocle
             return ret;
         }
 
-        static public bool Check(Entity a, Rectangle rect, float aX, float aY)
-        {
-            return Check(a, rect, new Vector2(aX, aY));
-        }
-
-        #endregion
-
-        #region Collider vs Entity List
-
-        static public bool Check(Collider a, List<Entity> b)
-        {
-            foreach (var e in b)
-            {
-                if (a.Collide(e))
-                    return true;
-            }
-
-            return false;
-        }
-
-        static public bool Check(Collider a, List<Entity> b, Vector2 aPos)
-        {
-            Vector2 old = a.Position;
-            a.Position = aPos;
-            bool ret = Check(a, b);
-            a.Position = old;
-            return ret;
-        }
-
-        static public bool Check(Collider a, List<Entity> b, float aX, float aY)
-        {
-            return Check(a, b, new Vector2(aX, aY));
-        }
-
-        static public Entity First(Collider a, List<Entity> b)
-        {
-            foreach (var e in b)
-            {
-                if (a.Collide(e))
-                    return e;
-            }
-
-            return null;
-        }
-
-        static public Entity First(Collider a, List<Entity> b, Vector2 aPos)
-        {
-            Vector2 old = a.Position;
-            a.Position = aPos;
-            Entity ret = First(a, b);
-            a.Position = old;
-            return ret;
-        }
-
-        static public Entity First(Collider a, List<Entity> b, float aX, float aY)
-        {
-            return First(a, b, new Vector2(aX, aY));
-        }
-
-        static public List<Entity> Into(Collider a, List<Entity> b, List<Entity> into)
-        {
-            foreach (var e in b)
-            {
-                if (a.Collide(e))
-                    into.Add(e);
-            }
-
-            return into;
-        }
-
-        static public List<Entity> Into(Collider a, List<Entity> b, List<Entity> into, Vector2 aPos)
-        {
-            Vector2 old = a.Position;
-            a.Position = aPos;
-            List<Entity> ret = Into(a, b, into);
-            a.Position = old;
-            return ret;
-        }
-
-        static public List<Entity> Into(Collider a, List<Entity> b, List<Entity> into, float aX, float aY)
-        {
-            return Into(a, b, into, new Vector2(aX, aY));
-        }
-
-        static public List<Entity> All(Collider a, List<Entity> b)
-        {
-            return Into(a, b, new List<Entity>());
-        }
-
-        static public List<Entity> All(Collider a, List<Entity> b, Vector2 aPos)
-        {
-            return Into(a, b, new List<Entity>(), aPos);
-        }
-
-        static public List<Entity> All(Collider a, List<Entity> b, float aX, float aY)
-        {
-            return Into(a, b, new List<Entity>(), aX, aY);
-        }
-
         #endregion
 
         #region Entity vs Entity Enumerable
@@ -185,10 +76,8 @@ namespace Monocle
         static public bool Check(Entity a, IEnumerable<Entity> b)
         {
             foreach (var e in b)
-            {
                 if (Check(a, e))
                     return true;
-            }
 
             return false;
         }
@@ -202,11 +91,6 @@ namespace Monocle
             return ret;
         }
 
-        static public bool Check(Entity a, IEnumerable<Entity> b, float aX, float aY)
-        {
-            return Check(a, b, new Vector2(aX, aY));
-        }
-
         #endregion
 
         #region First
@@ -214,10 +98,8 @@ namespace Monocle
         static public Entity First(Entity a, IEnumerable<Entity> b)
         {
             foreach (var e in b)
-            {
                 if (Check(a, e))
                     return e;
-            }
 
             return null;
         }
@@ -231,11 +113,6 @@ namespace Monocle
             return ret;
         }
 
-        static public Entity First(Entity a, IEnumerable<Entity> b, float aX, float aY)
-        {
-            return First(a, b, new Vector2(aX, aY));
-        }
-
         #endregion
 
         #region All
@@ -243,10 +120,8 @@ namespace Monocle
         static public List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into)
         {
             foreach (var e in b)
-            {
                 if (Check(a, e))
                     into.Add(e);
-            }
 
             return into;
         }
@@ -260,11 +135,6 @@ namespace Monocle
             return ret;
         }
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into, float aX, float aY)
-        {
-            return All(a, b, into, new Vector2(aX, aY));
-        }
-
         static public List<Entity> All(Entity a, IEnumerable<Entity> b)
         {
             return All(a, b, new List<Entity>());
@@ -273,11 +143,6 @@ namespace Monocle
         static public List<Entity> All(Entity a, IEnumerable<Entity> b, Vector2 aPos)
         {
             return All(a, b, new List<Entity>(), aPos);
-        }
-
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, float aX, float aY)
-        {
-            return All(a, b, new List<Entity>(), aX, aY);
         }
 
         #endregion
