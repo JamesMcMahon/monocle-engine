@@ -34,11 +34,17 @@ namespace Monocle
 
         }
 
+        /// <summary>
+        /// Called when the containing Scene Begins
+        /// </summary>
         public virtual void SceneBegin()
         {
 
         }
 
+        /// <summary>
+        /// Called when the containing Scene Ends
+        /// </summary>
         public virtual void SceneEnd()
         {
 
@@ -46,6 +52,7 @@ namespace Monocle
 
         /// <summary>
         /// Called before the frame starts, after Entities are added and removed, on the frame that the Entity was added
+        /// Useful if you added two Entities in the same frame, and need them to detect each other before they start Updating
         /// </summary>
         /// <param name="scene"></param>
         public virtual void Awake(Scene scene)
@@ -105,6 +112,9 @@ namespace Monocle
                 Collider.Render(Collidable ? Color.Red : Color.DarkRed);
         }
 
+        /// <summary>
+        /// Called when the graphics device resets. When this happens, any RenderTargets or other contents of VRAM will be wiped and need to be regenerated
+        /// </summary>
         public virtual void HandleGraphicsReset()
         {
             Components.HandleGraphicsReset();
