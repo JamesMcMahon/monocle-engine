@@ -44,11 +44,14 @@ namespace Monocle
 
         }
 
+        public virtual void Awake(Scene scene)
+        {
+
+        }
+
         public virtual void Added(Scene scene)
         {
             Scene = scene;
-            foreach (var tag in Tags)
-                Scene.TagEntity(tag, this);
             if (Components != null)
                 foreach (var c in Components)
                     c.EntityAdded();
@@ -60,8 +63,6 @@ namespace Monocle
             if (Components != null)
                 foreach (var c in Components)
                     c.EntityRemoved();
-            foreach (var tag in Tags)
-                Scene.TagLists[tag].Remove(this);
             Scene = null;
         }
 

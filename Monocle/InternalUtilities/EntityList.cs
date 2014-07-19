@@ -7,26 +7,20 @@ namespace Monocle
 {
     public class EntityList : IEnumerable<Entity>, IEnumerable
     {
-        public enum LockModes { Open, Locked, Error };
+        public Scene Scene { get; private set; }
 
         private List<Entity> entities;
         private List<Entity> toAdd;
         private List<Entity> toRemove;
-        private LockModes lockMode;
         private bool unsorted;
-        private Scene entityEventScene;
 
-        internal EntityList()
+        internal EntityList(Scene scene)
         {
+            Scene = scene;
+
             entities = new List<Entity>();
             toAdd = new List<Entity>();
             toRemove = new List<Entity>();
-        }
-
-        internal EntityList(Scene entityEventScene)
-            : this()
-        {
-            this.entityEventScene = entityEventScene;
         }
 
         internal void MarkUnsorted()
@@ -34,115 +28,71 @@ namespace Monocle
             unsorted = true;
         }
 
-        internal LockModes LockMode
+        public void UpdateLists()
         {
-            get
+            if (toAdd.Count > 0)
             {
-                return lockMode;
+                foreach (var entity in toAdd)
+                {
+                    if (!entities.Contains(entity))
+                    {
+                        entities.Add(entity);
+                        if (Scene != null)
+                        {
+                            Scene.TagLists.EntityAdded(entity);
+                            Scene.Tracker.EntityAdded(entity);
+                            entity.Added(Scene);
+                        }
+                    }
+                }
+
+                unsorted = true;
             }
 
-            set
+            if (toRemove.Count > 0)
             {
-                lockMode = value;
-
-                if (toAdd.Count > 0)
+                foreach (var entity in toRemove)
                 {
-                    foreach (var entity in toAdd)
+                    if (entities.Contains(entity))
                     {
-                        if (!entities.Contains(entity))
+                        entities.Remove(entity);
+                        if (Scene != null)
                         {
-                            entities.Add(entity);
-                            if (entityEventScene != null)
-                            {
-                                entity.Added(entityEventScene);
-                                entityEventScene.Tracker.EntityAdded(entity);
-                            }
+                            entity.Removed(Scene);
+                            Scene.TagLists.EntityRemoved(entity);
+                            Scene.Tracker.EntityRemoved(entity);
+                            Engine.Pooler.EntityRemoved(entity);
                         }
                     }
-
-                    toAdd.Clear();
-                    unsorted = true;
                 }
 
-                if (toRemove.Count > 0)
-                {
-                    foreach (var entity in toRemove)
-                    {
-                        if (entities.Contains(entity))
-                        {
-                            entities.Remove(entity);
-                            if (entityEventScene != null)
-                            {
-                                entity.Removed(entityEventScene);
-                                entityEventScene.Tracker.EntityRemoved(entity);
-                                Engine.Pooler.EntityRemoved(entity);
-                            }
-                        }
-                    }
+                toRemove.Clear();
+            }
 
-                    toRemove.Clear();
-                }
+            if (unsorted)
+            {
+                unsorted = false;
+                entities.Sort(CompareDepth);
+            }
 
-                if (unsorted)
-                {
-                    unsorted = false;
-                    entities.Sort(compareDepth);
-                }
+            if (toAdd.Count > 0)
+            {
+                foreach (var entity in toAdd)
+                    entity.Awake(Scene);
+                toAdd.Clear();
             }
         }
 
         public void Add(Entity entity)
         {
-            switch (lockMode)
-            {
-                case LockModes.Open:
-                    unsorted = true;
-                    if (!entities.Contains(entity))
-                    {
-                        entities.Add(entity);
-                        if (entityEventScene != null)
-                        {
-                            entity.Added(entityEventScene);
-                            entityEventScene.Tracker.EntityAdded(entity);
-                        }
-                    }
-                    break;
-
-                case LockModes.Locked:
-                    if (!toAdd.Contains(entity) && !entities.Contains(entity))
-                        toAdd.Add(entity);
-                    break;
-
-                case LockModes.Error:
-                    throw new Exception("Cannot add or remove Entities at this time!");
-            }
+            if (!toAdd.Contains(entity) && !entities.Contains(entity))
+                toAdd.Add(entity);
         }
 
         public void Remove(Entity entity)
         {
-            switch (lockMode)
-            {
-                case LockModes.Open:
-                    if (entities.Contains(entity))
-                    {
-                        entities.Remove(entity);
-                        if (entityEventScene != null)
-                        {
-                            entity.Removed(entityEventScene);
-                            entityEventScene.Tracker.EntityRemoved(entity);
-                            Engine.Pooler.EntityRemoved(entity);
-                        }
-                    }
-                    break;
-
-                case LockModes.Locked:
-                    if (!toRemove.Contains(entity) && entities.Contains(entity))
-                        toRemove.Add(entity);
-                    break;
-
-                case LockModes.Error:
-                    throw new Exception("Cannot add or remove Entities at this time!");
-            }
+            if (!toRemove.Contains(entity) && entities.Contains(entity))
+                toRemove.Add(entity);
         }
 
         public void Add(IEnumerable<Entity> entities)
@@ -205,52 +155,30 @@ namespace Monocle
 
         internal void Update()
         {
-            LockMode = LockModes.Locked;
             foreach (var entity in entities)
                 if (entity.Active)
                     entity.Update();
-            LockMode = LockModes.Open;
         }
 
         public void Render()
         {
-            LockMode = LockModes.Error;
             foreach (var entity in entities)
                 if (entity.Visible)
                     entity.Render();
-            LockMode = LockModes.Open;
         }
 
         public void DebugRender()
         {
-            LockMode = LockModes.Error;
             foreach (var entity in entities)
                 entity.DebugRender();
-            LockMode = LockModes.Open;
         }
 
         internal void HandleGraphicsReset()
         {
-            LockMode = LockModes.Error;
             foreach (var entity in entities)
                 entity.HandleGraphicsReset();
-            LockMode = LockModes.Open;
         }
 
-        #region Static
-
-        static EntityList()
-        {
-            compareDepth = CompareDepth;
-        }
-
-        static private Comparison<Entity> compareDepth;
-
-        static private int CompareDepth(Entity a, Entity b)
-        {
-            return Math.Sign(b.actualDepth - a.actualDepth);
-        }
-
-        #endregion
+        static public Comparison<Entity> CompareDepth = (a, b) => { return Math.Sign(b.actualDepth - a.actualDepth); };
     }
 }

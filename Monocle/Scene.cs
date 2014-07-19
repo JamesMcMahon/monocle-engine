@@ -10,7 +10,7 @@ namespace Monocle
         public float TimeActive { get; private set; }
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
-        public TagListHolder TagLists { get; private set; }
+        public TagLists TagLists { get; private set; }
         public List<Renderer> Renderers { get; private set; }
         public Entity HelperEntity { get; private set; }
         public Tracker Tracker { get; private set; }
@@ -21,7 +21,7 @@ namespace Monocle
         {
             Tracker = new Tracker();
             Entities = new EntityList(this);
-            TagLists = new TagListHolder();
+            TagLists = new TagLists();
             Renderers = new List<Renderer>();
 
             actualDepthLookup = new Dictionary<int, float>();
@@ -47,7 +47,9 @@ namespace Monocle
         public virtual void BeforeUpdate()
         {
             TimeActive += Engine.DeltaTime;
-            TagLists.SetLockMode(EntityList.LockModes.Locked);
+
+            Entities.UpdateLists();
+            TagLists.UpdateLists();
         }
 
         public virtual void Update()
@@ -57,7 +59,7 @@ namespace Monocle
 
         public virtual void AfterUpdate()
         {
-            TagLists.SetLockMode(EntityList.LockModes.Open);
+
         }
 
         public virtual void BeforeRender()
@@ -290,7 +292,7 @@ namespace Monocle
             //Mark lists unsorted
             Entities.MarkUnsorted();
             foreach (var tag in entity.Tags)
-                TagLists[tag].MarkUnsorted();
+                TagLists.MarkUnsorted(tag);
         }
 
         internal void TagEntity(int tag, Entity entity)
@@ -307,7 +309,7 @@ namespace Monocle
         /// </summary>
         /// <param name="tag">The tag list to fetch</param>
         /// <returns></returns>
-        public EntityList this[int tag]
+        public List<Entity> this[int tag]
         {
             get
             {

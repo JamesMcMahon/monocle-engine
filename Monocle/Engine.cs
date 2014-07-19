@@ -6,8 +6,6 @@ namespace Monocle
 {
     public class Engine : Game
     {
-        public const int MAX_TAG = 30;
-
         static public Engine Instance { get; private set; }
         static public float DeltaTime { get; private set; }
         static public float TimeRate = 1f;

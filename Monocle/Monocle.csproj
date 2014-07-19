@@ -133,7 +133,7 @@
     <Compile Include="InternalUtilities\ComponentList.cs" />
     <Compile Include="Util\MethodHandle.cs" />
     <Compile Include="Util\SpecEntity.cs" />
-    <Compile Include="InternalUtilities\TagListHolder.cs" />
+    <Compile Include="InternalUtilities\TagLists.cs" />
     <Compile Include="Util\Tiler.cs" />
     <Compile Include="Input\VirtualJoystick.cs" />
     <Compile Include="Input\VirtualButton.cs" />
