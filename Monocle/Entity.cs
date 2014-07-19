@@ -44,11 +44,21 @@ namespace Monocle
 
         }
 
+        /// <summary>
+        /// Called before the frame starts, after Entities are added and removed, on the frame that the Entity was added
+        /// </summary>
+        /// <param name="scene"></param>
         public virtual void Awake(Scene scene)
         {
 
         }
 
+        /// <summary>
+        /// Called when this Entity is added to a Scene, which only occurs immediately before each Update. 
+        /// Keep in mind, other Entities to be added this frame may be added after this Entity. 
+        /// See Awake() for after all Entities are added, but still before the frame Updates.
+        /// </summary>
+        /// <param name="scene"></param>
         public virtual void Added(Scene scene)
         {
             Scene = scene;
@@ -58,6 +68,10 @@ namespace Monocle
             Scene.SetActualDepth(this);
         }
 
+        /// <summary>
+        /// Called when the Entity is removed from a Scene
+        /// </summary>
+        /// <param name="scene"></param>
         public virtual void Removed(Scene scene)
         {
             if (Components != null)
@@ -66,16 +80,25 @@ namespace Monocle
             Scene = null;
         }
 
+        /// <summary>
+        /// Do game logic here, but do not render here. Not called if the Entity is not Active
+        /// </summary>
         public virtual void Update()
         {
             Components.Update();
         }
 
+        /// <summary>
+        /// Draw the Entity here. Not called if the Entity is not Visible
+        /// </summary>
         public virtual void Render()
         {
             Components.Render();
         }
 
+        /// <summary>
+        /// Draw any debug visuals here. Only called if the console is open, but still called even if the Entity is not Visible
+        /// </summary>
         public virtual void DebugRender()
         {
             if (Collider != null)
