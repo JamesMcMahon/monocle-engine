@@ -143,11 +143,10 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the Width of a Collider-less Entity");
-#endif
-                return Collider.Width;
+                    return 0;
+                else
+                    return Collider.Width;
             }
         }
 
@@ -155,11 +154,10 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the Height of a Collider-less Entity");
-#endif
-                return Collider.Height;
+                    return 0;
+                else
+                    return Collider.Height;
             }
         }
 
@@ -167,20 +165,18 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the Left of a Collider-less Entity");
-#endif
-                return Position.X + Collider.Left;
+                    return X;
+                else
+                    return Position.X + Collider.Left;
             }
 
             set
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't set the Left of a Collider-less Entity");
-#endif
-                Position.X = value - Collider.Left;
+                    Position.X = value;
+                else
+                    Position.X = value - Collider.Left;
             }
         }
 
@@ -188,20 +184,18 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the Right of a Collider-less Entity");
-#endif
-                return Position.X + Collider.Right;
+                    return Position.X;
+                else
+                    return Position.X + Collider.Right;
             }
 
             set
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't set the Right of a Collider-less Entity");
-#endif
-                Position.X = value - Collider.Right;
+                    Position.X = value;
+                else
+                    Position.X = value - Collider.Right;
             }
         }
 
@@ -209,20 +203,18 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the Top of a Collider-less Entity");
-#endif
-                return Position.Y + Collider.Top;
+                    return Position.Y;
+                else
+                    return Position.Y + Collider.Top;
             }
 
             set
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't set the Top of a Collider-less Entity");
-#endif
-                Position.Y = value - Collider.Top;
+                    Position.Y = value;
+                else
+                    Position.Y = value - Collider.Top;
             }
         }
 
@@ -230,20 +222,18 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the Bottom of a Collider-less Entity");
-#endif
-                return Position.Y + Collider.Bottom;
+                    return Position.Y;
+                else
+                    return Position.Y + Collider.Bottom;
             }
 
             set
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't set the Bottom of a Collider-less Entity");
-#endif
-                Position.Y = value - Collider.Bottom;
+                    Position.Y = value;
+                else
+                    Position.Y = value - Collider.Bottom;
             }
         }
 
@@ -251,20 +241,18 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the CenterX of a Collider-less Entity");
-#endif
-                return Position.X + Collider.Left + Collider.Width / 2f;
+                    return Position.X;
+                else
+                    return Position.X + Collider.Left + Collider.Width / 2f;
             }
 
             set
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't set the CenterX of a Collider-less Entity");
-#endif
-                Position.X = value - (Collider.Left + Collider.Width / 2f);
+                    Position.X = value;
+                else
+                    Position.X = value - (Collider.Left + Collider.Width / 2f);
             }
         }
 
@@ -272,20 +260,18 @@ namespace Monocle
         {
             get
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't get the CenterY of a Collider-less Entity");
-#endif
-                return Position.Y + Collider.Top + Collider.Height / 2f;
+                    return Position.Y;
+                else
+                    return Position.Y + Collider.Top + Collider.Height / 2f;
             }
 
             set
             {
-#if DEBUG
                 if (Collider == null)
-                    throw new Exception("Can't set the CenterY of a Collider-less Entity");
-#endif
-                Position.Y = value - (Collider.Top + Collider.Height / 2f);
+                    Position.Y = value;
+                else
+                    Position.Y = value - (Collider.Top + Collider.Height / 2f);
             }
         }
 
