@@ -295,11 +295,6 @@ namespace Monocle
                 TagLists.MarkUnsorted(tag);
         }
 
-        internal void TagEntity(int tag, Entity entity)
-        {
-            TagLists[tag].Add(entity);
-        }
-
         #endregion
 
         #region Entity Shortcuts

@@ -445,14 +445,8 @@ namespace Monocle
             {
                 Tags.Add(tag);
                 if (Scene != null)
-                    Scene.TagEntity(tag, this);
+                    Scene.TagLists[tag].Add(this);
             }
-        }
-
-        public void Tag(params int[] tags)
-        {
-            foreach (var tag in tags)
-                Tag(tag);
         }
 
         public void Untag(int tag)
@@ -463,12 +457,6 @@ namespace Monocle
                 if (Scene != null)
                     Scene.TagLists[tag].Remove(this);
             }
-        }
-
-        public void Untag(params int[] tags)
-        {
-            foreach (var tag in tags)
-                Untag(tag);
         }
 
         #endregion
