@@ -453,26 +453,6 @@ namespace Monocle
             return Collide.Check(this, other, at);
         }
 
-        public bool CollideCheck(Vector2 point)
-        {
-            return Collide.Check(this, point);
-        }
-
-        public bool CollideCheck(Vector2 point, Vector2 at)
-        {
-            return Collide.Check(this, point, at);
-        }
-
-        public bool CollideCheck(Rectangle rect)
-        {
-            return Collide.Check(this, rect);
-        }
-
-        public bool CollideCheck(Rectangle rect, Vector2 at)
-        {
-            return Collide.Check(this, rect, at);
-        }
-
         public bool CollideCheck(int tag)
         {
 #if DEBUG
@@ -658,6 +638,8 @@ namespace Monocle
 
         #endregion
 
+        #region Collide Do
+
         public bool CollideDo(int tag, Action<Entity> action)
         {
             bool hit = false;
@@ -672,14 +654,58 @@ namespace Monocle
             return hit;
         }
 
-        public bool CollideLine(Vector2 from, Vector2 to)
+        public bool CollideDo(int tag, Action<Entity> action, Vector2 at)
         {
-            return Collider.Collide(from, to);
+            bool hit = false;
+            var was = Position;
+            Position = at;
+
+            foreach (var other in Scene[tag])
+            {
+                if (CollideCheck(other))
+                {
+                    action(other);
+                    hit = true;
+                }
+            }
+
+            Position = was;
+            return hit;
         }
 
-        #region Against Tracked Entities
+        #endregion
 
+        #region Collide Geometry
 
+        public bool CollidePoint(Vector2 point)
+        {
+            return Collide.CheckPoint(this, point);
+        }
+
+        public bool CollidePoint(Vector2 point, Vector2 at)
+        {
+            return Collide.CheckPoint(this, point, at);
+        }
+
+        public bool CollideLine(Vector2 from, Vector2 to)
+        {
+            return Collide.CheckLine(this, from, to);
+        }
+
+        public bool CollideLine(Vector2 from, Vector2 to, Vector2 at)
+        {
+            return Collide.CheckLine(this, from, to, at);
+        }
+
+        public bool CollideRect(Rectangle rect)
+        {
+            return Collide.CheckRect(this, rect);
+        }
+
+        public bool CollideRect(Rectangle rect, Vector2 at)
+        {
+            return Collide.CheckRect(this, rect, at);
+        }
 
         #endregion
 

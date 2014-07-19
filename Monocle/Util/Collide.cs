@@ -16,53 +16,11 @@ namespace Monocle
                 return a != b && b.Collidable && a.Collider.Collide(b);
         }
 
-        static public bool Check(Entity a, Entity b, Vector2 aPos)
+        static public bool Check(Entity a, Entity b, Vector2 at)
         {
             Vector2 old = a.Position;
-            a.Position = aPos;
+            a.Position = at;
             bool ret = Check(a, b);
-            a.Position = old;
-            return ret;
-        }
-
-        #endregion
-
-        #region Entity vs Vector2
-
-        static public bool Check(Entity a, Vector2 point)
-        {
-            if (a.Collider == null)
-                return false;
-            else
-                return a.Collider.Collide(point);
-        }
-
-        static public bool Check(Entity a, Vector2 point, Vector2 aPos)
-        {
-            Vector2 old = a.Position;
-            a.Position = aPos;
-            bool ret = Check(a, point);
-            a.Position = old;
-            return ret;
-        }
-
-        #endregion
-
-        #region Entity vs Rectangle
-
-        static public bool Check(Entity a, Rectangle rect)
-        {
-            if (a.Collider == null)
-                return false;
-            else
-                return a.Collider.Collide(rect);
-        }
-
-        static public bool Check(Entity a, Rectangle rect, Vector2 aPos)
-        {
-            Vector2 old = a.Position;
-            a.Position = aPos;
-            bool ret = Check(a, rect);
             a.Position = old;
             return ret;
         }
@@ -82,10 +40,10 @@ namespace Monocle
             return false;
         }
 
-        static public bool Check(Entity a, IEnumerable<Entity> b, Vector2 aPos)
+        static public bool Check(Entity a, IEnumerable<Entity> b, Vector2 at)
         {
             Vector2 old = a.Position;
-            a.Position = aPos;
+            a.Position = at;
             bool ret = Check(a, b);
             a.Position = old;
             return ret;
@@ -104,10 +62,10 @@ namespace Monocle
             return null;
         }
 
-        static public Entity First(Entity a, IEnumerable<Entity> b, Vector2 aPos)
+        static public Entity First(Entity a, IEnumerable<Entity> b, Vector2 at)
         {
             Vector2 old = a.Position;
-            a.Position = aPos;
+            a.Position = at;
             Entity ret = First(a, b);
             a.Position = old;
             return ret;
@@ -126,10 +84,10 @@ namespace Monocle
             return into;
         }
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into, Vector2 aPos)
+        static public List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into, Vector2 at)
         {
             Vector2 old = a.Position;
-            a.Position = aPos;
+            a.Position = at;
             List<Entity> ret = All(a, b, into);
             a.Position = old;
             return ret;
@@ -140,12 +98,75 @@ namespace Monocle
             return All(a, b, new List<Entity>());
         }
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, Vector2 aPos)
+        static public List<Entity> All(Entity a, IEnumerable<Entity> b, Vector2 at)
         {
-            return All(a, b, new List<Entity>(), aPos);
+            return All(a, b, new List<Entity>(), at);
         }
 
         #endregion
+
+        #endregion
+
+        #region Entity vs Point
+
+        static public bool CheckPoint(Entity a, Vector2 point)
+        {
+            if (a.Collider == null)
+                return false;
+            else
+                return a.Collider.Collide(point);
+        }
+
+        static public bool CheckPoint(Entity a, Vector2 point, Vector2 at)
+        {
+            Vector2 old = a.Position;
+            a.Position = at;
+            bool ret = CheckPoint(a, point);
+            a.Position = old;
+            return ret;
+        }
+
+        #endregion
+
+        #region Entity vs Line
+
+        static public bool CheckLine(Entity a, Vector2 from, Vector2 to)
+        {
+            if (a.Collider == null)
+                return false;
+            else
+                return a.Collider.Collide(from, to);
+        }
+
+        static public bool CheckLine(Entity a, Vector2 from, Vector2 to, Vector2 at)
+        {
+            Vector2 old = a.Position;
+            a.Position = at;
+            bool ret = CheckLine(a, from, to);
+            a.Position = old;
+            return ret;
+        }
+
+        #endregion
+
+        #region Entity vs Rectangle
+
+        static public bool CheckRect(Entity a, Rectangle rect)
+        {
+            if (a.Collider == null)
+                return false;
+            else
+                return a.Collider.Collide(rect);
+        }
+
+        static public bool CheckRect(Entity a, Rectangle rect, Vector2 at)
+        {
+            Vector2 old = a.Position;
+            a.Position = at;
+            bool ret = CheckRect(a, rect);
+            a.Position = old;
+            return ret;
+        }
 
         #endregion
 

@@ -121,7 +121,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(point))
+                if (list[i].Collidable && list[i].CollidePoint(point))
                     return true;
             return false;
         }
@@ -141,7 +141,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(rect))
+                if (list[i].Collidable && list[i].CollideRect(rect))
                     return true;
             return false;
         }
@@ -151,7 +151,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(point))
+                if (list[i].Collidable && list[i].CollidePoint(point))
                     return list[i];
             return null;
         }
@@ -171,7 +171,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(rect))
+                if (list[i].Collidable && list[i].CollideRect(rect))
                     return list[i];
             return null;
         }
@@ -181,7 +181,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(point))
+                if (list[i].Collidable && list[i].CollidePoint(point))
                     hits.Add(list[i]);
         }
 
@@ -199,7 +199,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(rect))
+                if (list[i].Collidable && list[i].CollideRect(rect))
                     list.Add(list[i]);
         }
 
@@ -229,7 +229,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(point))
+                if (list[i].Collidable && list[i].CollidePoint(point))
                     action(list[i]);
         }
 
@@ -247,7 +247,7 @@ namespace Monocle
             var list = TagLists[(int)tag];
 
             for (int i = 0; i < list.Count; i++)
-                if (list[i].Collidable && list[i].CollideCheck(rect))
+                if (list[i].Collidable && list[i].CollideRect(rect))
                     action(list[i]);
         }
 
