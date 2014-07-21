@@ -31,35 +31,49 @@ namespace Monocle
 
                     if (typeof(Entity).IsAssignableFrom(type))
                     {
-                        if (!TrackedEntityTypes.ContainsKey(type))
-                            TrackedEntityTypes.Add(type, new List<Type>());
-                        TrackedEntityTypes[type].Add(type);
+                        if (!type.IsAbstract)
+                        {
+                            if (!TrackedEntityTypes.ContainsKey(type))
+                                TrackedEntityTypes.Add(type, new List<Type>());
+                            TrackedEntityTypes[type].Add(type);
+                        }
+
                         StoredEntityTypes.Add(type);
 
                         if (inherited)
                         {
                             foreach (var subclass in GetSubclasses(type))
                             {
-                                if (!TrackedEntityTypes.ContainsKey(subclass))
-                                    TrackedEntityTypes.Add(subclass, new List<Type>());
-                                TrackedEntityTypes[subclass].Add(type);
+                                if (!subclass.IsAbstract)
+                                {
+                                    if (!TrackedEntityTypes.ContainsKey(subclass))
+                                        TrackedEntityTypes.Add(subclass, new List<Type>());
+                                    TrackedEntityTypes[subclass].Add(type);
+                                }
                             }
                         }
                     }
                     else if (typeof(Component).IsAssignableFrom(type))
                     {
-                        if (!TrackedComponentTypes.ContainsKey(type))
-                            TrackedComponentTypes.Add(type, new List<Type>());
-                        TrackedComponentTypes[type].Add(type);
+                        if (!type.IsAbstract)
+                        {
+                            if (!TrackedComponentTypes.ContainsKey(type))
+                                TrackedComponentTypes.Add(type, new List<Type>());
+                            TrackedComponentTypes[type].Add(type);
+                        }
+
                         StoredComponentTypes.Add(type);
 
                         if (inherited)
                         {
                             foreach (var subclass in GetSubclasses(type))
                             {
-                                if (!TrackedComponentTypes.ContainsKey(subclass))
-                                    TrackedComponentTypes.Add(subclass, new List<Type>());
-                                TrackedComponentTypes[subclass].Add(type);
+                                if (!subclass.IsAbstract)
+                                {
+                                    if (!TrackedComponentTypes.ContainsKey(subclass))
+                                        TrackedComponentTypes.Add(subclass, new List<Type>());
+                                    TrackedComponentTypes[subclass].Add(type);
+                                }
                             }
                         }
                     }
@@ -110,14 +124,25 @@ namespace Monocle
                 return list[0] as T;
         }
 
-        public List<T> GetEntities<T>() where T : Entity
+        public List<Entity> GetEntities<T>() where T : Entity
         {
 #if DEBUG
             if (!Entities.ContainsKey(typeof(T)))
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
-            return Entities[typeof(T)] as List<T>;
+            return Entities[typeof(T)];
+        }
+
+        public IEnumerator<T> EnumerateEntities<T>() where T : Entity
+        {
+#if DEBUG
+            if (!Entities.ContainsKey(typeof(T)))
+                throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
+#endif
+
+            foreach (var e in Entities[typeof(T)])
+                yield return e as T;
         }
 
         public T GetComponent<T>() where T : Component
@@ -134,14 +159,25 @@ namespace Monocle
                 return list[0] as T;
         }
 
-        public List<T> GetComponents<T>() where T : Component
+        public List<Component> GetComponents<T>() where T : Component
         {
 #if DEBUG
             if (!Components.ContainsKey(typeof(T)))
                 throw new Exception("Provided Component type is not marked with the Tracked attribute!");
 #endif
 
-            return Components[typeof(T)] as List<T>;
+            return Components[typeof(T)];
+        }
+
+        public IEnumerator<T> EnumerateComponents<T>() where T : Component
+        {
+#if DEBUG
+            if (!Components.ContainsKey(typeof(T)))
+                throw new Exception("Provided Component type is not marked with the Tracked attribute!");
+#endif
+
+            foreach (var c in Components[typeof(T)])
+                yield return c as T;
         }
 
         internal void EntityAdded(Entity entity)
