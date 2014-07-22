@@ -501,17 +501,17 @@ namespace Monocle
                 return ret;
         }
 
-        static public Vector2 SafeNormalize(Vector2 vec)
+        static public Vector2 SafeNormalize(this Vector2 vec)
         {
             return SafeNormalize(vec, Vector2.Zero);
         }
 
-        static public Vector2 SafeNormalize(Vector2 vec, float length)
+        static public Vector2 SafeNormalize(this Vector2 vec, float length)
         {
             return SafeNormalize(vec, Vector2.Zero, length);
         }
 
-        static public Vector2 SafeNormalize(Vector2 vec, Vector2 ifZero)
+        static public Vector2 SafeNormalize(this Vector2 vec, Vector2 ifZero)
         {
             if (vec == Vector2.Zero)
                 return ifZero;
