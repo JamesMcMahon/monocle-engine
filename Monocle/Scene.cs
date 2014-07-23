@@ -300,6 +300,18 @@ namespace Monocle
         #region Entity Shortcuts
 
         /// <summary>
+        /// Shortcut to call Engine.Pooler.Create, add the Entity to this Scene, and return it. Entity type must be marked as Pooled
+        /// </summary>
+        /// <typeparam name="T">Pooled Entity type to create</typeparam>
+        /// <returns></returns>
+        public T CreateAndAdd<T>() where T : Entity, new()
+        {
+            var entity = Engine.Pooler.Create<T>();
+            Add(entity);
+            return entity;
+        }
+
+        /// <summary>
         /// Quick access to entire tag lists of Entities. Result will never be null
         /// </summary>
         /// <param name="tag">The tag list to fetch</param>
