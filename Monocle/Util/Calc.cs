@@ -731,6 +731,24 @@ namespace Monocle
             }
         }
 
+        static public Vector2 FourWayNormal(this Vector2 vec)
+        {
+            float angle = vec.Angle();
+            angle = (float)Math.Floor((angle + MathHelper.PiOver2 / 2f) / MathHelper.PiOver2) * MathHelper.PiOver2;
+
+            vec = AngleToVector(angle, 1f);
+            if (Math.Abs(vec.X) < .5f)
+                vec.X = 0;
+            else
+                vec.X = Math.Sign(vec.X);
+            if (Math.Abs(vec.Y) < .5f)
+                vec.Y = 0;
+            else
+                vec.Y = Math.Sign(vec.Y);
+
+            return vec;
+        }
+
         static public Vector2 EightWayNormal(this Vector2 vec)
         {
             float angle = vec.Angle();
