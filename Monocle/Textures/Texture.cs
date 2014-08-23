@@ -18,11 +18,6 @@ namespace Monocle
 
         public Texture(string imagePath, bool load)
         {
-#if DEBUG
-            if (!File.Exists(imagePath))
-                throw new Exception("File does not exist: " + ImagePath);
-#endif
-
             ImagePath = imagePath;
             if (load)
                 Load();
