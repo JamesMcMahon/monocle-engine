@@ -733,6 +733,9 @@ namespace Monocle
 
         static public Vector2 FourWayNormal(this Vector2 vec)
         {
+            if (vec == Vector2.Zero)
+                return Vector2.Zero;
+
             float angle = vec.Angle();
             angle = (float)Math.Floor((angle + MathHelper.PiOver2 / 2f) / MathHelper.PiOver2) * MathHelper.PiOver2;
 
@@ -751,6 +754,9 @@ namespace Monocle
 
         static public Vector2 EightWayNormal(this Vector2 vec)
         {
+            if (vec == Vector2.Zero)
+                return Vector2.Zero;
+
             float angle = vec.Angle();
             angle = (float)Math.Floor((angle + MathHelper.PiOver4 / 2f) / MathHelper.PiOver4) * MathHelper.PiOver4;
 

@@ -258,6 +258,15 @@ namespace Monocle
 
             #region Position
 
+            public bool WasMoved
+            {
+                get
+                {
+                    return CurrentState.X != PreviousState.X
+                        || CurrentState.Y != PreviousState.Y;
+                }
+            }
+
             public int X
             {
                 get
@@ -284,16 +293,16 @@ namespace Monocle
                 }
             }
 
-            public Point Position
+            public Vector2 Position
             {
                 get
                 {
-                    return new Point(X, Y);
+                    return new Vector2(X, Y);
                 }
 
                 set
                 {
-                    Microsoft.Xna.Framework.Input.Mouse.SetPosition(value.X, value.Y);
+                    Microsoft.Xna.Framework.Input.Mouse.SetPosition((int)Math.Round(value.X), (int)Math.Round(value.Y));
                 }
             }
 
