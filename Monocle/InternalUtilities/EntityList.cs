@@ -84,7 +84,7 @@ namespace Monocle
 
                 foreach (var entity in toAwake)
                     entity.Awake(Scene);
-
+                toAwake.Clear();
             }
         }
 
