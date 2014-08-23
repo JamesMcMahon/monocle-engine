@@ -11,6 +11,7 @@ namespace Monocle
 
         private List<Entity> entities;
         private List<Entity> toAdd;
+        private List<Entity> toAwake;
         private List<Entity> toRemove;
         private bool unsorted;
 
@@ -20,6 +21,7 @@ namespace Monocle
 
             entities = new List<Entity>();
             toAdd = new List<Entity>();
+            toAwake = new List<Entity>();
             toRemove = new List<Entity>();
         }
 
@@ -77,9 +79,12 @@ namespace Monocle
 
             if (toAdd.Count > 0)
             {
-                foreach (var entity in toAdd)
-                    entity.Awake(Scene);
+                toAwake.AddRange(toAdd);
                 toAdd.Clear();
+
+                foreach (var entity in toAwake)
+                    entity.Awake(Scene);
+
             }
         }
 
