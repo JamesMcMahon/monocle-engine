@@ -30,10 +30,8 @@ namespace Monocle
 
         public T Create<T>() where T : Entity, new()
         {
-#if DEBUG
             if (!Pools.ContainsKey(typeof(T)))
-                throw new Exception("The provided Entity type is not a Pooled type");
-#endif
+                return new T();
 
             var queue = Pools[typeof(T)];
             if (queue.Count == 0)
