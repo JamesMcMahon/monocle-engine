@@ -210,6 +210,17 @@ namespace Monocle
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color, 0, origin, 1, SpriteEffects.None, 0);
         }
 
+        static public void OutlineTextCentered(SpriteFont font, string text, Vector2 position, Color color, Color outlineColor, float scale)
+        {
+            Vector2 origin = font.MeasureString(text) / 2;
+
+            for (int i = -1; i < 2; i++)
+                for (int j = -1; j < 2; j++)
+                    if (i != 0 || j != 0)
+                        Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position) + new Vector2(i, j), outlineColor, 0, origin, scale, SpriteEffects.None, 0);
+            Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color, 0, origin, scale, SpriteEffects.None, 0);
+        }
+
         static public void OutlineTextJustify(SpriteFont font, string text, Vector2 position, Color color, Color outlineColor, Vector2 justify)
         {
             Vector2 origin = font.MeasureString(text) * justify;
