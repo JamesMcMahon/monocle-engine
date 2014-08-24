@@ -43,7 +43,7 @@ namespace Monocle
             Counter = sineCounter = 0;
 
             increment = 1f / duration;
-            sineAdd = MathHelper.TwoPi * frequency / 60;
+            sineAdd = MathHelper.TwoPi * frequency;
             this.onChange = onChange;
             this.easer = easer;
             this.removeSelfOnFinish = removeSelfOnFinish;
