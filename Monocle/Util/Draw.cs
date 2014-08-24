@@ -263,6 +263,11 @@ namespace Monocle
             SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), clipRect, color);
         }
 
+        static public void Texture(Texture texture, Vector2 position, Color color, Vector2 origin, Vector2 scale, float rotation)
+        {
+            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, color, rotation, origin, scale, SpriteEffects.None, 0);
+        }
+
         static public void Texture(Subtexture subTexture, Vector2 position, Color color)
         {
             SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color);
