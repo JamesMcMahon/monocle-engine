@@ -14,7 +14,7 @@ namespace Monocle
         {
             Tag = tag;
             BlendState = BlendState.AlphaBlend;
-            SamplerState = SamplerState.PointClamp;
+            SamplerState = SamplerState.LinearClamp;
             Camera = new Camera();
         }
 

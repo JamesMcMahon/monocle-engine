@@ -1,16 +1,22 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Monocle
 {
-    public class EverythingRenderer : Renderer
+    public class TagExcludeRenderer : Renderer
     {
         public BlendState BlendState;
         public SamplerState SamplerState;
         public Effect Effect;
         public Camera Camera;
+        public int ExcludeTag;
 
-        public EverythingRenderer()
+        public TagExcludeRenderer(int excludeTag)
         {
+            ExcludeTag = excludeTag;
             BlendState = BlendState.AlphaBlend;
             SamplerState = SamplerState.LinearClamp;
             Camera = new Camera();
@@ -25,9 +31,14 @@ namespace Monocle
         {
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix * Draw.MasterRenderMatrix);
 
-            scene.Entities.Render();
+            foreach (var entity in scene.Entities)
+                if (entity.Visible && !entity.Tags.Contains(ExcludeTag))
+                    entity.Render();
+
             if (Engine.Commands.Open)
-                scene.Entities.DebugRender();
+                foreach (var entity in scene.Entities)
+                    if (!entity.Tags.Contains(ExcludeTag))
+                        entity.DebugRender();
 
             Draw.SpriteBatch.End();
         }
