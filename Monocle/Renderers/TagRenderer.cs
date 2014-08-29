@@ -25,7 +25,7 @@ namespace Monocle
 
         public override void Render(Scene scene)
         {
-            Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix);
+            Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix * Draw.MasterRenderMatrix);
 
             foreach (var entity in scene[Tag])
                 if (entity.Visible)

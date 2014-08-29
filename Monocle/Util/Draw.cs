@@ -6,9 +6,26 @@ namespace Monocle
 {
     public static class Draw
     {
+        /// <summary>
+        /// The currently-rendering Renderer
+        /// </summary>
         static public Renderer Renderer { get; internal set; }
+
+        /// <summary>
+        /// All 2D rendering is done through this SpriteBatch instance
+        /// </summary>
         static public SpriteBatch SpriteBatch { get; private set; }
+
+        /// <summary>
+        /// The default Monocle font (Consolas 12). Loaded automatically by Monocle at startup
+        /// </summary>
         static public SpriteFont DefaultFont { get; private set; }
+
+        /// <summary>
+        /// Matrix that handles scaling for fullscreen. Automatically set by Monocle when the game switches from fullscreen to windowed mode.
+        /// All your rendering should use this Matrix and the default Renderers use it
+        /// </summary>
+        static public Matrix MasterRenderMatrix { get; internal set; }
 
         /// <summary>
         /// A subtexture used to draw rectangles and lines. 
@@ -28,6 +45,7 @@ namespace Monocle
 
         static internal void Initialize(GraphicsDevice graphicsDevice)
         {
+            OnGraphicsReset();
             SpriteBatch = new SpriteBatch(graphicsDevice);
             DefaultFont = Engine.Instance.Content.Load<SpriteFont>(@"Monocle\MonocleDefault");
 
@@ -36,6 +54,37 @@ namespace Monocle
             Pixel = new Subtexture(texture, 0, 0, 1, 1);
             Particle = new Subtexture(texture, 0, 0, 2, 2);
 #endif
+        }
+
+        static public void OnGraphicsReset()
+        {
+            float maxWidth = Engine.Instance.GraphicsDevice.PresentationParameters.BackBufferWidth;
+            float maxHeight = Engine.Instance.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            int width;
+            int height;
+
+            if (maxWidth / Engine.Width > maxHeight / Engine.Height)
+            {
+                width = (int)(maxHeight / Engine.Height * Engine.Width);
+                height = (int)maxHeight;
+            }
+            else
+            {
+                width = (int)maxWidth;
+                height = (int)(maxWidth / Engine.Width * Engine.Height);
+            }
+
+            MasterRenderMatrix = Matrix.CreateScale(width / (float)Engine.Width);
+
+            Engine.Instance.GraphicsDevice.Viewport = new Viewport
+            {
+                X = (int)(maxWidth / 2 - width / 2),
+                Y = (int)(maxHeight / 2 - height / 2),
+                Width = width,
+                Height = height,
+                MinDepth = 0,
+                MaxDepth = 1
+            };
         }
 
         static public void BeginCanvas(Canvas canvas)

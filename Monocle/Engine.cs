@@ -44,10 +44,15 @@ namespace Monocle
 
             IsMouseVisible = false;
             IsFixedTimeStep = false;
+#if !DEBUG
+            Graphics.IsFullScreen = true;
+#endif
         }
 
         private void OnGraphicsReset(object sender, EventArgs e)
         {
+            Monocle.Draw.OnGraphicsReset();
+
             if (scene != null)
                 scene.HandleGraphicsReset();
             if (nextScene != null)
@@ -163,4 +168,5 @@ namespace Monocle
             set { Instance.nextScene = value; }
         }
     }
+
 }

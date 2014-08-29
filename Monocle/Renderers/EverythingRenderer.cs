@@ -23,7 +23,7 @@ namespace Monocle
 
         public override void Render(Scene scene)
         {
-            Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix);
+            Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix * Draw.MasterRenderMatrix);
 
             scene.Entities.Render();
             if (Engine.Commands.Open)
