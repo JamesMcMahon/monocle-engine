@@ -36,22 +36,21 @@ namespace Monocle
             Graphics = new GraphicsDeviceManager(this);
             Graphics.SynchronizeWithVerticalRetrace = false;
             Graphics.DeviceReset += OnGraphicsReset;
-            Graphics.IsFullScreen = false;
             Graphics.PreferredBackBufferWidth = Width;
             Graphics.PreferredBackBufferHeight = Height;
+#if !DEBUG
+            Graphics.IsFullScreen = true;
+#endif
 
             Content.RootDirectory = @"Content\";
 
             IsMouseVisible = false;
             IsFixedTimeStep = false;
-#if !DEBUG
-            Graphics.IsFullScreen = true;
-#endif
         }
 
         private void OnGraphicsReset(object sender, EventArgs e)
         {
-            Monocle.Draw.OnGraphicsReset();
+            UpdateView();
 
             if (scene != null)
                 scene.HandleGraphicsReset();
@@ -59,10 +58,42 @@ namespace Monocle
                 nextScene.HandleGraphicsReset();
         }
 
+        protected virtual void UpdateView()
+        {
+            float screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            float screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            int drawWidth;
+            int drawHeight;
+
+            if (screenWidth / Width > screenHeight / Height)
+            {
+                drawWidth = (int)(screenHeight / Height * Width);
+                drawHeight = (int)screenHeight;
+            }
+            else
+            {
+                drawWidth = (int)screenWidth;
+                drawHeight = (int)(screenWidth / Width * Height);
+            }
+
+            Monocle.Draw.MasterRenderMatrix = Matrix.CreateScale(drawWidth / (float)Width);
+
+            GraphicsDevice.Viewport = new Viewport
+            {
+                X = (int)(screenWidth / 2 - drawWidth / 2),
+                Y = (int)(screenHeight / 2 - drawHeight / 2),
+                Width = drawWidth,
+                Height = drawHeight,
+                MinDepth = 0,
+                MaxDepth = 1
+            };
+        }
+
         protected override void Initialize()
         {
             base.Initialize();
 
+            UpdateView();
             MInput.Initialize();
             Tracker.Initialize();
             Pooler = new Monocle.Pooler();
@@ -168,5 +199,4 @@ namespace Monocle
             set { Instance.nextScene = value; }
         }
     }
-
 }
