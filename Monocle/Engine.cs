@@ -34,12 +34,15 @@ namespace Monocle
             ClearColor = Color.Black;
 
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.SynchronizeWithVerticalRetrace = false;
             Graphics.DeviceReset += OnGraphicsReset;
             Graphics.PreferredBackBufferWidth = Width;
             Graphics.PreferredBackBufferHeight = Height;
-#if !DEBUG
+#if DEBUG
+            Graphics.IsFullScreen = false;
+            Graphics.SynchronizeWithVerticalRetrace = false;
+#else
             Graphics.IsFullScreen = true;
+            Graphics.SynchronizeWithVerticalRetrace = true;
 #endif
 
             Content.RootDirectory = @"Content\";
