@@ -73,6 +73,7 @@
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
+    <Compile Include="Renderers\TagExcludeRenderer.cs" />
     <Compile Include="Util\Pooler.cs" />
     <Compile Include="Util\Tracker.cs" />
     <Compile Include="Util\Camera.cs" />

@@ -28,18 +28,19 @@ namespace Monocle
         static public Matrix MasterRenderMatrix { get; internal set; }
 
         /// <summary>
-        /// A subtexture used to draw rectangles and lines. 
-        /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
-        /// Should be a 1x1 white pixel
-        /// </summary>
-        static public Subtexture Pixel;
-
-        /// <summary>
         /// A subtexture used to draw particle systems.
         /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
         /// Should be a 2x2 white pixel
         /// </summary>
         static public Subtexture Particle;
+
+        /// <summary>
+        /// A subtexture used to draw rectangles and lines. 
+        /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
+        /// Use the top left pixel of your Particle Subtexture if you replace it!
+        /// Should be a 1x1 white pixel
+        /// </summary>
+        static public Subtexture Pixel;
 
         static private Rectangle rect;
 
@@ -48,11 +49,9 @@ namespace Monocle
             SpriteBatch = new SpriteBatch(graphicsDevice);
             DefaultFont = Engine.Instance.Content.Load<SpriteFont>(@"Monocle\MonocleDefault");
 
-#if DEBUG
             Texture texture = new Texture(2, 2, Color.White);
             Pixel = new Subtexture(texture, 0, 0, 1, 1);
             Particle = new Subtexture(texture, 0, 0, 2, 2);
-#endif
         }
 
         static public void BeginCanvas(Canvas canvas)
