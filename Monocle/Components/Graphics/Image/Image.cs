@@ -49,12 +49,12 @@ namespace Monocle
             Draw.SpriteBatch.Draw(Texture.Texture2D, RenderPosition, ClipRect, Color, Rotation, Origin, Scale * Zoom, Effects, 0);
         }
 
-        public override float Width
+        public virtual float Width
         {
             get { return ClipRect.Width; }
         }
 
-        public override float Height
+        public virtual float Height
         {
             get { return ClipRect.Height; }
         }

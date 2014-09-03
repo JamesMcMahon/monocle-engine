@@ -82,9 +82,6 @@ namespace Monocle
             }
         }
 
-        public abstract float Width { get; }
-        public abstract float Height { get; }
-
         public void DrawOutline(int offset = 1)
         {
             DrawOutline(Color.Black, offset);

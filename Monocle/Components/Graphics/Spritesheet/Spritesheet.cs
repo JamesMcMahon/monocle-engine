@@ -19,9 +19,9 @@ namespace Monocle
         public Rectangle[] FrameRects { get; private set; }
         public float Rate = 1;
 
-        private Dictionary<T, SpriteAnimation> Animations; 
+        private Dictionary<T, SpritesheetAnimation> Animations;
         private int currentFrame;
-        private SpriteAnimation currentAnim;        
+        private SpritesheetAnimation currentAnim;
         private float timer;
 
         public Spritesheet(Texture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
@@ -45,12 +45,12 @@ namespace Monocle
         public Spritesheet(Subtexture subTexture, int frameWidth, int frameHeight, int frameSep = 0)
             : this(subTexture, null, frameWidth, frameHeight, frameSep)
         {
-            
+
         }
 
         private void Initialize(int frameWidth, int frameHeight, int frameSep)
         {
-            Animations = new Dictionary<T, SpriteAnimation>();
+            Animations = new Dictionary<T, SpritesheetAnimation>();
 
             //Get the amounts of frames
             {
@@ -321,7 +321,7 @@ namespace Monocle
                     throw new Exception("Specified frames is out of max range for this Sprite.");
 #endif
 
-            var anim = new SpriteAnimation(delay, loop, frames);
+            var anim = new SpritesheetAnimation(delay, loop, frames);
             Animations.Add(id, anim);
         }
 
@@ -383,13 +383,13 @@ namespace Monocle
          *  Animation struct
          */
 
-        private struct SpriteAnimation
+        private struct SpritesheetAnimation
         {
             public float Delay;
             public int[] Frames;
             public bool Loop;
 
-            public SpriteAnimation(float delay, bool loop, int[] frames)
+            public SpritesheetAnimation(float delay, bool loop, int[] frames)
             {
                 Delay = delay;
                 Loop = loop;

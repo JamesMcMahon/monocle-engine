@@ -128,12 +128,12 @@ namespace Monocle
             }
         }
 
-        public override float Width
+        public float Width
         {
             get { return Canvas.Width; }
         }
 
-        public override float Height
+        public float Height
         {
             get { return Canvas.Height; }
         }

@@ -59,7 +59,7 @@ namespace Monocle
             if (Type.Source == null)
                 Draw.SpriteBatch.Draw(Draw.Particle.Texture2D, RenderPosition, Draw.Particle.Rect, Color, 0, Vector2.One, Size * .5f, SpriteEffects.None, 0);
             else
-                Draw.SpriteBatch.Draw(Type.Source.Texture2D, RenderPosition, Type.Source.Rect, Color, Rotation, Type.Source.HalfSize, Size, SpriteEffects.None, 0);
+                Draw.SpriteBatch.Draw(Type.Source.Texture2D, RenderPosition, Type.Source.Rect, Color, Rotation, Type.Source.Center, Size, SpriteEffects.None, 0);
         }
 
         public Vector2 RenderPosition { get { return Calc.Floor(Position); } }

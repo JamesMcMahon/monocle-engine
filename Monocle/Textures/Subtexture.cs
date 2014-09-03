@@ -59,7 +59,7 @@ namespace Monocle
             get { return new Vector2(Width, Height); }
         }
 
-        public Vector2 HalfSize
+        public Vector2 Center
         {
             get { return Size * .5f; }
         }
