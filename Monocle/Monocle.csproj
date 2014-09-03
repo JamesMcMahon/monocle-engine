@@ -84,20 +84,20 @@
     <Compile Include="Colliders\Hitbox.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Graphics\DrawRectangle.cs" />
-    <Compile Include="Components\Graphics\FlashingImage.cs" />
+    <Compile Include="Components\Graphics\Image\FlashingImage.cs" />
     <Compile Include="Components\Graphics\GraphicsComponent.cs" />
-    <Compile Include="Components\Graphics\Image.cs" />
-    <Compile Include="Components\Graphics\MotionBlurImage.cs" />
-    <Compile Include="Components\Graphics\MotionBlurSprite.cs" />
-    <Compile Include="Components\Graphics\OutlineImage.cs" />
-    <Compile Include="Components\Graphics\SineSprite.cs" />
-    <Compile Include="Components\Graphics\Sprite.cs" />
-    <Compile Include="Components\Graphics\SpritePart.cs" />
+    <Compile Include="Components\Graphics\Image\Image.cs" />
+    <Compile Include="Components\Graphics\Image\MotionBlurImage.cs" />
+    <Compile Include="Components\Graphics\Spritesheet\MotionBlurSpritesheet.cs" />
+    <Compile Include="Components\Graphics\Image\OutlineImage.cs" />
+    <Compile Include="Components\Graphics\Spritesheet\SineSpritesheet.cs" />
+    <Compile Include="Components\Graphics\Spritesheet\Spritesheet.cs" />
+    <Compile Include="Components\Graphics\Spritesheet\PartialSpritesheet.cs" />
     <Compile Include="Components\Graphics\Text\NumberText.cs" />
     <Compile Include="Components\Graphics\Text\OutlineText.cs" />
     <Compile Include="Components\Graphics\Text\Text.cs" />
     <Compile Include="Components\Graphics\Text\TimerText.cs" />
-    <Compile Include="Components\Graphics\TiledImage.cs" />
+    <Compile Include="Components\Graphics\Image\TiledImage.cs" />
     <Compile Include="Components\Graphics\Tilemap.cs" />
     <Compile Include="Components\Logic\Alarm.cs" />
     <Compile Include="Components\Logic\Coroutine.cs" />
@@ -139,7 +139,9 @@
     <Compile Include="Input\VirtualJoystick.cs" />
     <Compile Include="Input\VirtualButton.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Components\Graphics\Sprite\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Monocle\MonocleDefault.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

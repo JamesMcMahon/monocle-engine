@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
-    public class Sprite<T> : Image
+    public class Spritesheet<T> : Image
     {
-        public Action<Sprite<T>> OnAnimationComplete;
-        public Action<Sprite<T>> OnAnimate;
-        public Action<Sprite<T>> OnFrameChange;
+        public Action<Spritesheet<T>> OnAnimationComplete;
+        public Action<Spritesheet<T>> OnAnimate;
+        public Action<Spritesheet<T>> OnFrameChange;
 
         public int FramesX { get; private set; }
         public int FramesY { get; private set; }
@@ -24,25 +24,25 @@ namespace Monocle
         private SpriteAnimation currentAnim;        
         private float timer;
 
-        public Sprite(Texture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
+        public Spritesheet(Texture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, clipRect, true)
         {
             Initialize(frameWidth, frameHeight, frameSep);
         }
 
-        public Sprite(Subtexture subTexture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
+        public Spritesheet(Subtexture subTexture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
             : base(subTexture, clipRect, true)
         {
             Initialize(frameWidth, frameHeight, frameSep);
         }
 
-        public Sprite(Texture texture, int frameWidth, int frameHeight, int frameSep = 0)
+        public Spritesheet(Texture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : this(texture, null, frameWidth, frameHeight, frameSep)
         {
 
         }
 
-        public Sprite(Subtexture subTexture, int frameWidth, int frameHeight, int frameSep = 0)
+        public Spritesheet(Subtexture subTexture, int frameWidth, int frameHeight, int frameSep = 0)
             : this(subTexture, null, frameWidth, frameHeight, frameSep)
         {
             
@@ -276,7 +276,7 @@ namespace Monocle
             }
         }
 
-        public void CopyState(Sprite<T> other)
+        public void CopyState(Spritesheet<T> other)
         {
             AnimationFrame = other.AnimationFrame;
             Playing = other.Playing;

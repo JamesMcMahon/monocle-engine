@@ -2,35 +2,35 @@
 
 namespace Monocle
 {
-    public class SpritePart<T> : Sprite<T>
+    public class PartialSpritesheet<T> : Spritesheet<T>
     {
         public float DrawX = 0;
         public float DrawY = 0;
         public float DrawWidth = 1;
         public float DrawHeight = 1;
 
-        public SpritePart(Texture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
+        public PartialSpritesheet(Texture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, clipRect, frameWidth, frameHeight, frameSep)
         {
-            
+
         }
 
-        public SpritePart(Subtexture subTexture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
+        public PartialSpritesheet(Subtexture subTexture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
             : base(subTexture, clipRect, frameWidth, frameHeight, frameSep)
         {
-            
+
         }
 
-        public SpritePart(Texture texture, int frameWidth, int frameHeight, int frameSep = 0)
+        public PartialSpritesheet(Texture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : this(texture, null, frameWidth, frameHeight, frameSep)
         {
 
         }
 
-        public SpritePart(Subtexture subTexture, int frameWidth, int frameHeight, int frameSep = 0)
+        public PartialSpritesheet(Subtexture subTexture, int frameWidth, int frameHeight, int frameSep = 0)
             : this(subTexture, null, frameWidth, frameHeight, frameSep)
         {
-            
+
         }
 
         public override void Render()

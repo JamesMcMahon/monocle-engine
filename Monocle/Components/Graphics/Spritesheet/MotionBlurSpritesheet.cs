@@ -2,12 +2,12 @@
 
 namespace Monocle
 {
-    public class MotionBlurSprite<T> : Sprite<T>
+    public class MotionBlurSpritesheet<T> : Spritesheet<T>
     {
         private MotionBlurData[] blurData;
         public Vector2 BlurSpeed;
 
-        public MotionBlurSprite(Subtexture subtexture, int frameWidth, int frameHeight, int blurs)
+        public MotionBlurSpritesheet(Subtexture subtexture, int frameWidth, int frameHeight, int blurs)
             : base(subtexture, frameWidth, frameHeight)
         {
             blurData = new MotionBlurData[blurs];
@@ -17,7 +17,7 @@ namespace Monocle
         {
             base.Render();
             for (int i = 0; i < blurData.Length; i++)
-                Draw.SpriteBatch.Draw(Texture.Texture2D, RenderPosition + BlurSpeed * blurData[i].PositionMult, CurrentClip, 
+                Draw.SpriteBatch.Draw(Texture.Texture2D, RenderPosition + BlurSpeed * blurData[i].PositionMult, CurrentClip,
                     Color * blurData[i].Alpha, Rotation, Origin, Scale * Zoom, Effects, 0);
         }
 

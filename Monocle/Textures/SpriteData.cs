@@ -31,11 +31,11 @@ namespace Monocle
             return sprites[id];
         }
 
-        public Sprite<string> GetSpriteString(string id)
+        public Spritesheet<string> GetSpriteString(string id)
         {
             XmlElement xml = sprites[id];
 
-            Sprite<string> sprite = new Sprite<string>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
+            Spritesheet<string> sprite = new Spritesheet<string>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
             sprite.Origin = new Vector2(xml.ChildFloat("OriginX", 0), xml.ChildFloat("OriginY", 0));
             sprite.Position = new Vector2(xml.ChildFloat("X", 0), xml.ChildFloat("Y", 0));
             sprite.Color = xml.ChildHexColor("Color", Color.White);
@@ -48,11 +48,11 @@ namespace Monocle
             return sprite;
         }
 
-        public Sprite<int> GetSpriteInt(string id)
+        public Spritesheet<int> GetSpriteInt(string id)
         {
             XmlElement xml = sprites[id];
 
-            Sprite<int> sprite = new Sprite<int>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
+            Spritesheet<int> sprite = new Spritesheet<int>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
             sprite.Origin = new Vector2(xml.ChildFloat("OriginX", 0), xml.ChildFloat("OriginY", 0));
             sprite.Position = new Vector2(xml.ChildFloat("X", 0), xml.ChildFloat("Y", 0));
             sprite.Color = xml.ChildHexColor("Color", Color.White);
@@ -65,11 +65,11 @@ namespace Monocle
             return sprite;
         }
 
-        public MotionBlurSprite<int> GetMotionBlurSpriteInt(string id, int blurs)
+        public MotionBlurSpritesheet<int> GetMotionBlurSpriteInt(string id, int blurs)
         {
             XmlElement xml = sprites[id];
 
-            MotionBlurSprite<int> sprite = new MotionBlurSprite<int>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"), blurs);
+            MotionBlurSpritesheet<int> sprite = new MotionBlurSpritesheet<int>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"), blurs);
             sprite.Origin = new Vector2(xml.ChildFloat("OriginX", 0), xml.ChildFloat("OriginY", 0));
             sprite.Position = new Vector2(xml.ChildFloat("X", 0), xml.ChildFloat("Y", 0));
             sprite.Color = xml.ChildHexColor("Color", Color.White);
@@ -82,11 +82,11 @@ namespace Monocle
             return sprite;
         }
 
-        public SpritePart<int> GetSpritePartInt(string id)
+        public PartialSpritesheet<int> GetSpritePartInt(string id)
         {
             XmlElement xml = sprites[id];
 
-            SpritePart<int> sprite = new SpritePart<int>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
+            PartialSpritesheet<int> sprite = new PartialSpritesheet<int>(atlas[xml.ChildText("Texture")], xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
             sprite.Origin = new Vector2(xml.ChildFloat("OriginX", 0), xml.ChildFloat("OriginY", 0));
             sprite.Position = new Vector2(xml.ChildFloat("X", 0), xml.ChildFloat("Y", 0));
             sprite.Color = xml.ChildHexColor("Color", Color.White);
