@@ -9,8 +9,16 @@ namespace Monocle
     public class Sprite<T> : GraphicsComponent
     {
         public List<SpriteFrame> Frames { get; private set; }
-        private Dictionary<T, SpriteAnimation> animations;
+        public bool Animating { get; private set; }
+        public bool Finished { get; private set; }
+        public float Rate;
+
         private int currentFrame;
+        private Dictionary<T, SpriteAnimation> animations;
+        private SpriteAnimation currentAnimation;
+        private T currentAnimationID;
+        private float delayCounter;
+        private int currentAnimationFrame;
 
         public Sprite()
             : base(true)
@@ -54,6 +62,11 @@ namespace Monocle
 
         public void AddAnimation(T id, int frame)
         {
+#if DEBUG
+            if (frame < -1 || frame >= Frames.Count)
+                throw new Exception("Specified frame index is out of range. For null frame, use index -1.");
+#endif
+
             animations[id] =
                 new SpriteAnimation()
                 {
@@ -65,6 +78,16 @@ namespace Monocle
 
         public void AddAnimation(T id, bool looping, float delay, params int[] frames)
         {
+#if DEBUG
+            if (frames.Length == 0)
+                throw new Exception("Animation must have at least one frame. For null frame, use index -1.");
+            foreach (var frame in frames)
+                if (frame < -1 || frame >= Frames.Count)
+                    throw new Exception("Specified frame index is out of range. For null frame, use index -1.");
+            if (delay <= 0)
+                throw new Exception("Frame delay must be larger than zero.");
+#endif
+
             animations[id] =
                 new SpriteAnimation()
                 {
@@ -76,6 +99,35 @@ namespace Monocle
 
         #endregion
 
+        #region Animation Control
+
+        public void Play(T id, bool restart = true)
+        {
+#if DEBUG
+            if (!animations.ContainsKey(id))
+                throw new Exception("Animation id '" + id.ToString() + "' is undefined");
+#endif
+
+            if (restart || !currentAnimationID.Equals(id))
+            {
+                currentAnimationID = id;
+                currentAnimation = animations[id];
+                Animating = true;
+                delayCounter = 0;
+                currentAnimationFrame = 0;
+                currentFrame = currentAnimation.Frames[0];
+                Finished = (currentAnimation.Frames.Length == 1);
+            }
+        }
+
+        public void Stop()
+        {
+            currentAnimationID = default(T);
+
+        }
+
+        #endregion
+
         public override void Update()
         {
 
@@ -83,7 +135,7 @@ namespace Monocle
 
         public override void Render()
         {
-            //Draw it
+            //Draw it!
         }
 
         public int CurrentFrame
@@ -98,7 +150,25 @@ namespace Monocle
                 if (value < -1 || value >= Frames.Count)
                     throw new Exception("Sprite frame index out of range! For null frame, set index to -1.");
                 else
+                {
+                    Animating = false;
+                    Finished = false;
                     currentFrame = value;
+                    CurrentAnimation = default(T);
+                }
+            }
+        }
+
+        public T CurrentAnimation
+        {
+            get
+            {
+                return currentAnimationID;
+            }
+
+            set
+            {
+                Play(currentAnimationID, false);
             }
         }
 
