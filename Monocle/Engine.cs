@@ -7,13 +7,13 @@ namespace Monocle
     public class Engine : Game
     {
         static public Engine Instance { get; private set; }
-        static public float DeltaTime { get; private set; }
-        static public float TimeRate = 1f;
         static public GraphicsDeviceManager Graphics { get; private set; }
         static public Commands Commands { get; private set; }
         static public Pooler Pooler { get; private set; }
         static public int Width { get; private set; }
         static public int Height { get; private set; }
+        static public float DeltaTime { get; private set; }
+        static public float TimeRate = 1f;
         static public Color ClearColor;
         static public bool ExitOnEscapeKeypress;
 
