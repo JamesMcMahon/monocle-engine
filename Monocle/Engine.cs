@@ -15,6 +15,7 @@ namespace Monocle
         static public int Width { get; private set; }
         static public int Height { get; private set; }
         static public Color ClearColor;
+        static public bool ExitOnEscapeKeypress;
 
         private Scene scene;
         private Scene nextScene;
@@ -49,6 +50,7 @@ namespace Monocle
 
             IsMouseVisible = false;
             IsFixedTimeStep = false;
+            ExitOnEscapeKeypress = true;
         }
 
         private void OnGraphicsReset(object sender, EventArgs e)
@@ -116,6 +118,12 @@ namespace Monocle
 
             //Update input
             MInput.Update();
+
+            if (ExitOnEscapeKeypress && MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                Exit();
+                return;
+            }
 
             //Update current scene
             if (scene != null)
