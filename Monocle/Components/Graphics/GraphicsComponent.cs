@@ -57,23 +57,6 @@ namespace Monocle
             }
         }
 
-        public void CenterOrigin()
-        {
-            Origin.X = Width / 2f;
-            Origin.Y = Height / 2f;
-        }
-
-        public void JustifyOrigin(Vector2 at)
-        {
-            Origin.X = Width * at.X;
-            Origin.Y = Height * at.Y;
-        }
-
-        public void JustifyOrigin(float x, float y)
-        {
-            JustifyOrigin(new Vector2(x, y));
-        }
-
         public Vector2 RenderPosition
         {
             get

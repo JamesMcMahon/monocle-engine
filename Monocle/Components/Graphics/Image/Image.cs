@@ -59,6 +59,18 @@ namespace Monocle
             get { return ClipRect.Height; }
         }
 
+        public void CenterOrigin()
+        {
+            Origin.X = Width / 2f;
+            Origin.Y = Height / 2f;
+        }
+
+        public void JustifyOrigin(Vector2 at)
+        {
+            Origin.X = Width * at.X;
+            Origin.Y = Height * at.Y;
+        }
+
         public void SwapSubtexture(Subtexture subtexture, Rectangle? clipRect = null)
         {
             Texture = subtexture.Texture;

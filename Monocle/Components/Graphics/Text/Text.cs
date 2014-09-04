@@ -72,12 +72,12 @@ namespace Monocle
             }
         }
 
-        public override float Width
+        public float Width
         {
             get { return size.X; }
         }
 
-        public override float Height
+        public float Height
         {
             get { return size.Y; }
         }
@@ -94,7 +94,7 @@ namespace Monocle
                 Origin.X = 0;
             else if (horizontalOrigin == HorizontalAlign.Center)
                 Origin.X = size.X / 2;
-            else 
+            else
                 Origin.X = size.X;
 
             if (verticalOrigin == VerticalAlign.Top)
@@ -110,6 +110,6 @@ namespace Monocle
         public override void Render()
         {
             Draw.SpriteBatch.DrawString(font, text, RenderPosition, Color, Rotation, Origin, Scale * Zoom, Effects, 0);
-        }     
+        }
     }
 }

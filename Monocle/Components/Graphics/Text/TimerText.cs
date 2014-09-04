@@ -123,12 +123,12 @@ namespace Monocle
             }
         }
 
-        public override float Width
+        public float Width
         {
             get { return font.MeasureString(Text).X; }
         }
 
-        public override float Height
+        public float Height
         {
             get { return font.MeasureString(Text).Y; }
         }

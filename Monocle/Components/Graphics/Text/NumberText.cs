@@ -57,12 +57,12 @@ namespace Monocle
             Draw.SpriteBatch.DrawString(font, drawString, RenderPosition, Color, Rotation, Origin, Scale * Zoom, Effects, 0);
         }
 
-        public override float Width
+        public float Width
         {
             get { return font.MeasureString(drawString).X; }
         }
 
-        public override float Height
+        public float Height
         {
             get { return font.MeasureString(drawString).Y; }
         }
