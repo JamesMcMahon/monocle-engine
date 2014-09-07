@@ -71,6 +71,13 @@ namespace Monocle
             Active = true;
         }
 
+        public void Start(float duration, float frequency)
+        {
+            increment = 1f / duration;
+            sineAdd = MathHelper.TwoPi * frequency;
+            Start();
+        }
+
         public void Stop()
         {
             Active = false;

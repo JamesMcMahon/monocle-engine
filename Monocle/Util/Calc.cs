@@ -1202,6 +1202,46 @@ namespace Monocle
             return new Vector2(xml.AttrFloat("x", defaultPosition.X), xml.AttrFloat("y", defaultPosition.Y));
         }
 
+        static public float X(this XmlElement xml)
+        {
+            return xml.AttrFloat("x");
+        }
+
+        static public float X(this XmlElement xml, float defaultX)
+        {
+            return xml.AttrFloat("x", defaultX);
+        }
+
+        static public float Y(this XmlElement xml)
+        {
+            return xml.AttrFloat("y");
+        }
+
+        static public float Y(this XmlElement xml, float defaultY)
+        {
+            return xml.AttrFloat("y", defaultY);
+        }
+
+        static public int Width(this XmlElement xml)
+        {
+            return xml.AttrInt("width");
+        }
+
+        static public int Width(this XmlElement xml, int defaultWidth)
+        {
+            return xml.AttrInt("width", defaultWidth);
+        }
+
+        static public int Height(this XmlElement xml)
+        {
+            return xml.AttrInt("height");
+        }
+
+        static public int Height(this XmlElement xml, int defaultHeight)
+        {
+            return xml.AttrInt("height", defaultHeight);
+        }
+
         #endregion
 
         #region Inner Text
