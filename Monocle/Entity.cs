@@ -18,7 +18,7 @@ namespace Monocle
 
         private Collider collider;
         internal int depth = 0;
-        internal float actualDepth = 0;
+        internal double actualDepth = 0;
 
         public Entity(Vector2 position)
         {

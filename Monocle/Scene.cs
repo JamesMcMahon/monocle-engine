@@ -15,7 +15,7 @@ namespace Monocle
         public Entity HelperEntity { get; private set; }
         public Tracker Tracker { get; private set; }
 
-        private Dictionary<int, float> actualDepthLookup;
+        private Dictionary<int, double> actualDepthLookup;
 
         public Scene()
         {
@@ -24,7 +24,7 @@ namespace Monocle
             TagLists = new TagLists();
             Renderers = new List<Renderer>();
 
-            actualDepthLookup = new Dictionary<int, float>();
+            actualDepthLookup = new Dictionary<int, double>();
 
             HelperEntity = new Entity();
             Entities.Add(HelperEntity);
@@ -280,9 +280,9 @@ namespace Monocle
 
         internal void SetActualDepth(Entity entity)
         {
-            const float theta = .000001f;
+            const double theta = .000001f;
 
-            float add = 0;
+            double add = 0;
             if (actualDepthLookup.TryGetValue(entity.depth, out add))
                 actualDepthLookup[entity.depth] += theta;
             else
