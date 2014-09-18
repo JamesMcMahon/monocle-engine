@@ -49,6 +49,12 @@ namespace Monocle
             SpriteBatch = new SpriteBatch(graphicsDevice);
             DefaultFont = Engine.Instance.Content.Load<SpriteFont>(@"Monocle\MonocleDefault");
 
+            UseDebugPixelTexture();
+#endif
+        }
+
+        static public void UseDebugPixelTexture()
+        {
             Texture texture = new Texture(2, 2, Color.White);
             Pixel = new Subtexture(texture, 0, 0, 1, 1);
             Particle = new Subtexture(texture, 0, 0, 2, 2);
