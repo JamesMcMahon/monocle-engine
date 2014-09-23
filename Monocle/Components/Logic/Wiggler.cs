@@ -9,17 +9,15 @@ namespace Monocle
         static private Stack<Wiggler> cache = new Stack<Wiggler>();
 
         public float Counter { get; private set; }
+        public float Value { get; private set; }
         private float sineCounter;
 
         private float increment;
         private float sineAdd;
-        private Ease.Easer easer;
         private Action<float> onChange;
         private bool removeSelfOnFinish;
 
-        public float Value { get; private set; }
-
-        static public Wiggler Create(float duration, float frequency, Ease.Easer easer = null, Action<float> onChange = null, bool start = false, bool removeSelfOnFinish = false)
+        static public Wiggler Create(float duration, float frequency,  Action<float> onChange = null, bool start = false, bool removeSelfOnFinish = false)
         {
             Wiggler wiggler;
 
@@ -27,7 +25,7 @@ namespace Monocle
                 wiggler = cache.Pop();
             else
                 wiggler = new Wiggler();
-            wiggler.Init(duration, frequency, easer, onChange, start, removeSelfOnFinish);
+            wiggler.Init(duration, frequency, onChange, start, removeSelfOnFinish);
 
             return wiggler;
         }
@@ -38,14 +36,13 @@ namespace Monocle
 
         }
 
-        private void Init(float duration, float frequency, Ease.Easer easer, Action<float> onChange, bool start, bool removeSelfOnFinish)
+        private void Init(float duration, float frequency, Action<float> onChange, bool start, bool removeSelfOnFinish)
         {
             Counter = sineCounter = 0;
 
             increment = 1f / duration;
             sineAdd = MathHelper.TwoPi * frequency;
             this.onChange = onChange;
-            this.easer = easer;
             this.removeSelfOnFinish = removeSelfOnFinish;
 
             if (start)
@@ -102,10 +99,7 @@ namespace Monocle
                     RemoveSelf();
             }
 
-            if (easer == null)
-                Value = (float)Math.Cos(sineCounter) * Counter;
-            else
-                Value = (float)Math.Cos(sineCounter) * easer(Counter);
+            Value = (float)Math.Cos(sineCounter) * Counter;
 
             if (onChange != null)
                 onChange(Value);

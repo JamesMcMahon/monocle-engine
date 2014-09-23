@@ -49,6 +49,7 @@ namespace Monocle
             SpriteBatch = new SpriteBatch(graphicsDevice);
             DefaultFont = Engine.Instance.Content.Load<SpriteFont>(@"Monocle\MonocleDefault");
 
+#if DEBUG
             UseDebugPixelTexture();
 #endif
         }
