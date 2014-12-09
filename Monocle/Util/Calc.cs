@@ -54,7 +54,7 @@ namespace Monocle
 
         static public bool EndsWith(this string str, string match)
         {
-            return str.IndexOf(match) == str.Length - match.Length;
+            return str.LastIndexOf(match) == str.Length - match.Length;
         }
 
         static public string ToString(this int num, int minDigits)
@@ -63,6 +63,35 @@ namespace Monocle
             while (ret.Length < minDigits)
                 ret = "0" + ret;
             return ret;
+        }
+
+        static public string[] SplitLines(string text, SpriteFont font, int maxLineWidth, char newLine = '\n')
+        {
+            List<string> lines = new List<string>();
+
+            foreach (var forcedLine in text.Split(newLine))
+            {
+                string line = "";
+
+                foreach (string word in forcedLine.Split(' '))
+                {
+                    if (font.MeasureString(line + " " + word).X > maxLineWidth)
+                    {
+                        lines.Add(line);
+                        line = word;
+                    }
+                    else
+                    {
+                        if (line != "")
+                            line += " ";
+                        line += word;
+                    }
+                }
+
+                lines.Add(line);
+            }
+
+            return lines.ToArray();
         }
 
         #endregion
@@ -254,6 +283,12 @@ namespace Monocle
         {
             randomStack.Push(Calc.Random);
             Calc.Random = new Random(newSeed);
+        }
+
+        static public void PushRandom(Random random)
+        {
+            randomStack.Push(Calc.Random);
+            Calc.Random = random;
         }
 
         static public void PushRandom()
@@ -932,36 +967,7 @@ namespace Monocle
 
         #endregion
 
-        #region Data Parse
-
-        static public string[] SplitLines(string text, SpriteFont font, int maxLineWidth, char newLine = '\n')
-        {
-            List<string> lines = new List<string>();
-
-            foreach (var forcedLine in text.Split(newLine))
-            {
-                string line = "";
-
-                foreach (string word in forcedLine.Split(' '))
-                {
-                    if (font.MeasureString(line + " " + word).X > maxLineWidth)
-                    {
-                        lines.Add(line);
-                        line = word;
-                    }
-                    else
-                    {
-                        if (line != "")
-                            line += " ";
-                        line += word;
-                    }
-                }
-
-                lines.Add(line);
-            }
-
-            return lines.ToArray();
-        }
+        #region Data Parse 
 
         static public bool[,] GetBitData(string data, char rowSep = '\n')
         {
@@ -1006,7 +1012,7 @@ namespace Monocle
             return bitData;
         }
 
-        static public void AddBitData(bool[,] addTo, string data, char rowSep = '\n')
+        static public void CombineBitData(bool[,] combineInto, string data, char rowSep = '\n')
         {
             int x = 0;
             int y = 0;
@@ -1015,7 +1021,7 @@ namespace Monocle
                 switch (data[i])
                 {
                     case '1':
-                        addTo[x, y] = true;
+                        combineInto[x, y] = true;
                         x++;
                         break;
 
@@ -1034,15 +1040,15 @@ namespace Monocle
             }
         }
 
-        static public void AddBitData(bool[,] addTo, bool[,] data)
+        static public void CombineBitData(bool[,] combineInto, bool[,] data)
         {
-            for (int i = 0; i < addTo.GetLength(0); i++)
-                for (int j = 0; j < addTo.GetLength(1); j++)
+            for (int i = 0; i < combineInto.GetLength(0); i++)
+                for (int j = 0; j < combineInto.GetLength(1); j++)
                     if (data[i, j])
-                        addTo[i, j] = true;
+                        combineInto[i, j] = true;
         }
 
-        static public int[] ConvertStringArrayToInt(string[] strings)
+        static public int[] ConvertStringArrayToIntArray(string[] strings)
         {
             int[] ret = new int[strings.Length];
             for (int i = 0; i < strings.Length; i++)
@@ -1050,7 +1056,7 @@ namespace Monocle
             return ret;
         }
 
-        static public float[] ConvertStringArrayToFloat(string[] strings)
+        static public float[] ConvertStringArrayToFloatArray(string[] strings)
         {
             float[] ret = new float[strings.Length];
             for (int i = 0; i < strings.Length; i++)
@@ -1067,7 +1073,7 @@ namespace Monocle
             return File.Exists(filename);
         }
 
-        static public string SaveFile<T>(T obj, string filename) where T : new()
+        static public bool SaveFile<T>(T obj, string filename) where T : new()
         {
             Stream stream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 
@@ -1076,16 +1082,16 @@ namespace Monocle
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
                 serializer.Serialize(stream, obj);
                 stream.Close();
-                return null;
+                return true;
             }
             catch
             {
                 stream.Close();
-                return "FILE MAY BE IN USE, OR DISK MAY BE FULL";
+                return false;
             }
         }
 
-        static public T LoadFile<T>(string filename, out string error) where T : new()
+        static public bool LoadFile<T>(string filename, ref T data) where T : new()
         {
             Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -1094,14 +1100,13 @@ namespace Monocle
                 XmlSerializer serializer = new XmlSerializer(typeof(T));
                 T obj = (T)serializer.Deserialize(stream);
                 stream.Close();
-                error = null;
-                return obj;
+                data = obj;
+                return true;
             }
             catch
             {
                 stream.Close();
-                error = "FILE MAY BE IN USE, OR FORMAT IS INVALID";
-                return default(T);
+                return false;
             }
         }
 
