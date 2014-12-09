@@ -623,6 +623,12 @@ namespace Monocle
         [Command("count", "Logs amount of Entities in the Scene. Pass a tagIndex to count only Entities with that tag")]
         static private void Count(int tagIndex = -1)
         {
+            if (Engine.Scene == null)
+            {
+                Engine.Commands.Log("Current Scene is null!");
+                return;
+            }
+
             if (tagIndex < 0)
                 Engine.Commands.Log(Engine.Scene.Entities.Count.ToString());
             else
@@ -634,7 +640,7 @@ namespace Monocle
         {
             if (Engine.Scene == null)
             {
-                Engine.Commands.Log("No scene is active!");
+                Engine.Commands.Log("Current Scene is null!");
                 return;
             }
 
