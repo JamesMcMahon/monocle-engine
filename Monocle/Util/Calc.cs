@@ -267,30 +267,79 @@ namespace Monocle
             Calc.Random = randomStack.Pop();
         }
 
+        #region Choose
+
+        static public T Choose<T>(this Random random, T a, T b)
+        {
+            return GiveMe<T>(random.Next(2), a, b);
+        }
+
+        static public T Choose<T>(this Random random, T a, T b, T c)
+        {
+            return GiveMe<T>(random.Next(3), a, b, c);
+        }
+
+        static public T Choose<T>(this Random random, T a, T b, T c, T d)
+        {
+            return GiveMe<T>(random.Next(4), a, b, c, d);
+        }
+
+        static public T Choose<T>(this Random random, T a, T b, T c, T d, T e)
+        {
+            return GiveMe<T>(random.Next(5), a, b, c, d, e);
+        }
+
+        static public T Choose<T>(this Random random, T a, T b, T c, T d, T e, T f)
+        {
+            return GiveMe<T>(random.Next(6), a, b, c, d, e, f);
+        }
+
         static public T Choose<T>(this Random random, params T[] choices)
         {
             return choices[random.Next(choices.Length)];
         }
 
-        static public T Choose<T>(this Random random, List<T> choices)
-        {
-            return choices[random.Next(choices.Count)];
-        }
+        #endregion
 
+        #region Range
+
+        /// <summary>
+        /// Returns a random integer between min (inclusive) and max (exclusive)
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         static public int Range(this Random random, int min, int max)
         {
             return min + random.Next(max - min);
         }
 
+        /// <summary>
+        /// Returns a random float between min (inclusive) and max (exclusive)
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         static public float Range(this Random random, float min, float max)
         {
             return min + random.NextFloat(max - min);
         }
 
+        /// <summary>
+        /// Returns a random Vector2, and x- and y-values of which are between min (inclusive) and max (exclusive)
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         static public Vector2 Range(this Random random, Vector2 min, Vector2 max)
         {
             return min + new Vector2(random.NextFloat(max.X - min.X), random.NextFloat(max.Y - min.Y));
         }
+
+        #endregion
 
         static public bool Chance(this Random random, float chance)
         {

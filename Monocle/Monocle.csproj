@@ -76,6 +76,7 @@
     <Compile Include="Input\VirtualIntegerAxis.cs" />
     <Compile Include="Renderers\TagExcludeRenderer.cs" />
     <Compile Include="Util\Pooler.cs" />
+    <Compile Include="Util\ChoiceSet.cs" />
     <Compile Include="Util\Tracker.cs" />
     <Compile Include="Util\Camera.cs" />
     <Compile Include="Colliders\Circle.cs" />
