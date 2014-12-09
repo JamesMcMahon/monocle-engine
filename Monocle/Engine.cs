@@ -42,7 +42,7 @@ namespace Monocle
             Graphics.IsFullScreen = false;
             Graphics.SynchronizeWithVerticalRetrace = false;
 #else
-            Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = false;
             Graphics.SynchronizeWithVerticalRetrace = true;
 #endif
 

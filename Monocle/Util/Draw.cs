@@ -52,6 +52,7 @@ namespace Monocle
 #if DEBUG
             UseDebugPixelTexture();
 #endif
+            UseDebugPixelTexture();
         }
 
         static public void UseDebugPixelTexture()

@@ -157,7 +157,7 @@ namespace Monocle
             return Get(Calc.Random);
         }
 
-        private struct Choice<T>
+        private struct Choice
         {
             public T Data;
             public int Weight;

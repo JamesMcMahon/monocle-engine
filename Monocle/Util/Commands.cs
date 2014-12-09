@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace Monocle
@@ -12,8 +13,6 @@ namespace Monocle
         private const float REPEAT_DELAY = .5f;
         private const float REPEAT_EVERY = 1 / 30f;
         private const float OPACITY = .65f;
-
-        static private string[] Args;
 
         public bool Enabled = true;
         public bool Open { get; internal set; }
@@ -42,149 +41,9 @@ namespace Monocle
             drawCommands = new List<string>();
             commands = new Dictionary<string, CommandInfo>();
             sorted = new List<string>();
-
-            RegisterCommand("clear", () => { Clear(); }, null, "Clears the terminal. By default, you can also press F1 with the terminal open to clear it");
-            RegisterCommand("exit", () => { Engine.Instance.Exit(); }, null, "Exits the game");
-
-            RegisterCommand("count", () =>
-                {
-                    int arg = ArgInt(0, -1);
-                    if (arg == -1)
-                        Log(Engine.Scene.Entities.Count.ToString());
-                    else
-                        Log(Engine.Scene.TagLists[arg].Count.ToString());
-
-                },
-                "[tagIndex]",
-                "Prints amount of Entities in the current Scene. Pass a tagIndex to count only Entities with that tag");
-
-            RegisterCommand("tracker", () =>
-                {
-                    switch (Commands.ArgString(0, "x"))
-                    {
-                        default:
-                            Log("-- Entities --");
-                            Engine.Scene.Tracker.LogEntities();
-                            Log("-- Components --");
-                            Engine.Scene.Tracker.LogComponents();
-                            break;
-
-                        case "e":
-                            Engine.Scene.Tracker.LogEntities();
-                            break;
-
-                        case "c":
-                            Engine.Scene.Tracker.LogComponents();
-                            break;
-                    }
-                },
-                "[e|c]",
-                "Logs all tracked objects in the scene. Pass 'e' for just entities or 'c' for just components");
-
-            RegisterCommand("pooler",
-                Engine.Pooler.Log,
-                null,
-                "Logs the pooled Entity counts");
-
-            RegisterCommand("help", () =>
-                {
-                    string arg = ArgString(0);
-                    if (sorted.Contains(arg))
-                    {
-                        StringBuilder str = new StringBuilder();
-
-                        str.Append(arg);
-
-                        if (commands[arg].HelpUsage != null)
-                        {
-                            str.Append(" ");
-                            str.Append(commands[arg].HelpUsage);
-                        }
-
-                        str.Append(" : ");
-
-                        if (commands[arg].HelpAbout == null)
-                            str.Append("No help info set");
-                        else
-                            str.Append(commands[arg].HelpAbout);
-                        Log(str.ToString());
-                    }
-                    else
-                    {
-                        StringBuilder str = new StringBuilder();
-                        str.Append("Commands list: ");
-                        str.Append(string.Join(", ", sorted));
-                        Log(str.ToString());
-                        Log("Type 'help command' for more info on that command!");
-                    }
-                }, null, "Shows usage for the given command");
-
             FunctionKeyActions = new Action[12];
-        }
 
-        private void EnterCommand()
-        {
-            string[] data = currentText.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (commandHistory.Count == 0 || commandHistory[0] != currentText)
-                commandHistory.Insert(0, currentText);
-            drawCommands.Insert(0, ">" + currentText);
-            currentText = "";
-            seekIndex = -1;
-
-            string[] args = new string[data.Length - 1];
-            for (int i = 1; i < data.Length; i++)
-                args[i - 1] = data[i];
-            ExecuteCommand(data[0].ToLower(), args);
-        }
-
-        public void RegisterCommand(string command, Action action, string helpUsage = null, string helpAbout = null)
-        {
-            command = command.ToLower();
-
-            if (action == null)
-            {
-                if (commands.ContainsKey(command))
-                {
-                    commands.Remove(command);
-                    sorted.Remove(command);
-                }
-            }
-            else
-            {
-                commands[command] = new CommandInfo(action, helpUsage, helpAbout);
-                if (!sorted.Contains(command))
-                {
-                    int i;
-                    for (i = 0; i < sorted.Count; i++)
-                        if (sorted[i].CompareTo(command) > 0)
-                            break;
-                    sorted.Insert(i, command);
-                }
-            }
-        }
-
-        public void ExecuteCommand(string command, params string[] args)
-        {
-            Args = args;
-
-            if (commands.ContainsKey(command))
-            {
-                try
-                {
-                    commands[command].Action();
-                }
-                catch (Exception e)
-                {
-                    Log("'" + e.GetType() + "' encountered in command!");
-                }
-            }
-            else
-                Log("Command '" + command + "' not found! Type 'help' for list of commands");
-        }
-
-        public void Clear()
-        {
-            drawCommands.Clear();
+            BuildCommandsList();
         }
 
         public void Log(object obj)
@@ -221,6 +80,8 @@ namespace Monocle
             while (drawCommands.Count > maxCommands)
                 drawCommands.RemoveAt(drawCommands.Count - 1);
         }
+
+        #region Updating and Rendering
 
         internal void UpdateClosed()
         {
@@ -508,19 +369,19 @@ namespace Monocle
             }
         }
 
-        public void ExecuteFunctionKeyAction(int num)
+        private void EnterCommand()
         {
-            if (FunctionKeyActions[num] != null)
-            {
-                try
-                {
-                    FunctionKeyActions[num]();
-                }
-                catch (Exception e)
-                {
-                    Log("'" + e.GetType() + "' encountered in command!");
-                }
-            }
+            string[] data = currentText.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            if (commandHistory.Count == 0 || commandHistory[0] != currentText)
+                commandHistory.Insert(0, currentText);
+            drawCommands.Insert(0, ">" + currentText);
+            currentText = "";
+            seekIndex = -1;
+
+            string[] args = new string[data.Length - 1];
+            for (int i = 1; i < data.Length; i++)
+                args[i - 1] = data[i];
+            ExecuteCommand(data[0].ToLower(), args);
         }
 
         private void FindFirstTab()
@@ -566,78 +427,290 @@ namespace Monocle
             Draw.SpriteBatch.End();
         }
 
-        #region Arguments
+        #endregion
 
-        static public int ArgAmount
+        #region Execute
+
+        public void ExecuteCommand(string command, string[] args)
         {
-            get
+            if (commands.ContainsKey(command))
+                commands[command].Action(args);
+            else
+                Log("Command '" + command + "' not found! Type 'help' for list of commands");
+        }
+
+        public void ExecuteFunctionKeyAction(int num)
+        {
+            if (FunctionKeyActions[num] != null)
+                FunctionKeyActions[num]();
+        }
+
+        #endregion
+
+        #region Parse Commands
+
+        private void BuildCommandsList()
+        {
+            //Check Monocle for Commands
+            foreach (var type in Assembly.GetCallingAssembly().GetTypes())
+                foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+                    ProcessMethod(method);
+
+            //Check the calling assembly for Commands
+            foreach (var type in Assembly.GetEntryAssembly().GetTypes())
+                foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+                    ProcessMethod(method);
+
+            //Maintain the sorted command list
+            foreach (var command in commands)
+                sorted.Add(command.Key);
+            sorted.Sort();
+        }
+
+        private void ProcessMethod(MethodInfo method)
+        {
+            Command attr = null;
             {
-                return Args.Length;
+                var attrs = method.GetCustomAttributes(typeof(Command), false);
+                if (attrs.Length > 0)
+                    attr = attrs[0] as Command;
+            }
+
+            if (attr != null)
+            {
+                if (!method.IsStatic)
+                    throw new Exception(method.DeclaringType.Name + "." + method.Name + " is marked as a command, but is not static");
+                else
+                {
+                    CommandInfo info = new CommandInfo();
+                    info.Help = attr.Help;  
+
+                    var parameters = method.GetParameters();
+                    var defaults = new object[parameters.Length];                 
+                    string[] usage = new string[parameters.Length];
+                    
+                    for (int i = 0; i < parameters.Length; i++)
+                    {                       
+                        var p = parameters[i];
+                        usage[i] = p.Name + ":";
+
+                        if (p.ParameterType == typeof(string))
+                            usage[i] += "string";
+                        else if (p.ParameterType == typeof(int))
+                            usage[i] += "int";
+                        else if (p.ParameterType == typeof(float))
+                            usage[i] += "float";
+                        else if (p.ParameterType == typeof(bool))
+                            usage[i] += "bool";
+                        else
+                            throw new Exception(method.DeclaringType.Name + "." + method.Name + " is marked as a command, but has an invalid parameter type. Allowed types are: string, int, float, and bool");
+
+                        if (p.DefaultValue == DBNull.Value)
+                            defaults[i] = null;
+                        else if (p.DefaultValue != null)
+                        {
+                            defaults[i] = p.DefaultValue;
+                            if (p.ParameterType == typeof(string))
+                                usage[i] += "=\"" + p.DefaultValue.ToString() + "\"";
+                            else
+                                usage[i] += "=" + p.DefaultValue.ToString();
+                        }
+                        else
+                            defaults[i] = null;
+                    }
+
+                    if (usage.Length == 0)
+                        info.Usage = "";
+                    else
+                        info.Usage = "[" + string.Join(" ", usage) + "]";
+
+                    info.Action = (args) =>
+                        {
+                            if (parameters.Length == 0)
+                                method.Invoke(null, null);
+                            else
+                            {
+                                object[] param = (object[])defaults.Clone();
+
+                                for (int i = 0; i < param.Length && i < args.Length; i++)
+                                {
+                                    if (parameters[i].ParameterType == typeof(string))                                 
+                                        param[i] = ArgString(args[i]);
+                                    else if (parameters[i].ParameterType == typeof(int))
+                                        param[i] = ArgInt(args[i]);
+                                    else if (parameters[i].ParameterType == typeof(float))
+                                        param[i] = ArgFloat(args[i]);
+                                    else if (parameters[i].ParameterType == typeof(bool))
+                                        param[i] = ArgBool(args[i]);
+                                }
+
+                                method.Invoke(null, param);
+                            }
+                        };
+
+                    commands[attr.Name] = info;
+                }
             }
         }
 
-        static public bool ArgBool(int argumentNum, bool defaultValue = false)
+        private struct CommandInfo
+        {
+            public Action<string[]> Action;         
+            public string Help;
+            public string Usage;
+        }
+
+        #region Parsing Arguments
+
+        static private string ArgString(string arg)
+        {
+            if (arg == null)
+                return "";
+            else
+                return arg;
+        }
+
+        static private bool ArgBool(string arg)
+        {
+            if (arg != null)
+                return !(arg == "0" || arg.ToLower() == "false" || arg.ToLower() == "f");
+            else
+                return false;
+        }
+
+        static private int ArgInt(string arg)
         {
             try
             {
-                return !(Args[argumentNum] == "0" || Args[argumentNum].ToLower() == "false" || Args[argumentNum].ToLower() == "f");
+                return Convert.ToInt32(arg);
             }
             catch
             {
-                return defaultValue;
+                return 0;
             }
         }
 
-        static public int ArgInt(int argumentNum, int defaultValue = 0)
+        static private float ArgFloat(string arg)
         {
             try
             {
-                return Convert.ToInt32(Args[argumentNum]);
+                return Convert.ToSingle(arg);
             }
             catch
             {
-                return defaultValue;
-            }
-        }
-
-        static public float ArgFloat(int argumentNum, float defaultValue = 0f)
-        {
-            try
-            {
-                return Convert.ToSingle(Args[argumentNum]);
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
-
-        static public string ArgString(int argumentNum, string defaultValue = "")
-        {
-            try
-            {
-                return Args[argumentNum];
-            }
-            catch
-            {
-                return defaultValue;
+                return 0;
             }
         }
 
         #endregion
 
-        private struct CommandInfo
-        {
-            public Action Action;
-            public string HelpUsage;
-            public string HelpAbout;
+        #endregion
 
-            public CommandInfo(Action action, string helpUsage, string helpAbout)
+        #region Built-In Commands
+
+        [Command("clear", "Clears the terminal")]
+        static public void Clear()
+        {
+            Engine.Commands.drawCommands.Clear();
+        }
+
+        [Command("exit", "Exits the game")]
+        static private void Exit()
+        {
+            Engine.Instance.Exit();
+        }
+
+        [Command("count", "Logs amount of Entities in the Scene. Pass a tagIndex to count only Entities with that tag")]
+        static private void Count(int tagIndex = -1)
+        {
+            if (tagIndex < 0)
+                Engine.Commands.Log(Engine.Scene.Entities.Count.ToString());
+            else
+                Engine.Commands.Log(Engine.Scene.TagLists[tagIndex].Count.ToString());
+        }
+
+        [Command("tracker", "Logs all tracked objects in the scene. Set mode to 'e' for just entities, or 'c' for just components")]
+        static private void Tracker(string mode)
+        {
+            if (Engine.Scene == null)
             {
-                Action = action;
-                HelpUsage = helpUsage;
-                HelpAbout = helpAbout;
+                Engine.Commands.Log("No scene is active!");
+                return;
             }
+
+            switch (mode)
+            {
+                default:
+                    Engine.Commands.Log("-- Entities --");
+                    Engine.Scene.Tracker.LogEntities();
+                    Engine.Commands.Log("-- Components --");
+                    Engine.Scene.Tracker.LogComponents();
+                    break;
+
+                case "e":
+                    Engine.Scene.Tracker.LogEntities();
+                    break;
+
+                case "c":
+                    Engine.Scene.Tracker.LogComponents();
+                    break;
+            }
+        }
+
+        [Command("pooler", "Logs the pooled Entity counts")]
+        static private void Pooler()
+        {
+            Engine.Pooler.Log();
+        }
+
+        [Command("help", "Shows usage help for a given command")]
+        static private void Help(string command)
+        {
+            if (Engine.Commands.sorted.Contains(command))
+            {
+                var c = Engine.Commands.commands[command];
+                StringBuilder str = new StringBuilder();
+
+                //Title
+                str.Append(":: ");
+                str.Append(command);
+
+                //Usage
+                if (!string.IsNullOrEmpty(c.Usage))
+                {
+                    str.Append(" ");
+                    str.Append(c.Usage);
+                }
+                Engine.Commands.Log(str.ToString());
+               
+                //Help
+                if (string.IsNullOrEmpty(c.Help))
+                    Engine.Commands.Log("No help info set");
+                else
+                    Engine.Commands.Log(c.Help);
+            }
+            else
+            {
+                StringBuilder str = new StringBuilder();
+                str.Append("Commands list: ");
+                str.Append(string.Join(", ", Engine.Commands.sorted));
+                Engine.Commands.Log(str.ToString());
+                Engine.Commands.Log("Type 'help command' for more info on that command!");
+            }
+        }
+
+        #endregion
+    }
+
+    public class Command : Attribute
+    {
+        public string Name;
+        public string Help;
+
+        public Command(string name, string help)
+        {
+            Name = name;
+            Help = help;
         }
     }
 }
