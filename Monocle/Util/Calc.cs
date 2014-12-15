@@ -1643,12 +1643,17 @@ namespace Monocle
 
         static public void EndTimer()
         {
-            stopwatch.Stop();
-            Debug.WriteLine("Timer: " + stopwatch.ElapsedTicks + " ticks");
+            if (stopwatch != null)
+            {
+                stopwatch.Stop();
+
+                string message = "Timer: " + stopwatch.ElapsedTicks + " ticks, or " + TimeSpan.FromTicks(stopwatch.ElapsedTicks).TotalSeconds.ToString("00.0000000") + " seconds";
+                Debug.WriteLine(message);
 #if DESKTOP && DEBUG
-            Commands.Trace("Timer: " + stopwatch.ElapsedTicks + " ticks");
+            Commands.Trace(message);
 #endif
-            stopwatch = null;
+                stopwatch = null;
+            }
         }
 
         #endregion
