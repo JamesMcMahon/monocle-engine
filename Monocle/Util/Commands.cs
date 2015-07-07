@@ -620,6 +620,21 @@ namespace Monocle
             Engine.Instance.Exit();
         }
 
+        [Command("vsync", "Enables or disables vertical sync")]
+        static private void Vsync(bool enabled = true)
+        {
+            Engine.Graphics.SynchronizeWithVerticalRetrace = enabled;
+            Engine.Graphics.ApplyChanges();
+            Engine.Commands.Log("Vertical Sync " + (enabled ? "Enabled" : "Disabled"));
+        }
+
+        [Command("fixed", "Enables or disables fixed time step")]
+        static private void Fixed(bool enabled = true)
+        {
+            Engine.Instance.IsFixedTimeStep = enabled;
+            Engine.Commands.Log("Fixed Time Step " + (enabled ? "Enabled" : "Disabled"));
+        }
+
         [Command("count", "Logs amount of Entities in the Scene. Pass a tagIndex to count only Entities with that tag")]
         static private void Count(int tagIndex = -1)
         {
