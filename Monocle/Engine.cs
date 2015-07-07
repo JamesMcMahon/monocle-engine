@@ -14,6 +14,7 @@ namespace Monocle
         static public int Height { get; private set; }
         static public float DeltaTime { get; private set; }
         static public float TimeRate = 1f;
+        static public float FreezeTimer;
         static public Color ClearColor;
         static public bool ExitOnEscapeKeypress;
 
@@ -126,7 +127,9 @@ namespace Monocle
             }
 
             //Update current scene
-            if (scene != null)
+            if (FreezeTimer > 0)
+                FreezeTimer = Math.Max(FreezeTimer - DeltaTime, 0);
+            else if (scene != null)
             {
                 scene.BeforeUpdate();
                 scene.Update();
