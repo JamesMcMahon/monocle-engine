@@ -170,6 +170,11 @@ namespace Monocle
             SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
         }
 
+        static public void HollowRect(Rectangle rect, Color color)
+        {
+            HollowRect(rect.X, rect.Y, rect.Width, rect.Height, color);
+        }
+
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
         {
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color);
