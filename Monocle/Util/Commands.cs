@@ -635,6 +635,12 @@ namespace Monocle
             Engine.Commands.Log("Fixed Time Step " + (enabled ? "Enabled" : "Disabled"));
         }
 
+        [Command("framerate", "Sets the target framerate")]
+        static private void Framerate(float target)
+        {
+            Engine.Instance.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / target);
+        }
+
         [Command("count", "Logs amount of Entities in the Scene. Pass a tagIndex to count only Entities with that tag")]
         static private void Count(int tagIndex = -1)
         {
