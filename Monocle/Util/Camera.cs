@@ -47,6 +47,15 @@ namespace Monocle
             changed = false;
         }
 
+        public void CopyFrom(Camera other)
+        {
+            position = other.position;
+            origin = other.origin;
+            angle = other.angle;
+            zoom = other.zoom;
+            changed = true;
+        }
+
         public Matrix Matrix
         {
             get

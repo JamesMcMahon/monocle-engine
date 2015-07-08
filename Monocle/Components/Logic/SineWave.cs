@@ -32,11 +32,13 @@ namespace Monocle
          * 
          */
 
-        public float Rate = MathHelper.Pi / 64;
+        public float Frequency = 1f;
+        public float Rate = 1f;
         public float Value { get; private set; }
         public float ValueOverTwo { get; private set; }
         public float TwoValue { get; private set; }
-        public float Counter { get; private set; }
+
+        private float counter;
 
         public SineWave()
             : base(true, false)
@@ -44,34 +46,20 @@ namespace Monocle
 
         }
 
-        public SineWave(float timePerWave)
+        public SineWave(float frequency)
             : this()
         {
-            SetTimePerWave(timePerWave);
+            Frequency = frequency;
         }
 
         public override void Update()
         {
-            Counter = (Counter + Rate * Engine.DeltaTime) % (MathHelper.TwoPi * 4);
-            Value = (float)Math.Sin(Counter);
-            ValueOverTwo = (float)Math.Sin(Counter / 2);
-            TwoValue = (float)Math.Sin(Counter * 2);
-        }
-
-        public void Restart()
-        {
-            Active = true;
-            Counter = Value = ValueOverTwo = TwoValue = 0;
-        }
-
-        public void SetTimePerWave(float timePerWave)
-        {
-            Rate = MathHelper.TwoPi / timePerWave;
+            Counter += MathHelper.TwoPi * Frequency * Rate * Engine.DeltaTime;
         }
 
         public float ValueOffset(float offset)
         {
-            return (float)Math.Sin(Counter + offset);
+            return (float)Math.Sin(counter + offset);
         }
 
         public void Randomize()
@@ -82,17 +70,28 @@ namespace Monocle
         public void StartUp()
         {
             Counter = MathHelper.PiOver2;
-            Value = (float)Math.Sin(Counter);
-            ValueOverTwo = (float)Math.Sin(Counter / 2);
-            TwoValue = (float)Math.Sin(Counter * 2);
         }
 
         public void StartDown()
         {
             Counter = MathHelper.PiOver2 * 3f;
-            Value = (float)Math.Sin(Counter);
-            ValueOverTwo = (float)Math.Sin(Counter / 2);
-            TwoValue = (float)Math.Sin(Counter * 2);
+        }
+
+        public float Counter
+        {
+            get
+            {
+                return counter;
+            }
+
+            set
+            {
+                counter = (value + MathHelper.TwoPi * 4) % (MathHelper.TwoPi * 4);
+
+                Value = (float)Math.Sin(counter);
+                ValueOverTwo = (float)Math.Sin(counter / 2);
+                TwoValue = (float)Math.Sin(counter * 2);
+            }
         }
     }
 }
