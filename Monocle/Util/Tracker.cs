@@ -134,6 +134,11 @@ namespace Monocle
             return Entities[typeof(T)];
         }
 
+        public List<Entity> GetEntitiesCopy<T>() where T : Entity
+        {
+            return new List<Entity>(GetEntities<T>());
+        }
+
         public IEnumerator<T> EnumerateEntities<T>() where T : Entity
         {
 #if DEBUG
@@ -167,6 +172,11 @@ namespace Monocle
 #endif
 
             return Components[typeof(T)];
+        }
+
+        public List<Component> GetComponentsCopy<T>() where T : Component
+        {
+            return new List<Component>(GetComponents<T>());
         }
 
         public IEnumerator<T> EnumerateComponents<T>() where T : Component

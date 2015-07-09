@@ -90,6 +90,42 @@ namespace Monocle
             }
         }
 
+        public void ForceState(int toState)
+        {
+            if (state != toState)
+                State = toState;
+            else
+            {
+                if (Log)
+                    Calc.Log("Enter State " + toState + " (leaving " + state + ")");
+                ChangedStates = true;
+
+                if (state != -1 && ends[state] != null)
+                {
+                    if (Log)
+                        Calc.Log("Calling End " + state);
+                    ends[state]();
+                }
+                PreviousState = state;
+                state = toState;
+                if (begins[state] != null)
+                {
+                    if (Log)
+                        Calc.Log("Calling Begin " + state);
+                    begins[state]();
+                }
+
+                if (coroutines[state] != null)
+                {
+                    if (Log)
+                        Calc.Log("Starting Coroutine " + state);
+                    currentCoroutine.Replace(coroutines[state]());
+                }
+                else
+                    currentCoroutine.Cancel();
+            }
+        }
+
         public void SetCallbacks(int state, Func<int> onUpdate, Func<IEnumerator> coroutine = null, Action onEnterState = null, Action onLeaveState = null)
         {
             updates[state] = onUpdate;

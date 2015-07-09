@@ -177,7 +177,7 @@ namespace Monocle
 
         static public void HollowRect(Collider collider, Color color)
         {
-            HollowRect(collider.Left, collider.Top, collider.Width, collider.Height, color);
+            HollowRect(collider.AbsoluteLeft, collider.AbsoluteTop, collider.Width, collider.Height, color);
         }
 
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
