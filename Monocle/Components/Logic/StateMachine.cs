@@ -15,6 +15,7 @@ namespace Monocle
         public bool ChangedStates;
         public bool Log;
         public int PreviousState { get; private set; }
+        public bool Locked;
 
         public StateMachine(int maxStates = 10)
             : base(true, false)
@@ -55,23 +56,32 @@ namespace Monocle
                 if (value >= updates.Length || value < 0)
                     throw new Exception("StateMachine state out of range");
 #endif
-                if (state != value)
+
+                if (!Locked && state != value)
                 {
                     if (Log)
                         Calc.Log("Enter State " + value + " (leaving " + state + ")");
                     ChangedStates = true;
 
                     if (state != -1 && ends[state] != null)
+                    {
+                        if (Log)
+                            Calc.Log("Calling End " + state);
                         ends[state]();
+                    }
                     PreviousState = state;
                     state = value;
                     if (begins[state] != null)
+                    {
+                        if (Log)
+                            Calc.Log("Calling Begin " + state);
                         begins[state]();
+                    }
 
                     if (coroutines[state] != null)
                     {
                         if (Log)
-                            Calc.Log("Starting coroutine " + state);
+                            Calc.Log("Starting Coroutine " + state);
                         currentCoroutine.Replace(coroutines[state]());
                     }
                     else
@@ -106,7 +116,7 @@ namespace Monocle
             {
                 currentCoroutine.Update();
                 if (!ChangedStates && Log && currentCoroutine.Finished)
-                    Calc.Log("Coroutine " + state + " finished");
+                    Calc.Log("Finished Coroutine " + state);
             }
         }
 
