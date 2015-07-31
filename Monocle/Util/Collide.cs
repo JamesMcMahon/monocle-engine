@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
+    [Flags]
+    public enum PointSectors { Center = 0, Top = 1, Bottom = 2, TopLeft = 9, TopRight = 5, Left = 8, Right = 4, BottomLeft = 10, BottomRight = 6 };
+
     static public class Collide
     {
         #region Entity vs Entity
@@ -170,27 +173,7 @@ namespace Monocle
 
         #endregion
 
-        #region Misc
-
-        [Flags]
-        private enum PointSectors { Center = 0, Top = 1, Bottom = 2, TopLeft = 9, TopRight = 5, Left = 8, Right = 4, BottomLeft = 10, BottomRight = 6 };
-
-        static private PointSectors GetSector(Rectangle rect, Vector2 point)
-        {
-            PointSectors sector = PointSectors.Center;
-
-            if (point.X < rect.Left)
-                sector |= PointSectors.Left;
-            else if (point.X >= rect.Right)
-                sector |= PointSectors.Right;
-
-            if (point.Y < rect.Top)
-                sector |= PointSectors.Top;
-            else if (point.Y >= rect.Bottom)
-                sector |= PointSectors.Bottom;
-
-            return sector;
-        }
+        #region Misc Collisions
 
         static public bool LineCheck(Rectangle rect, Vector2 from, Vector2 to)
         {
@@ -291,6 +274,168 @@ namespace Monocle
             intersection = a1 + t * b;
 
             return true;
+        }
+
+        static public bool CircleToLine(Vector2 lineFrom, Vector2 lineTo, Vector2 cPosition, float radius)
+        {
+            return Vector2.DistanceSquared(cPosition, Calc.ClosestPointOnLine(lineFrom, lineTo, cPosition)) < radius * radius;
+        }
+
+        static public bool RectToCircle(float rX, float rY, float rW, float rH, Vector2 cPosition, float cRadius)
+        {
+            //Check if the circle's centerpoint is within the hitbox
+            if (cPosition.X >= rX && cPosition.Y >= rY && cPosition.X < rX + rW && cPosition.Y < rY + rH)
+                return true;
+
+            //Check the circle against the relevant edges
+            Vector2 edgeFrom;
+            Vector2 edgeTo;
+            PointSectors sector = GetSector(rX, rY, rW, rH, cPosition);
+
+            if ((sector & PointSectors.Top) != 0)
+            {
+                edgeFrom = new Vector2(rX, rY);
+                edgeTo = new Vector2(rX + rW, rY);
+                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                    return true;
+            }
+
+            if ((sector & PointSectors.Bottom) != 0)
+            {
+                edgeFrom = new Vector2(rX, rY + rH);
+                edgeTo = new Vector2(rX + rW, rY + rH);
+                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                    return true;
+            }
+
+            if ((sector & PointSectors.Left) != 0)
+            {
+                edgeFrom = new Vector2(rX, rY);
+                edgeTo = new Vector2(rX, rY + rH);
+                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                    return true;
+            }
+
+            if ((sector & PointSectors.Right) != 0)
+            {
+                edgeFrom = new Vector2(rX + rW, rY);
+                edgeTo = new Vector2(rX + rW, rY + rH);
+                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                    return true;
+            }
+
+            return false;
+        }
+
+        static public bool RectToCircle(Rectangle rect, Vector2 cPosition, float cRadius)
+        {
+            return RectToCircle(rect.X, rect.Y, rect.Width, rect.Height, cPosition, cRadius);
+        }
+
+        static public bool RectToLine(float rX, float rY, float rW, float rH, Vector2 lineFrom, Vector2 lineTo)
+        {
+            PointSectors fromSector = Monocle.Collide.GetSector(rX, rY, rW, rH, lineFrom);
+            PointSectors toSector = Monocle.Collide.GetSector(rX, rY, rW, rH, lineTo);
+
+            if (fromSector == PointSectors.Center || toSector == PointSectors.Center)
+                return true;
+            else if ((fromSector & toSector) != 0)
+                return false;
+            else
+            {
+                PointSectors both = fromSector | toSector;
+
+                //Do line checks against the edges
+                Vector2 edgeFrom;
+                Vector2 edgeTo;
+
+                if ((both & PointSectors.Top) != 0)
+                {
+                    edgeFrom = new Vector2(rX, rY);
+                    edgeTo = new Vector2(rX + rW, rY);
+                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, lineFrom, lineTo))
+                        return true;
+                }
+
+                if ((both & PointSectors.Bottom) != 0)
+                {
+                    edgeFrom = new Vector2(rX, rY + rH);
+                    edgeTo = new Vector2(rX + rW, rY + rH);
+                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, lineFrom, lineTo))
+                        return true;
+                }
+
+                if ((both & PointSectors.Left) != 0)
+                {
+                    edgeFrom = new Vector2(rX, rY);
+                    edgeTo = new Vector2(rX, rY + rH);
+                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, lineFrom, lineTo))
+                        return true;
+                }
+
+                if ((both & PointSectors.Right) != 0)
+                {
+                    edgeFrom = new Vector2(rX + rW, rY);
+                    edgeTo = new Vector2(rX + rW, rY + rH);
+                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, lineFrom, lineTo))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        static public bool RectToLine(Rectangle rect, Vector2 lineFrom, Vector2 lineTo)
+        {
+            return RectToLine(rect.X, rect.Y, rect.Width, rect.Height, lineFrom, lineTo);
+        }
+
+        #endregion
+
+        #region Sectors
+
+        /*
+         *  Bitflags and helpers for using the Cohen–Sutherland algorithm
+         *  http://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
+         *  
+         *  Sector bitflags:
+         *      1001  1000  1010
+         *      0001  0000  0010
+         *      0101  0100  0110
+         */
+
+        static public PointSectors GetSector(Rectangle rect, Vector2 point)
+        {
+            PointSectors sector = PointSectors.Center;
+
+            if (point.X < rect.Left)
+                sector |= PointSectors.Left;
+            else if (point.X >= rect.Right)
+                sector |= PointSectors.Right;
+
+            if (point.Y < rect.Top)
+                sector |= PointSectors.Top;
+            else if (point.Y >= rect.Bottom)
+                sector |= PointSectors.Bottom;
+
+            return sector;
+        }
+
+        static public PointSectors GetSector(float rX, float rY, float rW, float rH, Vector2 point)
+        {
+            PointSectors sector = PointSectors.Center;
+
+            if (point.X < rX)
+                sector |= PointSectors.Left;
+            else if (point.X >= rX + rW)
+                sector |= PointSectors.Right;
+
+            if (point.Y < rY)
+                sector |= PointSectors.Top;
+            else if (point.Y >= rY + rH)
+                sector |= PointSectors.Bottom;
+
+            return sector;
         }
 
         #endregion

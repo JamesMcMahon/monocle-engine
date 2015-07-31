@@ -71,12 +71,12 @@ namespace Monocle
 
         public override bool Collide(Rectangle rect)
         {
-            throw new NotImplementedException();
+            return Monocle.Collide.RectToCircle(rect, AbsolutePosition, Radius);
         }
 
         public override bool Collide(Vector2 from, Vector2 to)
         {
-            return Vector2.DistanceSquared(AbsolutePosition, Calc.ClosestPointOnLine(from, to, AbsolutePosition)) < Radius * Radius;
+            return Monocle.Collide.CircleToLine(from, to, AbsolutePosition, Radius);
         }
 
         public override bool Collide(Circle circle)
