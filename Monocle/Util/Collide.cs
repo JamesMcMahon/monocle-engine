@@ -173,60 +173,7 @@ namespace Monocle
 
         #endregion
 
-        #region Misc Collisions
-
-        static public bool LineCheck(Rectangle rect, Vector2 from, Vector2 to)
-        {
-            PointSectors fromSector = GetSector(rect, from);
-            PointSectors toSector = GetSector(rect, to);
-
-            if (fromSector == PointSectors.Center || toSector == PointSectors.Center)
-                return true;
-            else if ((fromSector & toSector) != 0)
-                return false;
-            else
-            {
-                PointSectors both = fromSector | toSector;
-
-                //Do line checks against the edges
-                Vector2 edgeFrom;
-                Vector2 edgeTo;
-
-                if ((both & PointSectors.Top) != 0)
-                {
-                    edgeFrom = new Vector2(rect.Left, rect.Top);
-                    edgeTo = new Vector2(rect.Right, rect.Top);
-                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, from, to))
-                        return true;
-                }
-
-                if ((both & PointSectors.Bottom) != 0)
-                {
-                    edgeFrom = new Vector2(rect.Left, rect.Bottom);
-                    edgeTo = new Vector2(rect.Right, rect.Bottom);
-                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, from, to))
-                        return true;
-                }
-
-                if ((both & PointSectors.Left) != 0)
-                {
-                    edgeFrom = new Vector2(rect.Left, rect.Top);
-                    edgeTo = new Vector2(rect.Left, rect.Bottom);
-                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, from, to))
-                        return true;
-                }
-
-                if ((both & PointSectors.Right) != 0)
-                {
-                    edgeFrom = new Vector2(rect.Right, rect.Top);
-                    edgeTo = new Vector2(rect.Right, rect.Bottom);
-                    if (Monocle.Collide.LineCheck(edgeFrom, edgeTo, from, to))
-                        return true;
-                }
-            }
-
-            return false;
-        }
+        #region Line
 
         static public bool LineCheck(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
         {
@@ -248,7 +195,7 @@ namespace Monocle
                 return false;
 
             return true;
-        }
+        } 
 
         static public bool LineCheck(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2, out Vector2 intersection)
         {
@@ -276,10 +223,33 @@ namespace Monocle
             return true;
         }
 
-        static public bool CircleToLine(Vector2 lineFrom, Vector2 lineTo, Vector2 cPosition, float radius)
+        #endregion
+
+        #region Circle
+
+        static public bool CircleToLine(Vector2 cPosiition, float cRadius, Vector2 lineFrom, Vector2 lineTo)
         {
-            return Vector2.DistanceSquared(cPosition, Calc.ClosestPointOnLine(lineFrom, lineTo, cPosition)) < radius * radius;
+            return Vector2.DistanceSquared(cPosiition, Calc.ClosestPointOnLine(lineFrom, lineTo, cPosiition)) < cRadius * cRadius;
         }
+
+        static public bool CircleToPoint(Vector2 cPosition, float cRadius, Vector2 point)
+        {
+            return Vector2.DistanceSquared(cPosition, point) < cRadius * cRadius;
+        }
+
+        static public bool CircleToRect(Vector2 cPosition, float cRadius, float rX, float rY, float rW, float rH)
+        {
+            return RectToCircle(rX, rY, rW, rH, cPosition, cRadius);
+        }
+
+        static public bool CircleToRect(Vector2 cPosition, float cRadius, Rectangle rect)
+        {
+            return RectToCircle(rect, cPosition, cRadius);
+        }
+
+        #endregion
+
+        #region Rect
 
         static public bool RectToCircle(float rX, float rY, float rW, float rH, Vector2 cPosition, float cRadius)
         {
@@ -296,7 +266,7 @@ namespace Monocle
             {
                 edgeFrom = new Vector2(rX, rY);
                 edgeTo = new Vector2(rX + rW, rY);
-                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                if (CircleToLine(cPosition, cRadius, edgeFrom, edgeTo))
                     return true;
             }
 
@@ -304,7 +274,7 @@ namespace Monocle
             {
                 edgeFrom = new Vector2(rX, rY + rH);
                 edgeTo = new Vector2(rX + rW, rY + rH);
-                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                if (CircleToLine(cPosition, cRadius, edgeFrom, edgeTo))
                     return true;
             }
 
@@ -312,7 +282,7 @@ namespace Monocle
             {
                 edgeFrom = new Vector2(rX, rY);
                 edgeTo = new Vector2(rX, rY + rH);
-                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                if (CircleToLine(cPosition, cRadius, edgeFrom, edgeTo))
                     return true;
             }
 
@@ -320,7 +290,7 @@ namespace Monocle
             {
                 edgeFrom = new Vector2(rX + rW, rY);
                 edgeTo = new Vector2(rX + rW, rY + rH);
-                if (CircleToLine(edgeFrom, edgeTo, cPosition, cRadius))
+                if (CircleToLine(cPosition, cRadius, edgeFrom, edgeTo))
                     return true;
             }
 

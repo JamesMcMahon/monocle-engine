@@ -66,7 +66,7 @@ namespace Monocle
 
         public override bool Collide(Vector2 point)
         {
-            return Vector2.DistanceSquared(AbsolutePosition, point) < Radius * Radius;
+            return Monocle.Collide.CircleToPoint(AbsolutePosition, Radius, point);
         }
 
         public override bool Collide(Rectangle rect)
@@ -76,7 +76,7 @@ namespace Monocle
 
         public override bool Collide(Vector2 from, Vector2 to)
         {
-            return Monocle.Collide.CircleToLine(from, to, AbsolutePosition, Radius);
+            return Monocle.Collide.CircleToLine(AbsolutePosition, Radius, from, to);
         }
 
         public override bool Collide(Circle circle)
@@ -91,7 +91,7 @@ namespace Monocle
 
         public override bool Collide(Grid grid)
         {
-            throw new NotImplementedException();
+            return grid.Collide(this);
         }
 
         public override bool Collide(ColliderList list)

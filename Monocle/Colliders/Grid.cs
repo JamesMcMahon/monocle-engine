@@ -390,7 +390,7 @@ namespace Monocle
 
         public override bool Collide(Circle circle)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool Collide(ColliderList list)
