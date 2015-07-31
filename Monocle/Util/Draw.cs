@@ -96,6 +96,8 @@ namespace Monocle
             Engine.Instance.GraphicsDevice.Clear(Color.Transparent);
         }
 
+        #region Line
+
         static public void Line(Vector2 start, Vector2 end, Color color)
         {
             LineAngle(start, Calc.Angle(start, end), Vector2.Distance(start, end), color);
@@ -110,6 +112,10 @@ namespace Monocle
         {
             Line(new Vector2(x1, y1), new Vector2(x2, y2), color);
         }
+
+        #endregion
+
+        #region Line Angle
 
         static public void LineAngle(Vector2 start, float angle, float length, Color color)
         {
@@ -126,6 +132,38 @@ namespace Monocle
             LineAngle(new Vector2(startX, startY), angle, length, color);
         }
 
+        #endregion
+
+        #region Circle
+
+        static public void Circle(Vector2 position, float radius, Color color, int resolution)
+        {
+            Vector2 last = Vector2.UnitX * radius;
+            Vector2 lastP = last.Perpendicular();
+            for (int i = 1; i <= resolution; i++)
+            {
+                Vector2 at = Calc.AngleToVector(i * MathHelper.PiOver2 / resolution, radius);
+                Vector2 atP = at.Perpendicular();
+
+                Draw.Line(position + last, position + at, color);
+                Draw.Line(position - last, position - at, color);
+                Draw.Line(position + lastP, position + atP, color);
+                Draw.Line(position - lastP, position - atP, color);
+
+                last = at;
+                lastP = atP;
+            }
+        }
+
+        static public void Circle(float x, float y, float radius, Color color, int resolution)
+        {
+            Circle(new Vector2(x, y), radius, color, resolution);
+        }
+
+        #endregion
+
+        #region Rect
+
         static public void Rect(float x, float y, float width, float height, Color color)
         {
             rect.X = (int)x;
@@ -133,6 +171,11 @@ namespace Monocle
             rect.Width = (int)width;
             rect.Height = (int)height;
             SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+        }
+
+        static public void Rect(Vector2 position, float width, float height, Color color)
+        {
+            Rect(position.X, position.Y, width, height, color);
         }
 
         static public void Rect(Rectangle rect, Color color)
@@ -145,6 +188,10 @@ namespace Monocle
         {
             Rect(collider.AbsoluteLeft, collider.AbsoluteTop, collider.Width, collider.Height, color);
         }
+
+        #endregion
+
+        #region Hollow Rect
 
         static public void HollowRect(float x, float y, float width, float height, Color color)
         {
@@ -170,6 +217,11 @@ namespace Monocle
             SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
         }
 
+        static public void HollowRect(Vector2 position, float width, float height, Color color)
+        {
+            HollowRect(position.X, position.Y, width, height, color);
+        }
+
         static public void HollowRect(Rectangle rect, Color color)
         {
             HollowRect(rect.X, rect.Y, rect.Width, rect.Height, color);
@@ -179,6 +231,8 @@ namespace Monocle
         {
             HollowRect(collider.AbsoluteLeft, collider.AbsoluteTop, collider.Width, collider.Height, color);
         }
+
+        #endregion
 
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
         {

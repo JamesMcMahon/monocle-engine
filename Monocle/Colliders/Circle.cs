@@ -57,7 +57,7 @@ namespace Monocle
 
         public override void Render(Color color)
         {
-            throw new NotImplementedException();
+            Draw.Circle(AbsolutePosition, Radius, color, 4);
         }
 
         /*
