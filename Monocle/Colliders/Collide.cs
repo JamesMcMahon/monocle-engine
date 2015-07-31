@@ -360,6 +360,16 @@ namespace Monocle
             return RectToLine(rect.X, rect.Y, rect.Width, rect.Height, lineFrom, lineTo);
         }
 
+        static public bool RectToPoint(float rX, float rY, float rW, float rH, Vector2 point)
+        {
+            return point.X >= rX && point.Y >= rY && point.X < rX + rW && point.Y < rY + rH;
+        }
+
+        static public bool RectToPoint(Rectangle rect, Vector2 point)
+        {
+            return RectToPoint(rect.X, rect.Y, rect.Width, rect.Height, point);
+        }
+
         #endregion
 
         #region Sectors

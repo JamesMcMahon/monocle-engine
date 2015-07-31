@@ -124,7 +124,7 @@ namespace Monocle
 
         public override bool Collide(Vector2 point)
         {
-            return point.X >= AbsoluteLeft && point.Y >= AbsoluteTop && point.X < AbsoluteRight && point.Y < AbsoluteBottom;
+            return Monocle.Collide.RectToPoint(AbsoluteLeft, AbsoluteTop, Width, Height, point);
         }
 
         public override bool Collide(Rectangle rect)
