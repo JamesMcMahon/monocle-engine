@@ -201,6 +201,14 @@ namespace Monocle
             LockMode = ComponentList.LockModes.Open;
         }
 
+        internal void HandleGraphicsCreate()
+        {
+            LockMode = ComponentList.LockModes.Error;
+            foreach (var component in components)
+                component.HandleGraphicsCreate();
+            LockMode = ComponentList.LockModes.Open;
+        }
+
         public T Get<T>() where T : Component
         {
             foreach (var component in components)

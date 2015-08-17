@@ -184,6 +184,12 @@ namespace Monocle
                 entity.HandleGraphicsReset();
         }
 
+        internal void HandleGraphicsCreate()
+        {
+            foreach (var entity in entities)
+                entity.HandleGraphicsCreate();
+        }
+
         static public Comparison<Entity> CompareDepth = (a, b) => { return Math.Sign(b.actualDepth - a.actualDepth); };
     }
 }

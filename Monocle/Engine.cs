@@ -37,6 +37,7 @@ namespace Monocle
 
             Graphics = new GraphicsDeviceManager(this);
             Graphics.DeviceReset += OnGraphicsReset;
+            Graphics.DeviceCreated += OnGraphicsCreate;
             Graphics.PreferredBackBufferWidth = Width;
             Graphics.PreferredBackBufferHeight = Height;
 #if DEBUG
@@ -54,14 +55,22 @@ namespace Monocle
             ExitOnEscapeKeypress = true;
         }
 
-        private void OnGraphicsReset(object sender, EventArgs e)
+        protected virtual void OnGraphicsReset(object sender, EventArgs e)
         {
             UpdateView();
 
             if (scene != null)
                 scene.HandleGraphicsReset();
-            if (nextScene != null)
+            if (nextScene != null && nextScene != scene)
                 nextScene.HandleGraphicsReset();
+        }
+
+        protected virtual void OnGraphicsCreate(object sender, EventArgs e)
+        {
+            if (scene != null)
+                scene.HandleGraphicsCreate();
+            if (nextScene != null && nextScene != scene)
+                nextScene.HandleGraphicsCreate();
         }
 
         protected virtual void UpdateView()
@@ -158,13 +167,7 @@ namespace Monocle
 
         protected override void Draw(GameTime gameTime)
         {
-            if (scene != null)
-                scene.BeforeRender();
-
             RenderCore();
-
-            if (scene != null)
-                scene.AfterRender();
 
             base.Draw(gameTime);
             if (Commands.Open)
@@ -188,11 +191,17 @@ namespace Monocle
         /// </summary>
         protected virtual void RenderCore()
         {
+            if (scene != null)
+                scene.BeforeRender();
+
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(ClearColor);
 
             if (scene != null)
+            {
                 scene.Render();
+                scene.AfterRender();
+            }
         }
 
         /// <summary>

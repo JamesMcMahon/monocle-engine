@@ -58,6 +58,11 @@ namespace Monocle
 
         }
 
+        public virtual void HandleGraphicsCreate()
+        {
+
+        }
+
         public void RemoveSelf()
         {
             if (Entity != null)

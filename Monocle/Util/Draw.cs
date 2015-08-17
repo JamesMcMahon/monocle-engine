@@ -397,6 +397,11 @@ namespace Monocle
             SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.GetAbsoluteClipRect(clipRect), color);
         }
 
+        static public void TextureCentered(Subtexture subTexture, Vector2 position)
+        {
+            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, Color.White, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), 1, SpriteEffects.None, 0);
+        }
+
         static public void TextureCentered(Subtexture subTexture, Vector2 position, Color color)
         {
             SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), 1, SpriteEffects.None, 0);
