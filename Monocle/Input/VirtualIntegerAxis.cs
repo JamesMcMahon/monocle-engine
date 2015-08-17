@@ -42,5 +42,10 @@ namespace Monocle
                 return 0;
             }
         }
+
+        static public implicit operator int(VirtualIntegerAxis axis)
+        {
+            return axis.Value;
+        }
     }
 }

@@ -43,6 +43,11 @@ namespace Monocle
             }
         }
 
+        static public implicit operator float(VirtualAxis axis)
+        {
+            return axis.Value;
+        }
+
         public abstract class Node : VirtualInputNode
         {
             public abstract float Value { get; }

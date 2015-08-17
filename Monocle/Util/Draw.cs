@@ -347,6 +347,11 @@ namespace Monocle
             Text(font, text, position, color, origin, scale, rotation);
         }
 
+        static public void Texture(Texture texture, Vector2 position)
+        {
+            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, Color.White);
+        }
+
         static public void Texture(Texture texture, Vector2 position, Color color)
         {
             SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, color);
@@ -365,6 +370,11 @@ namespace Monocle
         static public void Texture(Texture texture, Vector2 position, Color color, Vector2 origin, Vector2 scale, float rotation)
         {
             SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, color, rotation, origin, scale, SpriteEffects.None, 0);
+        }
+
+        static public void Texture(Subtexture subTexture, Vector2 position)
+        {
+            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, Color.White);
         }
 
         static public void Texture(Subtexture subTexture, Vector2 position, Color color)

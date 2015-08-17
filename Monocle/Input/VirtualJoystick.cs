@@ -51,6 +51,11 @@ namespace Monocle
             }
         }
 
+        static public implicit operator Vector2(VirtualJoystick joystick)
+        {
+            return joystick.Value;
+        }
+
         public abstract class Node : VirtualInputNode
         {
             public abstract Vector2 Value { get; }
