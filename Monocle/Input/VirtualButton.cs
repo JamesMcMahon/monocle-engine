@@ -101,6 +101,11 @@ namespace Monocle
             bufferCounter = 0;
         }
 
+        static public implicit operator bool(VirtualButton button)
+        {
+            return button.Check;
+        }
+
         public abstract class Node : VirtualInputNode
         {
             public abstract bool Check { get; }

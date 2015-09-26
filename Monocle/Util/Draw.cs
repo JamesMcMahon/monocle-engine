@@ -96,6 +96,11 @@ namespace Monocle
             Engine.Instance.GraphicsDevice.Clear(Color.Transparent);
         }
 
+        static public void Point(Vector2 at, Color color)
+        {
+            SpriteBatch.Draw(Pixel.Texture2D, at, Pixel.Rect, color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+        }
+
         #region Line
 
         static public void Line(Vector2 start, Vector2 end, Color color)
@@ -259,6 +264,11 @@ namespace Monocle
             origin.X *= justify.X;
             origin.Y *= justify.Y;
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color, 0, origin, scale, SpriteEffects.None, 0);
+        }
+
+        static public void TextCentered(SpriteFont font, string text, Vector2 position)
+        {
+            Text(font, text, position - font.MeasureString(text) * .5f, Color.White);
         }
 
         static public void TextCentered(SpriteFont font, string text, Vector2 position, Color color)

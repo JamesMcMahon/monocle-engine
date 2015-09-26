@@ -71,6 +71,12 @@ namespace Monocle
             Origin.Y = Height * at.Y;
         }
 
+        public void JustifyOrigin(float x, float y)
+        {
+            Origin.X = Width * x;
+            Origin.Y = Height * y;
+        }
+
         public void SwapSubtexture(Subtexture subtexture, Rectangle? clipRect = null)
         {
             Texture = subtexture.Texture;
