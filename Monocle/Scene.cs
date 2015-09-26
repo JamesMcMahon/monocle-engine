@@ -14,7 +14,6 @@ namespace Monocle
         public List<Renderer> Renderers { get; private set; }
         public Entity HelperEntity { get; private set; }
         public Tracker Tracker { get; private set; }
-        public float FreezeTimer;
 
         private Dictionary<int, double> actualDepthLookup;
 
@@ -55,10 +54,7 @@ namespace Monocle
 
         public virtual void Update()
         {
-            if (FreezeTimer > 0)
-                FreezeTimer -= Engine.DeltaTime;
-            else
-                Entities.Update();
+            Entities.Update();
         }
 
         public virtual void AfterUpdate()

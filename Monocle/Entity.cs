@@ -1066,6 +1066,11 @@ namespace Monocle
             return closest;
         }
 
+        public T SceneAs<T>() where T : Scene
+        {
+            return Scene as T;
+        }
+
         #endregion
     }
 }
