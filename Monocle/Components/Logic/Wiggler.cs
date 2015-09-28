@@ -10,6 +10,7 @@ namespace Monocle
 
         public float Counter { get; private set; }
         public float Value { get; private set; }
+        public bool StartZero;
         private float sineCounter;
 
         private float increment;
@@ -60,11 +61,22 @@ namespace Monocle
         public void Start()
         {
             Counter = 1f;
-            sineCounter = 0;
 
-            Value = 1f;
-            if (onChange != null)
-                onChange(1f);
+            if (StartZero)
+            {
+                sineCounter = MathHelper.PiOver2;
+                Value = 0;
+                if (onChange != null)
+                    onChange(0);
+            }
+            else
+            {
+                sineCounter = 0;
+                Value = 1f;
+                if (onChange != null)
+                    onChange(1f);
+            }
+
             Active = true;
         }
 

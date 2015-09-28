@@ -129,7 +129,7 @@ namespace Monocle
 
         static public void LineAngle(Vector2 start, float angle, float length, Color color, float thickness)
         {
-            SpriteBatch.Draw(Pixel.Texture2D, start, Pixel.Rect, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
+            SpriteBatch.Draw(Pixel.Texture2D, start, Pixel.Rect, color, angle, new Vector2(0, .5f), new Vector2(length, thickness), SpriteEffects.None, 0);
         }
 
         static public void LineAngle(float startX, float startY, float angle, float length, Color color)

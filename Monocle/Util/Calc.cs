@@ -828,6 +828,7 @@ namespace Monocle
                 vec.X = 0;
             else
                 vec.X = Math.Sign(vec.X);
+
             if (Math.Abs(vec.Y) < .5f)
                 vec.Y = 0;
             else
@@ -1453,6 +1454,23 @@ namespace Monocle
                 return Calc.HexToColor(xml[childName].InnerText);
             else
                 return Calc.HexToColor(defaultValue);
+        }
+
+        static public Vector2 ChildPosition(this XmlElement xml, string childName)
+        {
+#if DEBUG
+            if (!xml.HasChild(childName))
+                throw new Exception("Cannot find child xml tag with name '" + childName + "'.");
+#endif
+            return xml[childName].Position();
+        }
+
+        static public Vector2 ChildPosition(this XmlElement xml, string childName, Vector2 defaultValue)
+        {
+            if (xml.HasChild(childName))
+                return xml[childName].Position(defaultValue);
+            else
+                return defaultValue;
         }
 
         #endregion
