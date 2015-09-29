@@ -165,6 +165,232 @@ namespace Monocle
             }
         }
 
+        #region Pad Left Stick
+
+        public class PadLeftStickRight : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadLeftStickRight(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickRightCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickRightPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickRightReleased(Deadzone); }
+            }
+        }
+
+        public class PadLeftStickLeft : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadLeftStickLeft(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickLeftCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickLeftPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickLeftReleased(Deadzone); }
+            }
+        }
+
+        public class PadLeftStickUp : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadLeftStickUp(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickUpCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickUpPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickUpReleased(Deadzone); }
+            }
+        }
+
+        public class PadLeftStickDown : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadLeftStickDown(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickDownCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickDownPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].LeftStickDownReleased(Deadzone); }
+            }
+        }
+
+        #endregion
+
+        #region Pad Right Stick
+
+        public class PadRightStickRight : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadRightStickRight(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickRightCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickRightPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickRightReleased(Deadzone); }
+            }
+        }
+
+        public class PadRightStickLeft : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadRightStickLeft(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickLeftCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickLeftPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickLeftReleased(Deadzone); }
+            }
+        }
+
+        public class PadRightStickUp : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadRightStickUp(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickUpCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickUpPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickUpReleased(Deadzone); }
+            }
+        }
+
+        public class PadRightStickDown : Node
+        {
+            public int GamepadIndex;
+            public float Deadzone;
+
+            public PadRightStickDown(int gamepadindex, float deadzone)
+            {
+                GamepadIndex = gamepadindex;
+                Deadzone = deadzone;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickDownCheck(Deadzone); }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickDownPressed(Deadzone); }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].RightStickDownReleased(Deadzone); }
+            }
+        }
+
+        #endregion
+
+        #region Pad Triggers
+
         public class PadLeftTrigger : Node
         {
             public int GamepadIndex;
@@ -219,6 +445,114 @@ namespace Monocle
             }
         }
 
+        #endregion
+
+        #region Pad DPad
+
+        public class PadDPadRight : Node
+        {
+            public int GamepadIndex;
+
+            public PadDPadRight(int gamepadIndex)
+            {
+                GamepadIndex = gamepadIndex;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadRightCheck; }
+            }
+
+            public override bool Pressed
+            {
+	            get { return MInput.GamePads[GamepadIndex].DPadRightPressed; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadRightReleased; }
+            }
+        }
+
+        public class PadDPadLeft : Node
+        {
+            public int GamepadIndex;
+
+            public PadDPadLeft(int gamepadIndex)
+            {
+                GamepadIndex = gamepadIndex;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadLeftCheck; }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadLeftPressed; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadLeftReleased; }
+            }
+        }
+
+        public class PadDPadUp : Node
+        {
+            public int GamepadIndex;
+
+            public PadDPadUp(int gamepadIndex)
+            {
+                GamepadIndex = gamepadIndex;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadUpCheck; }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadUpPressed; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadUpReleased; }
+            }
+        }
+
+        public class PadDPadDown : Node
+        {
+            public int GamepadIndex;
+
+            public PadDPadDown(int gamepadIndex)
+            {
+                GamepadIndex = gamepadIndex;
+            }
+
+            public override bool Check
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadDownCheck; }
+            }
+
+            public override bool Pressed
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadDownPressed; }
+            }
+
+            public override bool Released
+            {
+                get { return MInput.GamePads[GamepadIndex].DPadDownReleased; }
+            }
+        }
+
+        #endregion
+
+        #region Mouse
+
         public class MouseLeftButton : Node
         {
             public override bool Check
@@ -272,5 +606,7 @@ namespace Monocle
                 get { return MInput.Mouse.ReleasedMiddleButton; }
             }
         }
+
+        #endregion
     }
 }
