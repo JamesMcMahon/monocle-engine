@@ -10,8 +10,13 @@ namespace Monocle
     {
         public List<Node> Nodes;
         public float BufferTime;
+        public float FirstRepeatTime;
+        public float MultiRepeatTime;
+        public bool Repeating { get; private set; }
 
         private float bufferCounter;
+        private float repeatCounter;
+        private bool willRepeat;
 
         public VirtualButton(float bufferTime)
             : base()
@@ -39,6 +44,20 @@ namespace Monocle
 
         }
 
+        public void SetRepeat(float repeatTime)
+        {
+            SetRepeat(repeatTime, repeatTime);
+        }
+        
+        public void SetRepeat(float firstRepeatTime, float multiRepeatTime)
+        {
+            FirstRepeatTime = firstRepeatTime;
+            MultiRepeatTime = multiRepeatTime;
+            willRepeat = (FirstRepeatTime > 0);
+            if (!willRepeat)
+                Repeating = false;
+        }
+
         public override void Update()
         {
             bufferCounter -= Engine.DeltaTime;
@@ -57,7 +76,25 @@ namespace Monocle
             }
 
             if (!check)
+            {
+                repeatCounter = 0;
                 bufferCounter = 0;
+            }
+            else if (willRepeat)
+            {
+                Repeating = false;
+                if (repeatCounter == 0)
+                    repeatCounter = FirstRepeatTime;
+                else
+                {
+                    repeatCounter -= Engine.DeltaTime;
+                    if (repeatCounter <= 0)
+                    {
+                        Repeating = true;
+                        repeatCounter = MultiRepeatTime;
+                    }
+                }
+            }
         }
 
         public bool Check
@@ -75,7 +112,7 @@ namespace Monocle
         {
             get
             {
-                if (bufferCounter > 0)
+                if (bufferCounter > 0 || Repeating)
                     return true;
 
                 foreach (var node in Nodes)
