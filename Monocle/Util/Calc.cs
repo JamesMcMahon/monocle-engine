@@ -697,6 +697,11 @@ namespace Monocle
             return Math.Abs(AngleDiff(radiansA, radiansB));
         }
 
+        static public int SignAngleDiff(float radiansA, float radiansB)
+        {
+            return Math.Sign(AngleDiff(radiansA, radiansB));
+        }
+
         static public float Angle(Vector2 from, Vector2 to)
         {
             return (float)Math.Atan2(to.Y - from.Y, to.X - from.X);
