@@ -1120,16 +1120,28 @@ namespace Monocle
 
         #region XML
 
-        static public XmlDocument LoadXML(string filename)
+        static public XmlDocument LoadContentXML(string filename)
         {
             XmlDocument xml = new XmlDocument();
             xml.Load(Engine.Instance.Content.RootDirectory + filename);
             return xml;
         }
 
-        static public bool XMLExists(string filename)
+        static public XmlDocument LoadXML(string filename)
+        {
+            XmlDocument xml = new XmlDocument();
+            xml.Load(filename);
+            return xml;
+        }
+
+        static public bool ContentXMLExists(string filename)
         {
             return File.Exists(Engine.Instance.Content.RootDirectory + filename);
+        }
+
+        static public bool XMLExists(string filename)
+        {
+            return File.Exists(filename);
         }
 
         #region Attributes

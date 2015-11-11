@@ -16,7 +16,7 @@ namespace Monocle
             XmlPath = xmlPath;
             ImagePath = imagePath;
 
-            XmlDocument xml = Calc.LoadXML(XmlPath);
+            XmlDocument xml = Calc.LoadContentXML(XmlPath);
             XmlElement atlas = xml["TextureAtlas"];
             
             var subTextures = atlas.GetElementsByTagName("SubTexture");

@@ -165,6 +165,30 @@ namespace Monocle
             Circle(new Vector2(x, y), radius, color, resolution);
         }
 
+        static public void Circle(Vector2 position, float radius, Color color, float thickness, int resolution)
+        {
+            Vector2 last = Vector2.UnitX * radius;
+            Vector2 lastP = last.Perpendicular();
+            for (int i = 1; i <= resolution; i++)
+            {
+                Vector2 at = Calc.AngleToVector(i * MathHelper.PiOver2 / resolution, radius);
+                Vector2 atP = at.Perpendicular();
+
+                Draw.Line(position + last, position + at, color, thickness);
+                Draw.Line(position - last, position - at, color, thickness);
+                Draw.Line(position + lastP, position + atP, color, thickness);
+                Draw.Line(position - lastP, position - atP, color, thickness);
+
+                last = at;
+                lastP = atP;
+            }
+        }
+
+        static public void Circle(float x, float y, float radius, Color color, float thickness, int resolution)
+        {
+            Circle(new Vector2(x, y), radius, color, thickness, resolution);
+        }
+
         #endregion
 
         #region Rect

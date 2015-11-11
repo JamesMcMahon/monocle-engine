@@ -253,8 +253,8 @@ namespace Monocle
 
         static public bool RectToCircle(float rX, float rY, float rW, float rH, Vector2 cPosition, float cRadius)
         {
-            //Check if the circle contains the rectangle's center-point
-            if (Collide.CircleToPoint(cPosition, cRadius, new Vector2(rX + rW/2, rY + rH/2)))
+            //Check if the rectangle contains the circle's center point
+            if (Collide.RectToPoint(rX, rY, rW, rH, cPosition))
                 return true;
 
             //Check the circle against the relevant edges
