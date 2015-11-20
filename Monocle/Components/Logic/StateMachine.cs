@@ -61,16 +61,18 @@ namespace Monocle
                 {
                     if (Log)
                         Calc.Log("Enter State " + value + " (leaving " + state + ")");
-                    ChangedStates = true;
 
-                    if (state != -1 && ends[state] != null)
-                    {
-                        if (Log)
-                            Calc.Log("Calling End " + state);
-                        ends[state]();
-                    }
+                    ChangedStates = true;
                     PreviousState = state;
                     state = value;
+
+                    if (PreviousState != -1 && ends[PreviousState] != null)
+                    {
+                        if (Log)
+                            Calc.Log("Calling End " + PreviousState);
+                        ends[PreviousState]();
+                    }
+                    
                     if (begins[state] != null)
                     {
                         if (Log)
