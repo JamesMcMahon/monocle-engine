@@ -9,6 +9,9 @@ namespace Monocle
     public class VirtualIntegerAxis : VirtualInput
     {
         public List<VirtualAxis.Node> Nodes;
+        
+        public int Value { get; private set; }
+        public int PreviousValue { get; private set; }
 
         public VirtualIntegerAxis()
             : base()
@@ -26,20 +29,17 @@ namespace Monocle
         {
             foreach (var node in Nodes)
                 node.Update();
-        }
 
-        public int Value
-        {
-            get
+            PreviousValue = Value;
+            Value = 0;
+            foreach (var node in Nodes)
             {
-                foreach (var node in Nodes)
+                float value = node.Value;
+                if (value != 0)
                 {
-                    float value = node.Value;
-                    if (value != 0)
-                        return (int)Math.Sign(value);
+                    Value = Math.Sign(value);
+                    break;
                 }
-
-                return 0;
             }
         }
 

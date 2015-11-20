@@ -10,6 +10,9 @@ namespace Monocle
     {
         public List<Node> Nodes;
 
+        public float Value { get; private set; }
+        public float PreviousValue { get; private set; }
+
         public VirtualAxis()
             : base()
         {
@@ -26,20 +29,17 @@ namespace Monocle
         {
             foreach (var node in Nodes)
                 node.Update();
-        }
 
-        public float Value
-        {
-            get
+            PreviousValue = Value;
+            Value = 0;
+            foreach (var node in Nodes)
             {
-                foreach (var node in Nodes)
+                float value = node.Value;
+                if (value != 0)
                 {
-                    float value = node.Value;
-                    if (value != 0)
-                        return value;
+                    Value = value;
+                    break;
                 }
-
-                return 0;
             }
         }
 
