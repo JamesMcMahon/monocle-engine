@@ -39,9 +39,9 @@ namespace Monocle
                 State = 0;
         }
 
-        public override void EntityAdded()
+        public override void EntityAdded(Scene scene)
         {
-            base.EntityAdded();
+            base.EntityAdded(scene);
 
             if (state == -1)
                 State = 0;

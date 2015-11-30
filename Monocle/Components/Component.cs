@@ -27,13 +27,13 @@ namespace Monocle
                 Scene.Tracker.ComponentRemoved(this);
         }
 
-        public virtual void EntityAdded()
+        public virtual void EntityAdded(Scene scene)
         {
             if (Scene != null)
                 Scene.Tracker.ComponentAdded(this);
         }
 
-        public virtual void EntityRemoved()
+        public virtual void EntityRemoved(Scene scene)
         {
             Scene.Tracker.ComponentRemoved(this);
         }

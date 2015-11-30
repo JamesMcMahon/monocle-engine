@@ -34,14 +34,14 @@ namespace Monocle
         {
             Focused = true;
             foreach (var entity in Entities)
-                entity.SceneBegin();
+                entity.SceneBegin(this);
         }
 
         public virtual void End()
         {
             Focused = false;
             foreach (var entity in Entities)
-                entity.SceneEnd();
+                entity.SceneEnd(this);
         }
 
         public virtual void BeforeUpdate()

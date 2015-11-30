@@ -37,7 +37,7 @@ namespace Monocle
         /// <summary>
         /// Called when the containing Scene Begins
         /// </summary>
-        public virtual void SceneBegin()
+        public virtual void SceneBegin(Scene scene)
         {
 
         }
@@ -45,7 +45,7 @@ namespace Monocle
         /// <summary>
         /// Called when the containing Scene Ends
         /// </summary>
-        public virtual void SceneEnd()
+        public virtual void SceneEnd(Scene scene)
         {
 
         }
@@ -71,7 +71,7 @@ namespace Monocle
             Scene = scene;
             if (Components != null)
                 foreach (var c in Components)
-                    c.EntityAdded();
+                    c.EntityAdded(scene);
             Scene.SetActualDepth(this);
         }
 
@@ -83,7 +83,7 @@ namespace Monocle
         {
             if (Components != null)
                 foreach (var c in Components)
-                    c.EntityRemoved();
+                    c.EntityRemoved(scene);
             Scene = null;
         }
 
