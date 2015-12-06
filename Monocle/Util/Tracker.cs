@@ -110,10 +110,20 @@ namespace Monocle
                 Components.Add(type, new List<Component>());
         }
 
+        public bool IsEntityTracked<T>() where T : Entity
+        {
+            return Entities.ContainsKey(typeof(T));
+        }
+
+        public bool IsComponentTracked<T>() where T : Component
+        {
+            return Components.ContainsKey(typeof(T));
+        }
+
         public T GetEntity<T>() where T : Entity
         {
 #if DEBUG
-            if (!Entities.ContainsKey(typeof(T)))
+            if (!IsEntityTracked<T>())
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
@@ -127,7 +137,7 @@ namespace Monocle
         public List<Entity> GetEntities<T>() where T : Entity
         {
 #if DEBUG
-            if (!Entities.ContainsKey(typeof(T)))
+            if (!IsEntityTracked<T>())
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
@@ -142,7 +152,7 @@ namespace Monocle
         public IEnumerator<T> EnumerateEntities<T>() where T : Entity
         {
 #if DEBUG
-            if (!Entities.ContainsKey(typeof(T)))
+            if (!IsEntityTracked<T>())
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
@@ -153,7 +163,7 @@ namespace Monocle
         public T GetComponent<T>() where T : Component
         {
 #if DEBUG
-            if (!Components.ContainsKey(typeof(T)))
+            if (!IsComponentTracked<T>())
                 throw new Exception("Provided Component type is not marked with the Tracked attribute!");
 #endif
 
@@ -167,7 +177,7 @@ namespace Monocle
         public List<Component> GetComponents<T>() where T : Component
         {
 #if DEBUG
-            if (!Components.ContainsKey(typeof(T)))
+            if (!IsComponentTracked<T>())
                 throw new Exception("Provided Component type is not marked with the Tracked attribute!");
 #endif
 
@@ -182,7 +192,7 @@ namespace Monocle
         public IEnumerator<T> EnumerateComponents<T>() where T : Component
         {
 #if DEBUG
-            if (!Components.ContainsKey(typeof(T)))
+            if (!IsComponentTracked<T>())
                 throw new Exception("Provided Component type is not marked with the Tracked attribute!");
 #endif
 

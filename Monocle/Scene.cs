@@ -281,7 +281,7 @@ namespace Monocle
 
         #endregion
 
-        #region Collisions v Tracked Lists
+        #region Collisions v Tracked List Entities
 
         public bool CollideCheck<T>(Vector2 point) where T : Entity
         {
@@ -458,6 +458,193 @@ namespace Monocle
             for (int i = 0; i <= amount; i++)
             {
                 if (CollideCheck<T>(at))
+                    return prev;
+                prev = at;
+                at += add;
+            }
+
+            return to;
+        }
+
+        #endregion
+
+        #region Collisions v Tracked List Components
+
+        public bool CollideCheckByComponent<T>(Vector2 point) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollidePoint(point))
+                    return true;
+            return false;
+        }
+
+        public bool CollideCheckByComponent<T>(Vector2 from, Vector2 to) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideLine(from, to))
+                    return true;
+            return false;
+        }
+
+        public bool CollideCheckByComponent<T>(Rectangle rect) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideRect(rect))
+                    return true;
+            return false;
+        }
+
+        public T CollideFirstByComponent<T>(Vector2 point) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollidePoint(point))
+                    return list[i] as T;
+            return null;
+        }
+
+        public T CollideFirstByComponent<T>(Vector2 from, Vector2 to) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideLine(from, to))
+                    return list[i] as T;
+            return null;
+        }
+
+        public T CollideFirstByComponent<T>(Rectangle rect) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideRect(rect))
+                    return list[i] as T;
+            return null;
+        }
+
+        public void CollideIntoByComponent<T>(Vector2 point, List<Component> hits) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollidePoint(point))
+                    hits.Add(list[i]);
+        }
+
+        public void CollideIntoByComponent<T>(Vector2 from, Vector2 to, List<Component> hits) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideLine(from, to))
+                    hits.Add(list[i]);
+        }
+
+        public void CollideIntoByComponent<T>(Rectangle rect, List<Component> hits) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideRect(rect))
+                    list.Add(list[i]);
+        }
+
+        public void CollideIntoByComponent<T>(Vector2 point, List<T> hits) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollidePoint(point))
+                    hits.Add(list[i] as T);
+        }
+
+        public void CollideIntoByComponent<T>(Vector2 from, Vector2 to, List<T> hits) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideLine(from, to))
+                    hits.Add(list[i] as T);
+        }
+
+        public void CollideIntoByComponent<T>(Rectangle rect, List<T> hits) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideRect(rect))
+                    list.Add(list[i] as T);
+        }
+
+        public List<T> CollideAllByComponent<T>(Vector2 point) where T : Component
+        {
+            List<T> list = new List<T>();
+            CollideIntoByComponent<T>(point, list);
+            return list;
+        }
+
+        public List<T> CollideAllByComponent<T>(Vector2 from, Vector2 to) where T : Component
+        {
+            List<T> list = new List<T>();
+            CollideIntoByComponent<T>(from, to, list);
+            return list;
+        }
+
+        public List<T> CollideAllByComponent<T>(Rectangle rect) where T : Component
+        {
+            List<T> list = new List<T>();
+            CollideIntoByComponent<T>(rect, list);
+            return list;
+        }
+
+        public void CollideDoByComponent<T>(Vector2 point, Action<T> action) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollidePoint(point))
+                    action(list[i] as T);
+        }
+
+        public void CollideDoByComponent<T>(Vector2 from, Vector2 to, Action<T> action) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideLine(from, to))
+                    action(list[i] as T);
+        }
+
+        public void CollideDoByComponent<T>(Rectangle rect, Action<T> action) where T : Component
+        {
+            var list = Tracker.Components[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Entity.Collidable && list[i].Entity.CollideRect(rect))
+                    action(list[i] as T);
+        }
+
+        public Vector2 LineWalkCheckByComponent<T>(Vector2 from, Vector2 to, float precision) where T : Component
+        {
+            Vector2 add = to - from;
+            add.Normalize();
+            add *= precision;
+
+            int amount = (int)Math.Floor((from - to).Length() / precision);
+            Vector2 prev = from;
+            Vector2 at = from + add;
+
+            for (int i = 0; i <= amount; i++)
+            {
+                if (CollideCheckByComponent<T>(at))
                     return prev;
                 prev = at;
                 at += add;

@@ -396,6 +396,13 @@ namespace Monocle
             return random.NextFloat() * MathHelper.TwoPi;
         }
 
+        static private int[] shakeVectorOffsets = new int[] { -2, -1, 0, 1, 2 };
+
+        static public Vector2 ShakeVector(this Random random)
+        {
+            return new Vector2(random.Choose(shakeVectorOffsets), random.Choose(shakeVectorOffsets));
+        }
+
         #endregion
 
         #region Lists
