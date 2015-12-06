@@ -283,7 +283,7 @@ namespace Monocle
                 if (Collider == null)
                     return Position.X;
                 else
-                    return Position.X + Collider.Left + Collider.Width / 2f;
+                    return Position.X + Collider.CenterX;
             }
 
             set
@@ -291,7 +291,7 @@ namespace Monocle
                 if (Collider == null)
                     Position.X = value;
                 else
-                    Position.X = value - (Collider.Left + Collider.Width / 2f);
+                    Position.X = value - Collider.CenterX;
             }
         }
 
@@ -302,7 +302,7 @@ namespace Monocle
                 if (Collider == null)
                     return Position.Y;
                 else
-                    return Position.Y + Collider.Top + Collider.Height / 2f;
+                    return Position.Y + Collider.CenterY;
             }
 
             set
@@ -310,7 +310,7 @@ namespace Monocle
                 if (Collider == null)
                     Position.Y = value;
                 else
-                    Position.Y = value - (Collider.Top + Collider.Height / 2f);
+                    Position.Y = value - Collider.CenterY;
             }
         }
 

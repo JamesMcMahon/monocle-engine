@@ -121,7 +121,7 @@ namespace Monocle
             return Math.Floor((TimeActive - offset - Engine.DeltaTime) / interval) < Math.Floor((TimeActive - offset) / interval);
         }
 
-        #region Collisions
+        #region Collisions v Tags
 
         public bool CollideCheck(Vector2 point, int tag)
         {
@@ -271,6 +271,193 @@ namespace Monocle
             for (int i = 0; i <= amount; i++)
             {
                 if (CollideCheck(at, tag))
+                    return prev;
+                prev = at;
+                at += add;
+            }
+
+            return to;
+        }
+
+        #endregion
+
+        #region Collisions v Tracked Lists
+
+        public bool CollideCheck<T>(Vector2 point) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollidePoint(point))
+                    return true;
+            return false;
+        }
+
+        public bool CollideCheck<T>(Vector2 from, Vector2 to) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    return true;
+            return false;
+        }
+
+        public bool CollideCheck<T>(Rectangle rect) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideRect(rect))
+                    return true;
+            return false;
+        }
+
+        public T CollideFirst<T>(Vector2 point) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollidePoint(point))
+                    return list[i] as T;
+            return null;
+        }
+
+        public T CollideFirst<T>(Vector2 from, Vector2 to) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    return list[i] as T;
+            return null;
+        }
+
+        public T CollideFirst<T>(Rectangle rect) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideRect(rect))
+                    return list[i] as T;
+            return null;
+        }
+
+        public void CollideInto<T>(Vector2 point, List<Entity> hits) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollidePoint(point))
+                    hits.Add(list[i]);
+        }
+
+        public void CollideInto<T>(Vector2 from, Vector2 to, List<Entity> hits) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    hits.Add(list[i]);
+        }
+
+        public void CollideInto<T>(Rectangle rect, List<Entity> hits) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideRect(rect))
+                    list.Add(list[i]);
+        }
+
+        public void CollideInto<T>(Vector2 point, List<T> hits) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollidePoint(point))
+                    hits.Add(list[i] as T);
+        }
+
+        public void CollideInto<T>(Vector2 from, Vector2 to, List<T> hits) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    hits.Add(list[i] as T);
+        }
+
+        public void CollideInto<T>(Rectangle rect, List<T> hits) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideRect(rect))
+                    list.Add(list[i] as T);
+        }
+
+        public List<T> CollideAll<T>(Vector2 point) where T : Entity
+        {
+            List<T> list = new List<T>();
+            CollideInto<T>(point, list);
+            return list;
+        }
+
+        public List<T> CollideAll<T>(Vector2 from, Vector2 to) where T : Entity
+        {
+            List<T> list = new List<T>();
+            CollideInto<T>(from, to, list);
+            return list;
+        }
+
+        public List<T> CollideAll<T>(Rectangle rect) where T : Entity
+        {
+            List<T> list = new List<T>();
+            CollideInto<T>(rect, list);
+            return list;
+        }
+
+        public void CollideDo<T>(Vector2 point, Action<T> action) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollidePoint(point))
+                    action(list[i] as T);
+        }
+
+        public void CollideDo<T>(Vector2 from, Vector2 to, Action<T> action) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideLine(from, to))
+                    action(list[i] as T);
+        }
+
+        public void CollideDo<T>(Rectangle rect, Action<T> action) where T : Entity
+        {
+            var list = Tracker.Entities[typeof(T)];
+
+            for (int i = 0; i < list.Count; i++)
+                if (list[i].Collidable && list[i].CollideRect(rect))
+                    action(list[i] as T);
+        }
+
+        public Vector2 LineWalkCheck<T>(Vector2 from, Vector2 to, float precision) where T : Entity
+        {
+            Vector2 add = to - from;
+            add.Normalize();
+            add *= precision;
+
+            int amount = (int)Math.Floor((from - to).Length() / precision);
+            Vector2 prev = from;
+            Vector2 at = from + add;
+
+            for (int i = 0; i <= amount; i++)
+            {
+                if (CollideCheck<T>(at))
                     return prev;
                 prev = at;
                 at += add;
