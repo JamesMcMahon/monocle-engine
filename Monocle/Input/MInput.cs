@@ -342,7 +342,7 @@ namespace Monocle
                 {
                     rumbleTime -= Engine.DeltaTime;
                     if (rumbleTime <= 0)
-                        GamePad.SetVibration(PlayerIndex, 0, 0):
+                        GamePad.SetVibration(PlayerIndex, 0, 0);
                 }
             }
 
