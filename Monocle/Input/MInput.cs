@@ -24,6 +24,12 @@ namespace Monocle
             VirtualInputs = new List<VirtualInput>();
         }
 
+        static internal void Shutdown()
+        {
+            foreach (var gamepad in GamePads)
+                gamepad.StopRumble();
+        }
+
         static internal void Update()
         {
             if (Engine.Instance.IsActive)
@@ -319,6 +325,9 @@ namespace Monocle
             public GamePadState PreviousState;
             public GamePadState CurrentState;
 
+            private float rumbleStrength;
+            private float rumbleTime;
+
             internal GamePadData(PlayerIndex playerIndex)
             {
                 PlayerIndex = playerIndex;
@@ -328,12 +337,35 @@ namespace Monocle
             {
                 PreviousState = CurrentState;
                 CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(PlayerIndex);
+
+                if (rumbleTime > 0)
+                {
+                    rumbleTime -= Engine.DeltaTime;
+                    if (rumbleTime <= 0)
+                        GamePad.SetVibration(PlayerIndex, 0, 0):
+                }
             }
 
             public void UpdateNull()
             {
                 PreviousState = CurrentState;
                 CurrentState = new GamePadState();
+            }
+
+            public void Rumble(float strength, float time)
+            {
+                if (rumbleTime <= 0 || strength > rumbleStrength || (strength == rumbleStrength && time > rumbleTime))
+                {
+                    GamePad.SetVibration(PlayerIndex, strength, strength);
+                    rumbleStrength = strength;
+                    rumbleTime = time;
+                }
+            }
+
+            public void StopRumble()
+            {
+                GamePad.SetVibration(PlayerIndex, 0, 0);
+                rumbleTime = 0;
             }
 
             #region Utils

@@ -221,5 +221,11 @@ namespace Monocle
             get { return Instance.scene; }
             set { Instance.nextScene = value; }
         }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+            MInput.Shutdown();
+        }
     }
 }
