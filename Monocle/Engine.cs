@@ -222,6 +222,14 @@ namespace Monocle
             }
         }
 
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+            MInput.Shutdown();
+        }
+
+        #region Scene
+
         /// <summary>
         /// Called after a Scene ends, before the next Scene begins
         /// </summary>
@@ -240,11 +248,7 @@ namespace Monocle
             set { Instance.nextScene = value; }
         }
 
-        protected override void OnExiting(object sender, EventArgs args)
-        {
-            base.OnExiting(sender, args);
-            MInput.Shutdown();
-        }
+        #endregion
 
         #region Screen
 
