@@ -22,12 +22,6 @@ namespace Monocle
         static public SpriteFont DefaultFont { get; private set; }
 
         /// <summary>
-        /// Matrix that handles scaling for fullscreen. Automatically set by Monocle when the game switches from fullscreen to windowed mode.
-        /// All your rendering should use this Matrix and the default Renderers use it
-        /// </summary>
-        static public Matrix MasterRenderMatrix { get; internal set; }
-
-        /// <summary>
         /// A subtexture used to draw particle systems.
         /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
         /// Should be a 2x2 white pixel

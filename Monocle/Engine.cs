@@ -17,16 +17,18 @@ namespace Monocle
         static public float FreezeTimer;
         static public Color ClearColor;
         static public bool ExitOnEscapeKeypress;
+        static public RenderTarget2D RenderBuffer;
 
         private Scene scene;
         private Scene nextScene;
         private string windowTitle;
+        private Matrix screenMatrix;
 #if DEBUG
         private TimeSpan counterElapsed = TimeSpan.Zero;
         private int counterFrames = 0;
 #endif
 
-        public Engine(int width, int height, string windowTitle)
+        public Engine(int width, int height, int windowedScale, string windowTitle, bool fullscreen)
         {
             Instance = this;
 
@@ -38,13 +40,18 @@ namespace Monocle
             Graphics = new GraphicsDeviceManager(this);
             Graphics.DeviceReset += OnGraphicsReset;
             Graphics.DeviceCreated += OnGraphicsCreate;
-            Graphics.PreferredBackBufferWidth = Width;
-            Graphics.PreferredBackBufferHeight = Height;
+
+            if (fullscreen)
+                Graphics.IsFullScreen = true;
+            else
+            {
+                Graphics.PreferredBackBufferWidth = Width * windowedScale;
+                Graphics.PreferredBackBufferHeight = Height * windowedScale;
+                Graphics.IsFullScreen = false;
+            }
 #if DEBUG
-            Graphics.IsFullScreen = false;
             Graphics.SynchronizeWithVerticalRetrace = false;
 #else
-            Graphics.IsFullScreen = false;
             Graphics.SynchronizeWithVerticalRetrace = true;
 #endif
 
@@ -91,7 +98,7 @@ namespace Monocle
                 drawHeight = (int)(screenWidth / Width * Height);
             }
 
-            Monocle.Draw.MasterRenderMatrix = Matrix.CreateScale(drawWidth / (float)Width);
+            screenMatrix = Matrix.CreateScale(drawWidth / (float)Width);
 
             GraphicsDevice.Viewport = new Viewport
             {
@@ -194,13 +201,24 @@ namespace Monocle
             if (scene != null)
                 scene.BeforeRender();
 
-            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.SetRenderTarget(RenderBuffer);
             GraphicsDevice.Clear(ClearColor);
 
             if (scene != null)
             {
                 scene.Render();
                 scene.AfterRender();
+            }
+
+            //Draw the buffer scaled up to the screen
+            if (RenderBuffer != null)
+            {
+                GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.Clear(ClearColor);
+
+                Monocle.Draw.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, screenMatrix);
+                Monocle.Draw.SpriteBatch.Draw(RenderBuffer, Vector2.Zero, Color.White);
+                Monocle.Draw.SpriteBatch.End();
             }
         }
 
@@ -227,5 +245,36 @@ namespace Monocle
             base.OnExiting(sender, args);
             MInput.Shutdown();
         }
+
+        #region Screen
+
+        static public Matrix ScreenMatrix
+        {
+            get
+            {
+                if (RenderBuffer == null)
+                    return Instance.screenMatrix;
+                else
+                    return Matrix.Identity;
+            }
+        }
+
+        static public void SetWindowed(int scale = 1)
+        {
+            Graphics.PreferredBackBufferWidth = Width * scale;
+            Graphics.PreferredBackBufferHeight = Height * scale;
+            Graphics.IsFullScreen = false;
+            Graphics.ApplyChanges();
+        }
+
+        static public void SetFullscreen()
+        {
+            Graphics.PreferredBackBufferWidth = Instance.GraphicsDevice.DisplayMode.Width;
+            Graphics.PreferredBackBufferHeight = Instance.GraphicsDevice.DisplayMode.Height;
+            Graphics.IsFullScreen = true;
+            Graphics.ApplyChanges();
+        }
+
+        #endregion
     }
 }
