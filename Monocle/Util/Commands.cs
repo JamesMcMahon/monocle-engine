@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -405,8 +406,8 @@ namespace Monocle
 
         internal void Render()
         {
-            int screenWidth = (int)Engine.Width;
-            int screenHeight = (int)Engine.Height;
+            int screenWidth = Engine.ViewWidth;
+            int screenHeight = Engine.ViewHeight;
 
             Draw.SpriteBatch.Begin();
 

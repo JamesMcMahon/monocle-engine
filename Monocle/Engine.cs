@@ -12,6 +12,8 @@ namespace Monocle
         static public Pooler Pooler { get; private set; }
         static public int Width { get; private set; }
         static public int Height { get; private set; }
+        static public int ViewWidth { get; private set; }
+        static public int ViewHeight { get; private set; }
         static public float DeltaTime { get; private set; }
         static public float TimeRate = 1f;
         static public float FreezeTimer;
@@ -84,28 +86,26 @@ namespace Monocle
         {
             float screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
             float screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-            int drawWidth;
-            int drawHeight;
 
             if (screenWidth / Width > screenHeight / Height)
             {
-                drawWidth = (int)(screenHeight / Height * Width);
-                drawHeight = (int)screenHeight;
+                ViewWidth = (int)(screenHeight / Height * Width);
+                ViewHeight = (int)screenHeight;
             }
             else
             {
-                drawWidth = (int)screenWidth;
-                drawHeight = (int)(screenWidth / Width * Height);
+                ViewWidth = (int)screenWidth;
+                ViewHeight = (int)(screenWidth / Width * Height);
             }
 
-            screenMatrix = Matrix.CreateScale(drawWidth / (float)Width);
+            screenMatrix = Matrix.CreateScale(ViewWidth / (float)Width);
 
             GraphicsDevice.Viewport = new Viewport
             {
-                X = (int)(screenWidth / 2 - drawWidth / 2),
-                Y = (int)(screenHeight / 2 - drawHeight / 2),
-                Width = drawWidth,
-                Height = drawHeight,
+                X = (int)(screenWidth / 2 - ViewWidth / 2),
+                Y = (int)(screenHeight / 2 - ViewHeight / 2),
+                Width = ViewWidth,
+                Height = ViewHeight,
                 MinDepth = 0,
                 MaxDepth = 1
             };
