@@ -35,7 +35,7 @@ namespace Monocle
                     longest = Math.Max(currentX, longest);
                     currentX = 0;
                 }
-                else if (bitstring[i] == '0' || bitstring[i] == '1')
+                else
                     currentX++;
             }
 
@@ -79,7 +79,7 @@ namespace Monocle
                         data[x, y] = false;
                         x++;
                     }
-                    else if (bitstring[i] == '1')
+                    else
                     {
                         data[x, y] = true;
                         x++;
