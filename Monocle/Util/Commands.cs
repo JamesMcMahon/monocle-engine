@@ -691,6 +691,18 @@ namespace Monocle
             Engine.Pooler.Log();
         }
 
+        [Command("fullscreen", "Switches to fullscreen mode")]
+        static private void Fullscreen()
+        {
+            Engine.SetFullscreen();
+        }
+
+        [Command("window", "Switches to window mode")]
+        static private void Window(int scale = 1)
+        {
+            Engine.SetWindowed(scale);
+        }
+
         [Command("help", "Shows usage help for a given command")]
         static private void Help(string command)
         {
