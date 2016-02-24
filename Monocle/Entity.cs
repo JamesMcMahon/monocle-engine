@@ -1001,6 +1001,11 @@ namespace Monocle
             Components.Remove(components);
         }
 
+        public T Get<T>() where T : Component
+        {
+            return Components.Get<T>();
+        }
+
         /// <summary>
         /// Allows you to iterate through all Components in the Entity
         /// </summary>

@@ -42,6 +42,7 @@ namespace Monocle
             Graphics = new GraphicsDeviceManager(this);
             Graphics.DeviceReset += OnGraphicsReset;
             Graphics.DeviceCreated += OnGraphicsCreate;
+            Graphics.SynchronizeWithVerticalRetrace = true;
 
             if (fullscreen)
                 Graphics.IsFullScreen = true;
@@ -51,11 +52,6 @@ namespace Monocle
                 Graphics.PreferredBackBufferHeight = Height * windowedScale;
                 Graphics.IsFullScreen = false;
             }
-#if DEBUG
-            Graphics.SynchronizeWithVerticalRetrace = false;
-#else
-            Graphics.SynchronizeWithVerticalRetrace = true;
-#endif
 
             Content.RootDirectory = @"Content\";
 
