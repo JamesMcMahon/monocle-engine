@@ -37,7 +37,7 @@ namespace Monocle
         public void Emit(ParticleType type, int amount, Vector2 position, Vector2 positionRange)
         {
             for (int i = 0; i < amount; i++)
-                Emit(type, Calc.Random.Range(position - positionRange, positionRange * 2));
+                Emit(type, Calc.Random.Range(position - positionRange, position + positionRange));
         }
 
         public void Emit(ParticleType type, Vector2 position, float direction)
@@ -49,7 +49,7 @@ namespace Monocle
         public void Emit(ParticleType type, int amount, Vector2 position, Vector2 positionRange, float direction)
         {
             for (int i = 0; i < amount; i++)
-                Emit(type, Calc.Random.Range(position - positionRange, positionRange * 2), direction);
+                Emit(type, Calc.Random.Range(position - positionRange, position + positionRange), direction);
         }
     }
 }
