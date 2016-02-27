@@ -143,6 +143,26 @@ namespace Monocle
             }
         }
 
+        public T FindFirst<T>() where T : Entity
+        {
+            foreach (var e in entities)
+                if (e is T)
+                    return e as T;
+
+            return null;
+        }
+
+        public List<T> FindAll<T>() where T : Entity
+        {
+            List<T> list = new List<T>();
+
+            foreach (var e in entities)
+                if (e is T)
+                    list.Add(e as T);
+
+            return list;
+        }
+
         public IEnumerator<Entity> GetEnumerator()
         {
             return entities.GetEnumerator();
