@@ -34,8 +34,9 @@ namespace Monocle
         {
             if (toAdd.Count > 0)
             {
-                foreach (var entity in toAdd)
+                for (int i = 0; i < toAdd.Count; i++)
                 {
+                    var entity = toAdd[i];
                     if (!entities.Contains(entity))
                     {
                         entities.Add(entity);
@@ -53,8 +54,9 @@ namespace Monocle
 
             if (toRemove.Count > 0)
             {
-                foreach (var entity in toRemove)
+                for (int i = 0; i < toRemove.Count; i++)
                 {
+                    var entity = toRemove[i];
                     if (entities.Contains(entity))
                     {
                         entities.Remove(entity);
