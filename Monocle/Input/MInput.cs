@@ -273,42 +273,29 @@ namespace Monocle
                 }
             }
 
-            public int X
-            {
-                get
-                {
-                    return CurrentState.X;
-                }
+			public float X
+			{
+				get { return Position.X; }
+				set { Position = new Vector2(value, Position.Y); }
+			}
 
-                set
-                {
-                    Microsoft.Xna.Framework.Input.Mouse.SetPosition(value, Y);
-                }
-            }
-
-            public int Y
-            {
-                get
-                {
-                    return CurrentState.Y;
-                }
-
-                set
-                {
-                    Microsoft.Xna.Framework.Input.Mouse.SetPosition(X, value);
-                }
-            }
+			public float Y
+			{
+				get { return Position.Y; }
+				set { Position = new Vector2(Position.X, value); }
+			}
 
             public Vector2 Position
             {
                 get
                 {
-                    return new Vector2(X, Y);
+                    return Vector2.Transform(new Vector2(CurrentState.X, CurrentState.Y), Matrix.Invert(Engine.Instance.screenMatrix));
                 }
 
                 set
                 {
-                    Microsoft.Xna.Framework.Input.Mouse.SetPosition((int)Math.Round(value.X), (int)Math.Round(value.Y));
+					var vector = Vector2.Transform(value, Engine.Instance.screenMatrix);
+                    Microsoft.Xna.Framework.Input.Mouse.SetPosition((int)Math.Round(vector.X), (int)Math.Round(vector.Y));
                 }
             }
 

@@ -24,7 +24,7 @@ namespace Monocle
         private Scene scene;
         private Scene nextScene;
         private string windowTitle;
-        private Matrix screenMatrix;
+        internal Matrix screenMatrix;
 #if DEBUG
         private TimeSpan counterElapsed = TimeSpan.Zero;
         private int counterFrames = 0;
