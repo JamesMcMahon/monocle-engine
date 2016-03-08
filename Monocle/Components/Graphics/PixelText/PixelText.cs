@@ -83,7 +83,7 @@ namespace Monocle
 				{
 					characters.Add(new Char()
 					{
-						Offset = offset,
+						Offset = offset + new Vector2(fontChar.XOffset, fontChar.YOffset),
 						Bounds = new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height)
 					});
 

@@ -273,7 +273,7 @@ namespace Monocle
 				var fontChar = font.Get(text[i]);
 				if (fontChar != null)
 				{
-					Draw.Texture(font.Texture, new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height), position + offset, color);
+					Draw.Texture(font.Texture, new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height), position + offset + new Vector2(fontChar.XOffset, fontChar.YOffset), color);
 					offset.X += fontChar.XAdvance;
 				}
 			}
