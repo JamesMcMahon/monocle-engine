@@ -396,7 +396,7 @@ namespace Monocle
             return random.NextFloat() * MathHelper.TwoPi;
         }
 
-        static private int[] shakeVectorOffsets = new int[] { -2, -1, 0, 1, 2 };
+        static private int[] shakeVectorOffsets = new int[] { -1, -1, 0, 1, 1 };
 
         static public Vector2 ShakeVector(this Random random)
         {
