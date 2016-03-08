@@ -1321,6 +1321,11 @@ namespace Monocle
             return xml.AttrInt("height", defaultHeight);
         }
 
+        static public int ID(this XmlElement xml)
+        {
+            return xml.AttrInt("id");
+        }
+
         #endregion
 
         #region Inner Text
