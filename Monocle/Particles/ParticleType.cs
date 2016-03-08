@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Monocle
@@ -18,8 +19,8 @@ namespace Monocle
         public Vector2 Acceleration;
         public float Direction;
         public float DirectionRange;
-        public int Life;
-        public int LifeRange;
+        public float Life;
+        public float LifeRange;
         public float Size;
         public float SizeRange;
         public bool Rotated;
@@ -77,10 +78,7 @@ namespace Monocle
             particle.Type = this;
             particle.Active = true;
             particle.Position = position;
-            if (Source == null)
-                particle.Size = (int)Calc.Random.Range(Size, Size + SizeRange);
-            else
-                particle.Size = Calc.Random.Range(Size, Size + SizeRange);
+            particle.Size = Calc.Random.Range(Size, Size + SizeRange);
             particle.Color = Color;
             particle.Speed = Calc.AngleToVector(direction - DirectionRange / 2 + Calc.Random.NextFloat() * DirectionRange, Calc.Random.Range(Speed, SpeedRange));
             particle.Life = Calc.Random.Range(Life, LifeRange);
@@ -90,10 +88,10 @@ namespace Monocle
             else if (Rotated)
                 particle.Rotation = direction;
 
-            if (ScaleOut)
-                particle.SizeChange = -(particle.Size / (particle.Life * 2f));
-            else
-                particle.SizeChange = 0;
+			if (ScaleOut)
+				particle.SizeChange = -particle.Size / particle.Life;
+			else
+				particle.SizeChange = 0;
 
             return particle;
         }
