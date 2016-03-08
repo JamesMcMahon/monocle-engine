@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Graphics\PixelText\PixelText.cs" />
     <Compile Include="Components\Graphics\Sprite\Sprite.cs" />
     <Compile Include="Components\Logic\CounterSet.cs" />
     <Compile Include="Components\Logic\Shaker.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
     <Compile Include="Renderers\TagExcludeRenderer.cs" />
+    <Compile Include="Util\PixelFont.cs" />
     <Compile Include="Util\Pooler.cs" />
     <Compile Include="Util\ChoiceSet.cs" />
     <Compile Include="Util\Tracker.cs" />

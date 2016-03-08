@@ -255,7 +255,29 @@ namespace Monocle
             HollowRect(collider.AbsoluteLeft, collider.AbsoluteTop, collider.Width, collider.Height, color);
         }
 
-        #endregion
+		#endregion
+
+		static public void Text(PixelFont font, string text, Vector2 position, Color color)
+		{
+			var offset = Vector2.Zero;
+			for (int i = 0; i < text.Length; i++)
+			{
+				// new line
+				if (text[i] == '\n')
+				{
+					offset.X = 0;
+					offset.Y += font.LineHeight;
+				}
+
+				// add char
+				var fontChar = font.Get(text[i]);
+				if (fontChar != null)
+				{
+					Draw.Texture(font.Texture, new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height), position + offset, color);
+					offset.X += fontChar.XAdvance;
+				}
+			}
+		}
 
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
         {
