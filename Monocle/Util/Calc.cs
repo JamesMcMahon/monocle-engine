@@ -407,6 +407,24 @@ namespace Monocle
 
         #region Lists
 
+        static public Vector2 ClosestTo(this List<Vector2> list, Vector2 to)
+        {
+            Vector2 best = list[0];
+            float distSq = Vector2.DistanceSquared(list[0], to);
+
+            for (int i = 1; i < list.Count; i++)
+            {
+                float d = Vector2.DistanceSquared(list[i], to);
+                if (d < distSq)
+                {
+                    distSq = d;
+                    best = list[i];
+                }
+            }
+
+            return best;
+        }
+
         static public void Shuffle<T>(this List<T> list, Random random)
         {
             int i = list.Count;
