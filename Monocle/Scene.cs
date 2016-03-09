@@ -17,6 +17,8 @@ namespace Monocle
 
         private Dictionary<int, double> actualDepthLookup;
 
+        public event Action OnEndOfFrame;
+
         public Scene()
         {
             Tracker = new Tracker();
@@ -59,7 +61,11 @@ namespace Monocle
 
         public virtual void AfterUpdate()
         {
-
+            if (OnEndOfFrame != null)
+            {
+                OnEndOfFrame();
+                OnEndOfFrame = null;
+            }
         }
 
         public virtual void BeforeRender()
