@@ -51,6 +51,56 @@ namespace Monocle
             this.data = (bool[,])data.Clone();
         }
 
+        public void Extend(int left, int right, int up, int down)
+        {
+            Position -= new Vector2(left * CellWidth, up * CellHeight);
+
+            int newWidth = data.GetLength(0) + left + right;
+            int newHeight = data.GetLength(1) + up + down;
+            if (newWidth <= 0 || newHeight <= 0)
+            {
+                data = new bool[0, 0];
+                return;
+            }
+
+            bool[,] newData = new bool[newWidth, newHeight];
+
+            //Center
+            for (int x = 0; x < data.GetLength(0); x++)
+            {
+                for (int y = 0; y < data.GetLength(1); y++)
+                {
+                    int atX = x + left;
+                    int atY = y + up;
+
+                    if (atX >= 0 && atX < newWidth && atY >= 0 && atY < newHeight)
+                        newData[atX, atY] = data[x, y];
+                }
+            }
+
+            //Left
+            for (int x = 0; x < left; x++)
+                for (int y = 0; y < newHeight; y++)
+                    newData[x, y] = data[0, Calc.Clamp(y - up, 0, data.GetLength(1) - 1)];
+
+            //Right
+            for (int x = newWidth - right; x < newWidth; x++)
+                for (int y = 0; y < newHeight; y++)
+                    newData[x, y] = data[data.GetLength(0) - 1, Calc.Clamp(y - up, 0, data.GetLength(1) - 1)];
+
+            //Top
+            for (int y = 0; y < up; y++)
+                for (int x = 0; x < newWidth; x++)
+                    newData[x, y] = data[Calc.Clamp(x - left, 0, data.GetLength(0) - 1), 0];
+
+            //Bottom
+            for (int y = newHeight - down; y < newHeight; y++)
+                for (int x = 0; x < newWidth; x++)
+                    newData[x, y] = data[Calc.Clamp(x - left, 0, data.GetLength(0) - 1), data.GetLength(1) - 1];
+
+            data = newData;
+        }
+
         public void LoadBitstring(string bitstring)
         {
             int x = 0;
