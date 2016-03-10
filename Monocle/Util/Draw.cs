@@ -279,6 +279,15 @@ namespace Monocle
 			}
 		}
 
+		static public void TextBorder(PixelFont font, string text, Vector2 position, Color border, Color color)
+		{
+			Text(font, text, position + new Vector2(-1, 0), border);
+			Text(font, text, position + new Vector2(1, 0), border);
+			Text(font, text, position + new Vector2(0, -1), border);
+			Text(font, text, position + new Vector2(0, 1), border);
+			Text(font, text, position, color);
+		}
+
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
         {
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color);
