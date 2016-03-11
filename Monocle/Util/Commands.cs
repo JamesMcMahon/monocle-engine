@@ -16,7 +16,7 @@ namespace Monocle
         private const float OPACITY = .65f;
 
         public bool Enabled = true;
-        public bool Open { get; internal set; }
+        public bool Open;
         public Action[] FunctionKeyActions { get; private set; }
 
         private Dictionary<string, CommandInfo> commands;
