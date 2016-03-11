@@ -141,7 +141,7 @@ namespace Monocle
                 throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
 #endif
 
-            return Entities[typeof(T)];
+			return Entities[typeof(T)];
         }
 
         public List<Entity> GetEntitiesCopy<T>() where T : Entity

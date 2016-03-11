@@ -257,7 +257,7 @@ namespace Monocle
 
 		#endregion
 
-		static public void Text(PixelFont font, string text, Vector2 position, Color color)
+		public static void Text(PixelFont font, string text, Vector2 position, Vector2 scale, Color color)
 		{
 			var offset = Vector2.Zero;
 			for (int i = 0; i < text.Length; i++)
@@ -273,11 +273,19 @@ namespace Monocle
 				var fontChar = font.Get(text[i]);
 				if (fontChar != null)
 				{
-					Draw.Texture(font.Texture, new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height), position + offset + new Vector2(fontChar.XOffset, fontChar.YOffset), color);
+					var clipRect = new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height);
+					var pos = position + (offset + new Vector2(fontChar.XOffset, fontChar.YOffset)) * scale;
+					SpriteBatch.Draw(font.Texture.Texture2D, Calc.Floor(pos), font.Texture.GetAbsoluteClipRect(clipRect), color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
 					offset.X += fontChar.XAdvance;
 				}
 			}
 		}
+
+		static public void Text(PixelFont font, string text, Vector2 position, Color color)
+		{
+			Text(font, text, position, Vector2.One, color);
+		}
+
 
 		static public void TextBorder(PixelFont font, string text, Vector2 position, Color border, Color color)
 		{

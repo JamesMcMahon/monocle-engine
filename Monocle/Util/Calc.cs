@@ -334,6 +334,11 @@ namespace Monocle
             return choices[random.Next(choices.Length)];
         }
 
+		static public T Choose<T>(this Random random, List<T> choices)
+		{
+			return choices[random.Next(choices.Count)];
+		}
+
         #endregion
 
         #region Range
