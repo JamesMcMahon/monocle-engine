@@ -107,6 +107,16 @@ namespace Monocle
             Entities.HandleGraphicsCreate();
         }
 
+        public virtual void GainFocus()
+        {
+
+        }
+
+        public virtual void LoseFocus()
+        {
+
+        }
+
         /// <summary>
         /// Returns whether the Scene timer has passed the given time interval since the last frame. Ex: given 2.0f, this will return true once every 2 seconds
         /// </summary>
