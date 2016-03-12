@@ -1612,7 +1612,7 @@ namespace Monocle
                 ele = xml[childName];
             else
             {
-                ele = xml.OwnerDocument.CreateElement(childName);
+                ele = xml.OwnerDocument.CreateElement(null, childName, xml.NamespaceURI);
                 xml.AppendChild(ele);
             }
 
@@ -1621,14 +1621,14 @@ namespace Monocle
 
         static public XmlElement CreateChild(this XmlDocument doc, string childName)
         {
-            XmlElement ele = doc.CreateElement(childName);
+            XmlElement ele = doc.CreateElement(null, childName, doc.NamespaceURI);
             doc.AppendChild(ele);
             return ele;
         }
 
         static public XmlElement CreateChild(this XmlElement xml, string childName)
         {
-            XmlElement ele = xml.OwnerDocument.CreateElement(childName);
+            XmlElement ele = xml.OwnerDocument.CreateElement(null, childName, xml.NamespaceURI);
             xml.AppendChild(ele);
             return ele;
         }
