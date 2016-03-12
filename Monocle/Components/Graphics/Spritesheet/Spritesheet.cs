@@ -18,6 +18,7 @@ namespace Monocle
         public T CurrentAnimID { get; private set; }
         public Rectangle[] FrameRects { get; private set; }
         public float Rate = 1;
+		public bool UseActualDeltaTime;
 
         private Dictionary<T, SpritesheetAnimation> Animations;
         private int currentFrame;
@@ -84,7 +85,10 @@ namespace Monocle
         {
             if (Playing && currentAnim.Delay > 0)
             {
-                timer += Engine.DeltaTime * Math.Abs(Rate);
+				if (!UseActualDeltaTime)
+					timer += Engine.DeltaTime * Math.Abs(Rate);
+				else
+					timer += Engine.ActualDeltaTime * Math.Abs(Rate);
 
                 while (timer >= currentAnim.Delay)
                 {
@@ -290,7 +294,10 @@ namespace Monocle
 
         public void SetTimerFrames(float frames)
         {
-            timer = Engine.DeltaTime * frames;
+			if (!UseActualDeltaTime)
+				timer = Engine.DeltaTime * frames;
+			else
+				timer = Engine.ActualDeltaTime * frames;
 
             AnimationFrame = (int)(timer / currentAnim.Delay) % currentAnim.Frames.Length;
             currentFrame = currentAnim[AnimationFrame];
