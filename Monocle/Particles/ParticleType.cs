@@ -26,6 +26,7 @@ namespace Monocle
         public bool Rotated;
         public bool RandomRotate;
         public bool ScaleOut;
+		public bool UseActualDeltaTime;
 
         public ParticleType()
         {

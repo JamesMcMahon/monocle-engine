@@ -20,8 +20,10 @@ namespace Monocle
 
         public void Update()
         {
-            //Life
-            Life -= Engine.DeltaTime;
+			var dt = (Type.UseActualDeltaTime ? Engine.ActualDeltaTime : Engine.DeltaTime);
+
+			//Life
+			Life -= dt;
             if (Life <= 0)
             {
                 Active = false;
@@ -31,7 +33,7 @@ namespace Monocle
             //Color switch
             if (ColorSwitch > 0)
             {
-                ColorSwitch -= Engine.DeltaTime;
+                ColorSwitch -= dt;
                 if (ColorSwitch <= 0)
                 {
                     if (Type.ColorSwitchLoop)
@@ -45,13 +47,13 @@ namespace Monocle
             }
 
             //Speed
-            Position += Speed * Engine.DeltaTime;
-            Speed += Type.Acceleration * Engine.DeltaTime;
+            Position += Speed * dt;
+            Speed += Type.Acceleration * dt;
             if (Type.SpeedMultiplier != 1)
-                Speed *= (float)Math.Pow(Type.SpeedMultiplier, Engine.DeltaTime);
+                Speed *= (float)Math.Pow(Type.SpeedMultiplier, dt);
 
             //Scale Out
-            Size += SizeChange * Engine.DeltaTime;
+            Size += SizeChange * dt;
         }
 
         public void Render()
