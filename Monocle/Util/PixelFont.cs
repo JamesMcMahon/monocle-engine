@@ -8,52 +8,40 @@ namespace Monocle
 {
 	public class PixelFont
 	{
-
-		public class Char
+		public class CharData
 		{
-			public int X;
-			public int Y;
-			public int Width;
-			public int Height;
+            public MTexture Texture;
 			public int XOffset;
 			public int YOffset;
 			public int XAdvance;
 
-			public Char(int x, int y, int width, int height, int xOffset, int yOffset, int xAdvance)
+			public CharData(MTexture texture, XmlElement xml)
 			{
-				X = x;
-				Y = y;
-				Width = width;
-				Height = height;
-				XOffset = xOffset;
-				YOffset = yOffset;
-				XAdvance = xAdvance;
+                Texture = texture.GetSubtexture(xml.AttrInt("x"), xml.AttrInt("y"), xml.AttrInt("width"), xml.AttrInt("height"));
+                XOffset = xml.AttrInt("xoffset");
+                YOffset = xml.AttrInt("yoffset");
+                XAdvance = xml.AttrInt("xadvance");
 			}
 		}
 
 		public MTexture Texture { get; private set; }
-		public Dictionary<int, Char> CharData { get; private set; }
+		public Dictionary<int, CharData> CharDatas { get; private set; }
 		public int LineHeight { get; private set; }
 
 		public PixelFont(XmlElement data, MTexture texture)
 		{
 			Texture = texture;
 
-			CharData = new Dictionary<int, Char>();
+            CharDatas = new Dictionary<int, CharData>();
 			foreach (XmlElement character in data["chars"])
-			{
-				CharData.Add(character.AttrInt("id"),
-					new Char(character.AttrInt("x"), character.AttrInt("y"),
-								character.AttrInt("width"), character.AttrInt("height"),
-								character.AttrInt("xoffset"), character.AttrInt("yoffset"), character.AttrInt("xadvance")));
-			}
+                CharDatas.Add(character.AttrInt("id"), new CharData(texture, character));
 			LineHeight = data["common"].AttrInt("lineHeight");
 		}
 
-		public Char Get(char id)
+		public CharData Get(char id)
 		{
-			Char val = null;
-			if (CharData.TryGetValue((int)id, out val))
+			CharData val = null;
+			if (CharDatas.TryGetValue((int)id, out val))
 				return val;
 			return null;
 		}
@@ -62,8 +50,8 @@ namespace Monocle
 		{
 			int width = 0;
 			for (int i = 0; i < str.Length; i++)
-				if (CharData.ContainsKey((int)str[i]))
-					width += CharData[(int)str[i]].XAdvance;
+				if (CharDatas.ContainsKey((int)str[i]))
+					width += CharDatas[(int)str[i]].XAdvance;
 			return width;
 		}
 

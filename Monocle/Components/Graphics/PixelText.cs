@@ -12,6 +12,7 @@ namespace Monocle
 		private struct Char
 		{
 			public Vector2 Offset;
+            public PixelFont.CharData CharData;
 			public Rectangle Bounds;
 		}
 
@@ -81,10 +82,11 @@ namespace Monocle
 				var fontChar = font.Get(text[i]);
 				if (fontChar != null)
 				{
-					characters.Add(new Char()
-					{
-						Offset = offset + new Vector2(fontChar.XOffset, fontChar.YOffset),
-						Bounds = new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height)
+                    characters.Add(new Char()
+                    {
+                        Offset = offset + new Vector2(fontChar.XOffset, fontChar.YOffset),
+                        CharData = fontChar,
+                        Bounds = fontChar.Texture.ClipRect,
 					});
 
 					if (offset.X > widest)
@@ -102,8 +104,8 @@ namespace Monocle
 			if (dirty)
 				Refresh();
 
-			//for (var i = 0; i < characters.Count; i++)
-			//	Draw.Texture(Font.Texture, characters[i].Bounds, Position + characters[i].Offset, Color);
+            for (var i = 0; i < characters.Count; i++)
+                characters[i].CharData.Texture.Draw(Position + characters[i].Offset, Vector2.Zero, Color);
 		}
 
 	}

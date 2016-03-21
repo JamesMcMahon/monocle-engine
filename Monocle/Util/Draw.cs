@@ -241,9 +241,8 @@ namespace Monocle
                 var fontChar = font.Get(text[i]);
                 if (fontChar != null)
                 {
-                    var clipRect = new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height);
                     var pos = position + (offset + new Vector2(fontChar.XOffset, fontChar.YOffset)) * scale;
-                    //SpriteBatch.Draw(font.Texture.Texture2D, Calc.Floor(pos), font.Texture.GetRelativeRect(clipRect), color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+                    fontChar.Texture.Draw(Calc.Floor(pos), Vector2.Zero, color, scale);
                     offset.X += fontChar.XAdvance;
                 }
             }
