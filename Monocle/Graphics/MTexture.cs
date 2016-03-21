@@ -16,11 +16,6 @@ namespace Monocle
 
         private Dictionary<string, MTexture> atlas;
 
-        private MTexture()
-        {
-
-        }
-
         public MTexture(string imagePath)
         {
             ImagePath = imagePath;
@@ -28,8 +23,8 @@ namespace Monocle
 #if DEBUG
             if (Engine.Instance.GraphicsDevice == null)
                 throw new Exception("Cannot load until GraphicsDevice has been initialized");
-            if (!File.Exists(imagePath))
-                throw new Exception("Texture file does not exist!");
+            if (!File.Exists(Engine.Instance.Content.RootDirectory + ImagePath))
+                throw new FileNotFoundException("Texture file does not exist!");
 #endif
 
             FileStream stream = new FileStream(Engine.Instance.Content.RootDirectory + ImagePath, FileMode.Open);
@@ -54,7 +49,7 @@ namespace Monocle
             Parent = parent;
             Texture2D = parent.Texture2D;
             ImagePath = parent.ImagePath;
-            ClipRect = GetRelativeClipRect(x, y, width, height);
+            ClipRect = parent.GetRelativeClipRect(x, y, width, height);
         }
 
         public MTexture(MTexture parent, Rectangle clipRect)
@@ -62,7 +57,7 @@ namespace Monocle
             Parent = parent;
             Texture2D = parent.Texture2D;
             ImagePath = parent.ImagePath;
-            ClipRect = GetRelativeClipRect(clipRect);
+            ClipRect = parent.GetRelativeClipRect(clipRect);
         }
 
         public virtual void Unload()

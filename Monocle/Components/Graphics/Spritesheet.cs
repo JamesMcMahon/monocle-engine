@@ -311,7 +311,7 @@ namespace Monocle
 #if DEBUG
             foreach (var i in frames)
                 if (i >= FrameRects.Length)
-                    throw new Exception("Specified frames is out of max range for this Sprite.");
+                    throw new Exception("Specified frames is out of max range for this Spritesheet");
 #endif
 
             var anim = new SpritesheetAnimation(delay, loop, frames);
