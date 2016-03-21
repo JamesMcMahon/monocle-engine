@@ -31,7 +31,7 @@ namespace Monocle
             for (int i = -1; i < 2; i++)
                 for (int j = -1; j < 2; j++)
                     if (i != 0 || j != 0)
-                        Draw.SpriteBatch.DrawString(Font, DrawText, RenderPosition + new Vector2(i * OutlineOffset, j * OutlineOffset), OutlineColor, Rotation, Origin, Scale * Zoom, Effects, 0);
+                        Draw.SpriteBatch.DrawString(Font, DrawText, RenderPosition + new Vector2(i * OutlineOffset, j * OutlineOffset), OutlineColor, Rotation, Origin, Scale, Effects, 0);
             base.Render();
         }
     }

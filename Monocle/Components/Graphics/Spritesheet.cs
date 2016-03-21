@@ -16,7 +16,7 @@ namespace Monocle
         public bool Playing { get; private set; }
         public bool Finished { get; private set; }
         public T CurrentAnimID { get; private set; }
-        public Rectangle[] FrameRects { get; private set; }
+        public MTexture[] FrameRects { get; private set; }
         public float Rate = 1;
 		public bool UseActualDeltaTime;
 
@@ -25,38 +25,27 @@ namespace Monocle
         private SpritesheetAnimation currentAnim;
         private float timer;
 
-        public Spritesheet(MTexture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
-            : base(texture, clipRect, true)
-        {
-            Initialize(frameWidth, frameHeight, frameSep);
-        }
-
         public Spritesheet(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
-            : this(texture, null, frameWidth, frameHeight, frameSep)
-        {
-
-        }
-
-        private void Initialize(int frameWidth, int frameHeight, int frameSep)
+            : base(texture, true)
         {
             Animations = new Dictionary<T, SpritesheetAnimation>();
 
             //Get the amounts of frames
             {
-                for (int i = 0; i <= ClipRect.Width - frameWidth; i += frameWidth + frameSep)
+                for (int i = 0; i <= Texture.Width - frameWidth; i += frameWidth + frameSep)
                     FramesX++;
-                for (int i = 0; i <= ClipRect.Height - frameHeight; i += frameHeight + frameSep)
+                for (int i = 0; i <= Texture.Height - frameHeight; i += frameHeight + frameSep)
                     FramesY++;
             }
 
             //Build the frame rects
             {
-                FrameRects = new Rectangle[FramesTotal];
+                FrameRects = new MTexture[FramesTotal];
                 int x = 0, y = 0;
 
                 for (int i = 0; i < FramesTotal; i++)
                 {
-                    FrameRects[i] = new Rectangle(ClipRect.X + x, ClipRect.Y + y, frameWidth, frameHeight);
+                    FrameRects[i] = Texture.GetSubtexture(x, y, frameWidth, frameHeight);
 
                     if ((i + 1) % FramesX == 0)
                     {
@@ -188,7 +177,7 @@ namespace Monocle
             }
         }
 
-        public Rectangle CurrentClip
+        public MTexture CurrentClip
         {
             get
             {
@@ -222,48 +211,8 @@ namespace Monocle
 
         public override void Render()
         {
-            Draw.SpriteBatch.Draw(Texture.Texture2D, RenderPosition, CurrentClip, Color, Rotation, Origin, Scale * Zoom, Effects, 0);
-        }
-
-        public void Render(int overrideHeight)
-        {
-            Rectangle rect = CurrentClip;
-            rect.Height = overrideHeight;
-            Draw.SpriteBatch.Draw(Texture.Texture2D, RenderPosition, rect, Color, Rotation, Origin, Scale * Zoom, Effects, 0);
-        }
-
-        public void DrawOutline(int overrideHeight, int offset = 1)
-        {
-            Vector2 pos = Position;
-            Color was = Color;
-            Color = Color.Black;
-
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
-                    if (i != 0 || j != 0)
-                    {
-                        Position = pos + new Vector2(i * offset, j * offset);
-                        Render(overrideHeight);
-                    }
-                }
-            }
-
-            Position = pos;
-            Color = was;
-        }
-
-        public new void SetTexture(MTexture setTo, Rectangle? clipRect = null)
-        {
-            Rectangle old = ClipRect;
-            base.SetTexture(setTo, clipRect);
-
-            for (int i = 0; i < FrameRects.Length; i++)
-            {
-                FrameRects[i].X += ClipRect.X - old.X;
-                FrameRects[i].Y += ClipRect.Y - old.Y;
-            }
+            Texture = CurrentClip;
+            base.Render();
         }
 
         public void CopyState(Spritesheet<T> other)

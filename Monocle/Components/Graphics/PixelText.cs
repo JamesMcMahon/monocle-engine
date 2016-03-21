@@ -102,8 +102,8 @@ namespace Monocle
 			if (dirty)
 				Refresh();
 
-			for (var i = 0; i < characters.Count; i++)
-				Draw.Texture(Font.Texture, characters[i].Bounds, Position + characters[i].Offset, Color);
+			//for (var i = 0; i < characters.Count; i++)
+			//	Draw.Texture(Font.Texture, characters[i].Bounds, Position + characters[i].Offset, Color);
 		}
 
 	}

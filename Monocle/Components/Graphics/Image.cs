@@ -4,49 +4,33 @@ namespace Monocle
 {
     public class Image : GraphicsComponent
     {
-        public MTexture Texture { get; protected set; }
-        public Rectangle ClipRect;
-
-        public Image(MTexture texture, Rectangle? clipRect = null)
-            : this(texture, clipRect, false)
-        {
-
-        }
+        public MTexture Texture;
 
         public Image(MTexture texture)
             : base(false)
         {
-            SetTexture(texture);
+            Texture = texture;
         }
 
-        internal Image(MTexture texture, Rectangle? clipRect, bool active)
+        internal Image(MTexture texture, bool active)
             : base(active)
         {
-            SetTexture(texture, clipRect);
-        }
-
-        public void SetTexture(MTexture texture, Rectangle? clipRect = null)
-        {
             Texture = texture;
-            if (clipRect.HasValue)
-                ClipRect = texture.GetRelativeClipRect(clipRect.Value);
-            else
-                ClipRect = texture.ClipRect;
         }
 
         public override void Render()
         {
-            Draw.SpriteBatch.Draw(Texture.Texture2D, RenderPosition, ClipRect, Color, Rotation, Origin, Scale * Zoom, Effects, 0);
+            Texture.Draw(RenderPosition, Origin, Color, Scale, Rotation, Effects);
         }
 
         public virtual float Width
         {
-            get { return ClipRect.Width; }
+            get { return Texture.Width; }
         }
 
         public virtual float Height
         {
-            get { return ClipRect.Height; }
+            get { return Texture.Height; }
         }
 
         public void CenterOrigin()

@@ -1344,6 +1344,11 @@ namespace Monocle
             return xml.AttrInt("height", defaultHeight);
         }
 
+        static public Rectangle Rect(this XmlElement xml)
+        {
+            return new Rectangle(xml.X(), xml.Y(), xml.Width(), xml.Height());
+        }
+
         static public int ID(this XmlElement xml)
         {
             return xml.AttrInt("id");

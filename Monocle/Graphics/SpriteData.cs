@@ -74,9 +74,6 @@ namespace Monocle
             image.Position = new Vector2(xml.ChildFloat("X", 0), xml.ChildFloat("Y", 0));
             image.Color = xml.ChildHexColor("Color", Color.White);
 
-            if (xml.Name != "image")
-                image.ClipRect = new Rectangle(image.ClipRect.X, image.ClipRect.Y, xml.ChildInt("FrameWidth"), xml.ChildInt("FrameHeight"));
-
             return image;
         }
 

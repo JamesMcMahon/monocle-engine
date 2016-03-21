@@ -8,7 +8,6 @@ namespace Monocle
         public Vector2 Position;
         public Vector2 Origin;
         public Vector2 Scale = Vector2.One;
-        public float Zoom = 1.0f;
         public float Rotation;
         public Color Color = Color.White;
         public SpriteEffects Effects = SpriteEffects.None;
