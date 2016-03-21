@@ -4,44 +4,34 @@ namespace Monocle
 {
     public class Image : GraphicsComponent
     {
-        public Texture Texture { get; protected set; }
+        public MTexture Texture { get; protected set; }
         public Rectangle ClipRect;
 
-        public Image(Texture texture, Rectangle? clipRect = null)
+        public Image(MTexture texture, Rectangle? clipRect = null)
             : this(texture, clipRect, false)
         {
 
         }
 
-        public Image(Subtexture subTexture, Rectangle? clipRect = null)
-            : this(subTexture, clipRect, false)
-        {
-
-        }
-
-        public Image(Texture texture)
+        public Image(MTexture texture)
             : base(false)
         {
-            Texture = texture;
-            ClipRect = new Rectangle(0, 0, texture.Width, texture.Height);
+            SetTexture(texture);
         }
 
-        internal Image(Texture texture, Rectangle? clipRect, bool active)
+        internal Image(MTexture texture, Rectangle? clipRect, bool active)
             : base(active)
         {
-            Texture = texture;
-            ClipRect = clipRect ?? texture.Rect;
+            SetTexture(texture, clipRect);
         }
 
-        internal Image(Subtexture subTexture, Rectangle? clipRect, bool active)
-            : base(active)
+        public void SetTexture(MTexture texture, Rectangle? clipRect = null)
         {
-            Texture = subTexture.Texture;
-
+            Texture = texture;
             if (clipRect.HasValue)
-                ClipRect = subTexture.GetAbsoluteClipRect(clipRect.Value);
+                ClipRect = texture.GetRelativeClipRect(clipRect.Value);
             else
-                ClipRect = subTexture.Rect;
+                ClipRect = texture.ClipRect;
         }
 
         public override void Render()
@@ -75,12 +65,6 @@ namespace Monocle
         {
             Origin.X = Width * x;
             Origin.Y = Height * y;
-        }
-
-        public void SwapSubtexture(Subtexture subtexture, Rectangle? clipRect = null)
-        {
-            Texture = subtexture.Texture;
-            ClipRect = clipRect ?? subtexture.Rect;
         }
     }
 }

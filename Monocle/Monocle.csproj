@@ -69,8 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Graphics\PixelText\PixelText.cs" />
-    <Compile Include="Components\Graphics\Sprite\Sprite.cs" />
+    <Compile Include="Components\Graphics\PixelText.cs" />
     <Compile Include="Components\Logic\CounterSet.cs" />
     <Compile Include="Components\Logic\Shaker.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
@@ -88,22 +87,13 @@
     <Compile Include="Colliders\Grid.cs" />
     <Compile Include="Colliders\Hitbox.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\Graphics\DrawRectangle.cs" />
-    <Compile Include="Components\Graphics\Image\FlashingImage.cs" />
     <Compile Include="Components\Graphics\GraphicsComponent.cs" />
-    <Compile Include="Components\Graphics\Image\Image.cs" />
-    <Compile Include="Components\Graphics\Image\MotionBlurImage.cs" />
-    <Compile Include="Components\Graphics\Spritesheet\MotionBlurSpritesheet.cs" />
-    <Compile Include="Components\Graphics\Image\OutlineImage.cs" />
-    <Compile Include="Components\Graphics\Spritesheet\SineSpritesheet.cs" />
-    <Compile Include="Components\Graphics\Spritesheet\Spritesheet.cs" />
-    <Compile Include="Components\Graphics\Spritesheet\PartialSpritesheet.cs" />
+    <Compile Include="Components\Graphics\Image.cs" />
+    <Compile Include="Components\Graphics\Spritesheet.cs" />
     <Compile Include="Components\Graphics\Text\NumberText.cs" />
     <Compile Include="Components\Graphics\Text\OutlineText.cs" />
     <Compile Include="Components\Graphics\Text\Text.cs" />
     <Compile Include="Components\Graphics\Text\TimerText.cs" />
-    <Compile Include="Components\Graphics\Image\TiledImage.cs" />
-    <Compile Include="Components\Graphics\Tilemap.cs" />
     <Compile Include="Components\Logic\Alarm.cs" />
     <Compile Include="Components\Logic\Coroutine.cs" />
     <Compile Include="Components\Logic\CoroutineHolder.cs" />
@@ -117,11 +107,8 @@
     <Compile Include="Renderers\TagRenderer.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="Textures\Atlas.cs" />
-    <Compile Include="Textures\Canvas.cs" />
-    <Compile Include="Textures\SpriteData.cs" />
-    <Compile Include="Textures\Subtexture.cs" />
-    <Compile Include="Textures\Texture.cs" />
+    <Compile Include="Graphics\SpriteData.cs" />
+    <Compile Include="Graphics\MTexture.cs" />
     <Compile Include="Input\MInput.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleSystem.cs" />

@@ -8,7 +8,7 @@ namespace Monocle
     {
         static private List<ParticleType> AllTypes = new List<ParticleType>();
 
-        public Subtexture Source;
+        public MTexture Source;
         public Color Color;
         public Color Color2;
         public int ColorSwitch;

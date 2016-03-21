@@ -1304,24 +1304,24 @@ namespace Monocle
             return new Vector2(xml.AttrFloat("x", defaultPosition.X), xml.AttrFloat("y", defaultPosition.Y));
         }
 
-        static public float X(this XmlElement xml)
+        static public int X(this XmlElement xml)
         {
-            return xml.AttrFloat("x");
+            return xml.AttrInt("x");
         }
 
-        static public float X(this XmlElement xml, float defaultX)
+        static public int X(this XmlElement xml, int defaultX)
         {
-            return xml.AttrFloat("x", defaultX);
+            return xml.AttrInt("x", defaultX);
         }
 
-        static public float Y(this XmlElement xml)
+        static public int Y(this XmlElement xml)
         {
-            return xml.AttrFloat("y");
+            return xml.AttrInt("y");
         }
 
-        static public float Y(this XmlElement xml, float defaultY)
+        static public int Y(this XmlElement xml, int defaultY)
         {
-            return xml.AttrFloat("y", defaultY);
+            return xml.AttrInt("y", defaultY);
         }
 
         static public int Width(this XmlElement xml)

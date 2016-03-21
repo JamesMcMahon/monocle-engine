@@ -26,7 +26,7 @@ namespace Monocle
         /// Will be generated at startup, but you can replace this with a subtexture from your Atlas to reduce texture swaps.
         /// Should be a 2x2 white pixel
         /// </summary>
-        static public Subtexture Particle;
+        static public MTexture Particle;
 
         /// <summary>
         /// A subtexture used to draw rectangles and lines. 
@@ -34,7 +34,7 @@ namespace Monocle
         /// Use the top left pixel of your Particle Subtexture if you replace it!
         /// Should be a 1x1 white pixel
         /// </summary>
-        static public Subtexture Pixel;
+        static public MTexture Pixel;
 
         static private Rectangle rect;
 
@@ -51,48 +51,14 @@ namespace Monocle
 
         static public void UseDebugPixelTexture()
         {
-            Texture texture = new Texture(2, 2, Color.White);
-            Pixel = new Subtexture(texture, 0, 0, 1, 1);
-            Particle = new Subtexture(texture, 0, 0, 2, 2);
-        }
-
-        static public void BeginCanvas(Canvas canvas)
-        {
-            SetTarget(canvas);
-            Clear();
-            Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-        }
-
-        static public void BeginCanvas(Canvas canvas, Color clearColor, BlendState blendState)
-        {
-            SetTarget(canvas);
-            Clear(clearColor);
-            Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, blendState, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone);
-        }
-
-        static public void SetTarget(Canvas canvas)
-        {
-            Engine.Instance.GraphicsDevice.SetRenderTarget(canvas.RenderTarget2D);
-        }
-
-        static public void ResetTarget()
-        {
-            Engine.Instance.GraphicsDevice.SetRenderTarget(null);
-        }
-
-        static public void Clear(Color color)
-        {
-            Engine.Instance.GraphicsDevice.Clear(color);
-        }
-
-        static public void Clear()
-        {
-            Engine.Instance.GraphicsDevice.Clear(Color.Transparent);
+            MTexture texture = new MTexture(2, 2, Color.White);
+            Pixel = new MTexture(texture, 0, 0, 1, 1);
+            Particle = new MTexture(texture, 0, 0, 2, 2);
         }
 
         static public void Point(Vector2 at, Color color)
         {
-            SpriteBatch.Draw(Pixel.Texture2D, at, Pixel.Rect, color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+            SpriteBatch.Draw(Pixel.Texture2D, at, Pixel.ClipRect, color, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
         #region Line
@@ -118,12 +84,12 @@ namespace Monocle
 
         static public void LineAngle(Vector2 start, float angle, float length, Color color)
         {
-            SpriteBatch.Draw(Pixel.Texture2D, start, Pixel.Rect, color, angle, Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
+            SpriteBatch.Draw(Pixel.Texture2D, start, Pixel.ClipRect, color, angle, Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
 
         static public void LineAngle(Vector2 start, float angle, float length, Color color, float thickness)
         {
-            SpriteBatch.Draw(Pixel.Texture2D, start, Pixel.Rect, color, angle, new Vector2(0, .5f), new Vector2(length, thickness), SpriteEffects.None, 0);
+            SpriteBatch.Draw(Pixel.Texture2D, start, Pixel.ClipRect, color, angle, new Vector2(0, .5f), new Vector2(length, thickness), SpriteEffects.None, 0);
         }
 
         static public void LineAngle(float startX, float startY, float angle, float length, Color color)
@@ -193,7 +159,7 @@ namespace Monocle
             rect.Y = (int)y;
             rect.Width = (int)width;
             rect.Height = (int)height;
-            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.ClipRect, color);
         }
 
         static public void Rect(Vector2 position, float width, float height, Color color)
@@ -204,7 +170,7 @@ namespace Monocle
         static public void Rect(Rectangle rect, Color color)
         {
             Draw.rect = rect;
-            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.ClipRect, color);
         }
 
         static public void Rect(Collider collider, Color color)
@@ -223,21 +189,21 @@ namespace Monocle
             rect.Width = (int)width;
             rect.Height = 1;
 
-            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.ClipRect, color);
 
             rect.Y += (int)height - 1;
 
-            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.ClipRect, color);
 
             rect.Y -= (int)height - 1;
             rect.Width = 1;
             rect.Height = (int)height;
 
-            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.ClipRect, color);
 
             rect.X += (int)width - 1;
 
-            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.Rect, color);
+            SpriteBatch.Draw(Pixel.Texture2D, rect, Pixel.ClipRect, color);
         }
 
         static public void HollowRect(Vector2 position, float width, float height, Color color)
@@ -255,46 +221,48 @@ namespace Monocle
             HollowRect(collider.AbsoluteLeft, collider.AbsoluteTop, collider.Width, collider.Height, color);
         }
 
-		#endregion
+        #endregion
 
-		public static void Text(PixelFont font, string text, Vector2 position, Vector2 scale, Color color)
-		{
-			var offset = Vector2.Zero;
-			for (int i = 0; i < text.Length; i++)
-			{
-				// new line
-				if (text[i] == '\n')
-				{
-					offset.X = 0;
-					offset.Y += font.LineHeight;
-				}
+        #region Text
 
-				// add char
-				var fontChar = font.Get(text[i]);
-				if (fontChar != null)
-				{
-					var clipRect = new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height);
-					var pos = position + (offset + new Vector2(fontChar.XOffset, fontChar.YOffset)) * scale;
-					SpriteBatch.Draw(font.Texture.Texture2D, Calc.Floor(pos), font.Texture.GetAbsoluteClipRect(clipRect), color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-					offset.X += fontChar.XAdvance;
-				}
-			}
-		}
+        public static void Text(PixelFont font, string text, Vector2 position, Vector2 scale, Color color)
+        {
+            var offset = Vector2.Zero;
+            for (int i = 0; i < text.Length; i++)
+            {
+                // new line
+                if (text[i] == '\n')
+                {
+                    offset.X = 0;
+                    offset.Y += font.LineHeight;
+                }
 
-		static public void Text(PixelFont font, string text, Vector2 position, Color color)
-		{
-			Text(font, text, position, Vector2.One, color);
-		}
+                // add char
+                var fontChar = font.Get(text[i]);
+                if (fontChar != null)
+                {
+                    var clipRect = new Rectangle(fontChar.X, fontChar.Y, fontChar.Width, fontChar.Height);
+                    var pos = position + (offset + new Vector2(fontChar.XOffset, fontChar.YOffset)) * scale;
+                    SpriteBatch.Draw(font.Texture.Texture2D, Calc.Floor(pos), font.Texture.GetRelativeClipRect(clipRect), color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+                    offset.X += fontChar.XAdvance;
+                }
+            }
+        }
+
+        static public void Text(PixelFont font, string text, Vector2 position, Color color)
+        {
+            Text(font, text, position, Vector2.One, color);
+        }
 
 
-		static public void TextBorder(PixelFont font, string text, Vector2 position, Color border, Color color)
-		{
-			Text(font, text, position + new Vector2(-1, 0), border);
-			Text(font, text, position + new Vector2(1, 0), border);
-			Text(font, text, position + new Vector2(0, -1), border);
-			Text(font, text, position + new Vector2(0, 1), border);
-			Text(font, text, position, color);
-		}
+        static public void TextBorder(PixelFont font, string text, Vector2 position, Color border, Color color)
+        {
+            Text(font, text, position + new Vector2(-1, 0), border);
+            Text(font, text, position + new Vector2(1, 0), border);
+            Text(font, text, position + new Vector2(0, -1), border);
+            Text(font, text, position + new Vector2(0, 1), border);
+            Text(font, text, position, color);
+        }
 
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
         {
@@ -306,7 +274,7 @@ namespace Monocle
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color, rotation, origin, scale, SpriteEffects.None, 0);
         }
 
-        static public void TextJustify(SpriteFont font, string text, Vector2 position, Color color, Vector2 justify)
+        static public void TextJustified(SpriteFont font, string text, Vector2 position, Color color, Vector2 justify)
         {
             Vector2 origin = font.MeasureString(text);
             origin.X *= justify.X;
@@ -315,7 +283,7 @@ namespace Monocle
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color, 0, origin, 1, SpriteEffects.None, 0);
         }
 
-        static public void TextJustify(SpriteFont font, string text, Vector2 position, Color color, float scale, Vector2 justify)
+        static public void TextJustified(SpriteFont font, string text, Vector2 position, Color color, float scale, Vector2 justify)
         {
             Vector2 origin = font.MeasureString(text);
             origin.X *= justify.X;
@@ -398,145 +366,103 @@ namespace Monocle
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color, 0, origin, scale, SpriteEffects.None, 0);
         }
 
-        static public void TextRight(SpriteFont font, string text, Vector2 position, Color color)
-        {
-            Vector2 origin = font.MeasureString(text);
-            origin.Y /= 2;
+        #endregion
 
-            Text(font, text, position - origin, color);
+        #region Texture
+
+        static public void Texture(MTexture tex, Vector2 position)
+        {
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, Color.White);
         }
 
-        static public void TextRight(SpriteFont font, string text, Vector2 position, Color color, Vector2 scale, float rotation)
+        static public void Texture(MTexture tex, Vector2 position, Color color)
         {
-            Vector2 origin = font.MeasureString(text);
-            origin.Y /= 2f;
-
-            Text(font, text, position, color, origin, scale, rotation);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color);
         }
 
-        static public void Texture(Texture texture, Vector2 position)
+        static public void Texture(MTexture tex, Vector2 position, Color color, Vector2 origin, Vector2 scale)
         {
-            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, Color.White);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, 0, origin, scale, SpriteEffects.None, 0);
         }
 
-        static public void Texture(Texture texture, Vector2 position, Color color)
+        static public void Texture(MTexture tex, Vector2 position, Color color, Vector2 origin, Vector2 scale, float rotation)
         {
-            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, color);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, rotation, origin, scale, SpriteEffects.None, 0);
         }
 
-        static public void Texture(Texture texture, Vector2 position, Color color, float scale)
+        static public void Texture(MTexture tex, Vector2 position, Color color, Vector2 origin, float scale, float rotation)
         {
-            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, color, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, rotation, origin, scale, SpriteEffects.None, 0);
         }
 
-        static public void Texture(Texture texture, Rectangle clipRect, Vector2 position, Color color)
+        static public void Texture(MTexture tex, Vector2 position, Color color, Vector2 origin, float scale, float rotation, SpriteEffects effects)
         {
-            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), clipRect, color);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, rotation, origin, scale, effects, 0);
         }
 
-        static public void Texture(Texture texture, Vector2 position, Color color, Vector2 origin, Vector2 scale, float rotation)
+        static public void Texture(MTexture tex, Rectangle clipRect, Vector2 position, Color color)
         {
-            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), null, color, rotation, origin, scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.GetRelativeClipRect(clipRect), color);
         }
 
-        static public void Texture(Subtexture subTexture, Vector2 position)
+        static public void TextureCentered(MTexture tex, Vector2 position)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, Color.White);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, Color.White, 0, new Vector2(tex.ClipRect.Width / 2, tex.ClipRect.Height / 2), 1, SpriteEffects.None, 0);
         }
 
-        static public void Texture(Subtexture subTexture, Vector2 position, Color color)
+        static public void TextureCentered(MTexture tex, Vector2 position, Color color)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, 0, new Vector2(tex.ClipRect.Width / 2, tex.ClipRect.Height / 2), 1, SpriteEffects.None, 0);
         }
 
-        static public void Texture(Subtexture subTexture, Vector2 position, Color color, Vector2 origin, Vector2 scale)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, 0, origin, scale, SpriteEffects.None, 0);
-        }
-
-        static public void Texture(Subtexture subTexture, Vector2 position, Color color, Vector2 origin, Vector2 scale, float rotation)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, origin, scale, SpriteEffects.None, 0);
-        }
-
-        static public void Texture(Subtexture subTexture, Vector2 position, Color color, Vector2 origin, float scale, float rotation)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, origin, scale, SpriteEffects.None, 0);
-        }
-
-        static public void Texture(Subtexture subTexture, Vector2 position, Color color, Vector2 origin, float scale, float rotation, SpriteEffects effects)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, origin, scale, effects, 0);
-        }
-
-        static public void Texture(Subtexture subTexture, Rectangle clipRect, Vector2 position, Color color)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.GetAbsoluteClipRect(clipRect), color);
-        }
-
-        static public void TextureCentered(Subtexture subTexture, Vector2 position)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, Color.White, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), 1, SpriteEffects.None, 0);
-        }
-
-        static public void TextureCentered(Subtexture subTexture, Vector2 position, Color color)
-        {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), 1, SpriteEffects.None, 0);
-        }
-
-        static public void OutlineTextureCentered(Subtexture subTexture, Vector2 position, Color color)
+        static public void OutlineTextureCentered(MTexture subTexture, Vector2 position, Color color)
         {
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
-                        SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position) + new Vector2(i, j), subTexture.Rect, Color.Black, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), 1, SpriteEffects.None, 0);
+                        SpriteBatch.Draw(subTexture.Texture2D, Calc.Floor(position) + new Vector2(i, j), subTexture.ClipRect, Color.Black, 0, new Vector2(subTexture.ClipRect.Width / 2, subTexture.ClipRect.Height / 2), 1, SpriteEffects.None, 0);
 
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), 1, SpriteEffects.None, 0);
+            SpriteBatch.Draw(subTexture.Texture2D, Calc.Floor(position), subTexture.ClipRect, color, 0, new Vector2(subTexture.ClipRect.Width / 2, subTexture.ClipRect.Height / 2), 1, SpriteEffects.None, 0);
         }
 
-        static public void OutlineTextureCentered(Subtexture subTexture, Vector2 position, Color color, Vector2 scale)
+        static public void OutlineTextureCentered(MTexture tex, Vector2 position, Color color, Vector2 scale)
         {
             for (int i = -1; i <= 1; i++)
                 for (int j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
-                        SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position) + new Vector2(i, j), subTexture.Rect, Color.Black, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), scale, SpriteEffects.None, 0);
+                        SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position) + new Vector2(i, j), tex.ClipRect, Color.Black, 0, new Vector2(tex.ClipRect.Width / 2, tex.ClipRect.Height / 2), scale, SpriteEffects.None, 0);
 
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, 0, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, 0, new Vector2(tex.ClipRect.Width / 2, tex.ClipRect.Height / 2), scale, SpriteEffects.None, 0);
         }
 
-        static public void TextureCentered(Subtexture subTexture, Rectangle clipRect, Vector2 position, Color color)
+        static public void TextureCentered(MTexture tex, Rectangle clipRect, Vector2 position, Color color)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.GetAbsoluteClipRect(clipRect), color, 0, new Vector2(clipRect.Width / 2, clipRect.Height / 2), 1, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.GetRelativeClipRect(clipRect), color, 0, new Vector2(clipRect.Width / 2, clipRect.Height / 2), 1, SpriteEffects.None, 0);
         }
 
-        static public void TextureCentered(Subtexture subTexture, Vector2 position, Color color, float scale, float rotation)
+        static public void TextureCentered(MTexture tex, Vector2 position, Color color, float scale, float rotation)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, rotation, new Vector2(tex.ClipRect.Width / 2, tex.ClipRect.Height / 2), scale, SpriteEffects.None, 0);
         }
 
-        static public void TextureCentered(Subtexture subTexture, Vector2 position, Color color, Vector2 scale, float rotation)
+        static public void TextureCentered(MTexture tex, Vector2 position, Color color, Vector2 scale, float rotation)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.Rect, color, rotation, new Vector2(subTexture.Rect.Width / 2, subTexture.Rect.Height / 2), scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, rotation, new Vector2(tex.ClipRect.Width / 2, tex.ClipRect.Height / 2), scale, SpriteEffects.None, 0);
         }
 
-        static public void TextureCentered(Subtexture subTexture, Rectangle clipRect, Vector2 position, Color color, float scale, float rotation)
+        static public void TextureCentered(MTexture tex, Rectangle clipRect, Vector2 position, Color color, float scale, float rotation)
         {
-            SpriteBatch.Draw(subTexture.Texture.Texture2D, Calc.Floor(position), subTexture.GetAbsoluteClipRect(clipRect), color, rotation, new Vector2(clipRect.Width / 2, clipRect.Height / 2), scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.GetRelativeClipRect(clipRect), color, rotation, new Vector2(clipRect.Width / 2, clipRect.Height / 2), scale, SpriteEffects.None, 0);
         }
 
-        static public void TextureJustify(Texture texture, Vector2 position, Color color, Vector2 scale, float rotation, Vector2 justify)
+        static public void TextureJustify(MTexture tex, Vector2 position, Color color, Vector2 scale, float rotation, Vector2 justify)
         {
-            SpriteBatch.Draw(texture.Texture2D, Calc.Floor(position), texture.Rect, color, rotation, new Vector2(texture.Width, texture.Height) * justify, scale, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), tex.ClipRect, color, rotation, new Vector2(tex.Width, tex.Height) * justify, scale, SpriteEffects.None, 0);
         }
 
-        static public void TextureJustify(Subtexture subtexture, Vector2 position, Color color, Vector2 scale, float rotation, Vector2 justify)
+        static public void TextureJustify(MTexture tex, Rectangle clipRect, Vector2 position, Color color, Vector2 justify)
         {
-            SpriteBatch.Draw(subtexture.Texture.Texture2D, Calc.Floor(position), subtexture.Rect, color, rotation, subtexture.Size * justify, scale, SpriteEffects.None, 0);
-        }
-
-        static public void TextureJustify(Subtexture subtexture, Rectangle clipRect, Vector2 position, Color color, Vector2 justify)
-        {
-            Rectangle drawRect = subtexture.Rect;
+            Rectangle drawRect = tex.ClipRect;
             drawRect.X += clipRect.X;
             drawRect.Y += clipRect.Y;
             drawRect.Width = clipRect.Width;
@@ -544,135 +470,70 @@ namespace Monocle
 
             Vector2 origin = new Vector2(drawRect.Width * justify.X, drawRect.Height * justify.Y);
 
-            SpriteBatch.Draw(subtexture.Texture.Texture2D, Calc.Floor(position), drawRect, color, 0, origin, Vector2.One, SpriteEffects.None, 0);
+            SpriteBatch.Draw(tex.Texture2D, Calc.Floor(position), drawRect, color, 0, origin, Vector2.One, SpriteEffects.None, 0);
         }
 
-        static public void SineTextureV(Texture texture, Rectangle clipRect, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
+        #endregion
+
+        #region Weird Textures
+
+        static public void SineTextureH(MTexture tex, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
         {
             position = Calc.Floor(position);
-            Rectangle clip = clipRect;
-            clip.Height = sliceSize;
+            Rectangle clip = tex.ClipRect;
+            clip.Width = sliceSize;
 
             int num = 0;
-            while (clip.Y < clipRect.Y + clipRect.Height)
+            while (clip.X < tex.ClipRect.X + tex.ClipRect.Width)
             {
-                Vector2 add = new Vector2((float)Math.Round(Math.Sin(sineCounter + sliceAdd * num) * amplitude), sliceSize * num);
-                Draw.SpriteBatch.Draw(texture.Texture2D, position, clip, color, rotation, origin - add, scale, effects, 0);
+                Vector2 add = new Vector2(sliceSize * num, (float)Math.Round(Math.Sin(sineCounter + sliceAdd * num) * amplitude));
+                Draw.SpriteBatch.Draw(tex.Texture2D, position, clip, color, rotation, origin - add, scale, effects, 0);
 
                 num++;
-                clip.Y += sliceSize;
-                clip.Height = Math.Min(sliceSize, clipRect.Y + clipRect.Height - clip.Y);
+                clip.X += sliceSize;
+                clip.Width = Math.Min(sliceSize, tex.ClipRect.X + tex.ClipRect.Width - clip.X);
             }
         }
 
-        static public void SineTextureV(Subtexture subtexture, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
-        {
-            SineTextureV(subtexture.Texture, subtexture.Rect, position, origin, scale, rotation, color, effects, sineCounter, amplitude, sliceSize, sliceAdd);
-        }
-
-        static public void TextureBannerV(Texture texture, Rectangle clipRect, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
+        static public void SineTextureV(MTexture tex, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
         {
             position = Calc.Floor(position);
-            Rectangle clip = clipRect;
+            Rectangle clip = tex.ClipRect;
             clip.Height = sliceSize;
 
             int num = 0;
-            while (clip.Y < clipRect.Y + clipRect.Height)
+            while (clip.Y < tex.ClipRect.Y + tex.ClipRect.Height)
             {
-                float fade = (clip.Y - clipRect.Y) / (float)clipRect.Height;
-                clip.Height = (int)MathHelper.Lerp(sliceSize, 1, fade);
-                clip.Height = Math.Min(sliceSize, clipRect.Y + clipRect.Height - clip.Y);
+                Vector2 add = new Vector2((float)Math.Round(Math.Sin(sineCounter + sliceAdd * num) * amplitude), sliceSize * num);
+                Draw.SpriteBatch.Draw(tex.Texture2D, position, clip, color, rotation, origin - add, scale, effects, 0);
 
-                Vector2 add = new Vector2((float)Math.Round(Math.Sin(sineCounter + sliceAdd * num) * amplitude * fade), clip.Y - clipRect.Y);
-                Draw.SpriteBatch.Draw(texture.Texture2D, position, clip, color, rotation, origin - add, scale, effects, 0);
+                num++;
+                clip.Y += sliceSize;
+                clip.Height = Math.Min(sliceSize, tex.ClipRect.Y + tex.ClipRect.Height - clip.Y);
+            }
+        }
+
+        static public void TextureBannerV(MTexture tex, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
+        {
+            position = Calc.Floor(position);
+            Rectangle clip = tex.ClipRect;
+            clip.Height = sliceSize;
+
+            int num = 0;
+            while (clip.Y < tex.ClipRect.Y + tex.ClipRect.Height)
+            {
+                float fade = (clip.Y - tex.ClipRect.Y) / (float)tex.ClipRect.Height;
+                clip.Height = (int)MathHelper.Lerp(sliceSize, 1, fade);
+                clip.Height = Math.Min(sliceSize, tex.ClipRect.Y + tex.ClipRect.Height - clip.Y);
+
+                Vector2 add = new Vector2((float)Math.Round(Math.Sin(sineCounter + sliceAdd * num) * amplitude * fade), clip.Y - tex.ClipRect.Y);
+                Draw.SpriteBatch.Draw(tex.Texture2D, position, clip, color, rotation, origin - add, scale, effects, 0);
 
                 num++;
                 clip.Y += clip.Height;
             }
         }
 
-        static public void TextureBannerV(Subtexture subtexture, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
-        {
-            TextureBannerV(subtexture.Texture, subtexture.Rect, position, origin, scale, rotation, color, effects, sineCounter, amplitude, sliceSize, sliceAdd);
-        }
-
-        static public void SineTextureH(Texture texture, Rectangle clipRect, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
-        {
-            position = Calc.Floor(position);
-            Rectangle clip = clipRect;
-            clip.Width = sliceSize;
-
-            int num = 0;
-            while (clip.X < clipRect.X + clipRect.Width)
-            {
-                Vector2 add = new Vector2(sliceSize * num, (float)Math.Round(Math.Sin(sineCounter + sliceAdd * num) * amplitude));
-                Draw.SpriteBatch.Draw(texture.Texture2D, position, clip, color, rotation, origin - add, scale, effects, 0);
-
-                num++;
-                clip.X += sliceSize;
-                clip.Width = Math.Min(sliceSize, clipRect.X + clipRect.Width - clip.X);
-            }
-        }
-
-        static public void SineTextureH(Subtexture subtexture, Vector2 position, Vector2 origin, Vector2 scale, float rotation, Color color, SpriteEffects effects, float sineCounter, float amplitude = 2, int sliceSize = 2, float sliceAdd = MathHelper.TwoPi / 8)
-        {
-            SineTextureH(subtexture.Texture, subtexture.Rect, position, origin, scale, rotation, color, effects, sineCounter, amplitude, sliceSize, sliceAdd);
-        }
-
-        static public void TextureFill(Texture texture, Rectangle clipRect, Rectangle fillArea)
-        {
-            Rectangle currentDraw = Rectangle.Empty;
-
-            for (currentDraw.X = fillArea.X; currentDraw.X < fillArea.X + fillArea.Width; currentDraw.X += clipRect.Width)
-            {
-                for (currentDraw.Y = fillArea.Y; currentDraw.Y < fillArea.Y + fillArea.Height; currentDraw.Y += clipRect.Height)
-                {
-                    currentDraw.Width = Math.Min(fillArea.X + fillArea.Width - currentDraw.X, clipRect.Width);
-                    currentDraw.Height = Math.Min(fillArea.Y + fillArea.Height - currentDraw.Y, clipRect.Height);
-                    SpriteBatch.Draw(texture.Texture2D, currentDraw, clipRect, Color.White);
-                }
-            }
-        }
-
-        //TODO: FIX THIS
-        static public void TextureFill(Texture texture, Rectangle clipRect, Rectangle fillArea, int offsetX, int offsetY)
-        {
-            offsetX %= clipRect.Width;
-            offsetY %= clipRect.Height;
-
-            Rectangle currentDraw = Rectangle.Empty;
-            Rectangle currentClip = clipRect;
-            currentClip.X = clipRect.X + offsetX;
-            currentClip.Width -= offsetX;
-
-            for (currentDraw.X = fillArea.X; currentDraw.X < fillArea.X + fillArea.Width; currentDraw.X += clipRect.Width)
-            {
-                currentClip.Y = clipRect.Y + offsetY;
-                currentClip.Height = clipRect.Height - offsetY;
-
-                for (currentDraw.Y = fillArea.Y; currentDraw.Y < fillArea.Y + fillArea.Height; currentDraw.Y += clipRect.Height)
-                {
-                    currentDraw.Width = Math.Min(fillArea.X + fillArea.Width - currentDraw.X, currentClip.Width);
-                    currentDraw.Height = Math.Min(fillArea.Y + fillArea.Height - currentDraw.Y, currentClip.Height);
-                    SpriteBatch.Draw(texture.Texture2D, currentDraw, currentClip, Color.White);
-
-                    currentClip.Y = clipRect.Y;
-                    currentClip.Height = clipRect.Height;
-                }
-
-                currentClip.X = clipRect.X;
-                currentClip.Width = clipRect.Width;
-            }
-        }
-
-        static public void TextureFill(Subtexture subTexture, Rectangle fillArea, int offsetX, int offsetY)
-        {
-            TextureFill(subTexture.Texture, subTexture.Rect, fillArea, offsetX, offsetY);
-        }
-
-        static public void TextureFill(Subtexture subTexture, Rectangle fillArea)
-        {
-            TextureFill(subTexture.Texture, subTexture.Rect, fillArea);
-        }
+        #endregion
     }
 }

@@ -25,26 +25,14 @@ namespace Monocle
         private SpritesheetAnimation currentAnim;
         private float timer;
 
-        public Spritesheet(Texture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
+        public Spritesheet(MTexture texture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, clipRect, true)
         {
             Initialize(frameWidth, frameHeight, frameSep);
         }
 
-        public Spritesheet(Subtexture subTexture, Rectangle? clipRect, int frameWidth, int frameHeight, int frameSep = 0)
-            : base(subTexture, clipRect, true)
-        {
-            Initialize(frameWidth, frameHeight, frameSep);
-        }
-
-        public Spritesheet(Texture texture, int frameWidth, int frameHeight, int frameSep = 0)
+        public Spritesheet(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : this(texture, null, frameWidth, frameHeight, frameSep)
-        {
-
-        }
-
-        public Spritesheet(Subtexture subTexture, int frameWidth, int frameHeight, int frameSep = 0)
-            : this(subTexture, null, frameWidth, frameHeight, frameSep)
         {
 
         }
@@ -266,12 +254,10 @@ namespace Monocle
             Color = was;
         }
 
-        public new void SwapSubtexture(Subtexture setTo, Rectangle? clipRect = null)
+        public new void SetTexture(MTexture setTo, Rectangle? clipRect = null)
         {
             Rectangle old = ClipRect;
-
-            Texture = setTo.Texture;
-            ClipRect = clipRect ?? setTo.Rect;
+            base.SetTexture(setTo, clipRect);
 
             for (int i = 0; i < FrameRects.Length; i++)
             {

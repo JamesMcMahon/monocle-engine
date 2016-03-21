@@ -31,11 +31,11 @@ namespace Monocle
 			}
 		}
 
-		public Subtexture Texture { get; private set; }
+		public MTexture Texture { get; private set; }
 		public Dictionary<int, Char> CharData { get; private set; }
 		public int LineHeight { get; private set; }
 
-		public PixelFont(XmlElement data, Subtexture texture)
+		public PixelFont(XmlElement data, MTexture texture)
 		{
 			Texture = texture;
 
