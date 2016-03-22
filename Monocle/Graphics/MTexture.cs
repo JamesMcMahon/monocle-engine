@@ -99,7 +99,7 @@ namespace Monocle
             return new MTexture(this, x, y, width, height);
         }
 
-        public MTexture GetRect(Rectangle rect)
+        public MTexture GetSubtexture(Rectangle rect)
         {
             return new MTexture(this, rect);
         }
