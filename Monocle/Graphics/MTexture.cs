@@ -124,6 +124,18 @@ namespace Monocle
             }
         }
 
+        public List<MTexture> GetAtlasSubtextures(string key)
+        {
+            List<MTexture> list = new List<MTexture>();
+
+            if (atlas != null)
+                foreach (var kv in atlas)
+                    if (kv.Key.StartsWith(key))
+                        list.Add(kv.Value);
+
+            return list;
+        }
+
         public enum AtlasDataFormat { TexturePacker_Sparrow };
 
         public void LoadAtlasData(string dataPath, AtlasDataFormat format)

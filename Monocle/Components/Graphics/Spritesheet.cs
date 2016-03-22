@@ -20,15 +20,15 @@ namespace Monocle
         public float Rate = 1;
 		public bool UseActualDeltaTime;
 
-        private Dictionary<T, SpritesheetAnimation> Animations;
+        private Dictionary<T, Animation> Animations;
         private int currentFrame;
-        private SpritesheetAnimation currentAnim;
+        private Animation currentAnim;
         private float timer;
 
         public Spritesheet(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, true)
         {
-            Animations = new Dictionary<T, SpritesheetAnimation>();
+            Animations = new Dictionary<T, Animation>();
 
             //Get the amounts of frames
             {
@@ -263,7 +263,7 @@ namespace Monocle
                     throw new Exception("Specified frames is out of max range for this Spritesheet");
 #endif
 
-            var anim = new SpritesheetAnimation(delay, loop, frames);
+            var anim = new Animation(delay, loop, frames);
             Animations.Add(id, anim);
         }
 
@@ -325,13 +325,13 @@ namespace Monocle
          *  Animation struct
          */
 
-        private struct SpritesheetAnimation
+        private struct Animation
         {
             public float Delay;
             public int[] Frames;
             public bool Loop;
 
-            public SpritesheetAnimation(float delay, bool loop, int[] frames)
+            public Animation(float delay, bool loop, int[] frames)
             {
                 Delay = delay;
                 Loop = loop;

@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Graphics\PixelText.cs" />
+    <Compile Include="Components\Graphics\Sprite.cs" />
     <Compile Include="Components\Logic\CounterSet.cs" />
     <Compile Include="Components\Logic\Shaker.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
