@@ -15,7 +15,7 @@ namespace Monocle
         static public int ViewWidth { get; private set; }
         static public int ViewHeight { get; private set; }
         static public float DeltaTime { get; private set; }
-        static public float ActualDeltaTime { get; private set; }
+        static public float RawDeltaTime { get; private set; }
         static public float TimeRate = 1f;
         static public float FreezeTimer;
         static public Color ClearColor;
@@ -144,8 +144,8 @@ namespace Monocle
 
         protected override void Update(GameTime gameTime)
         {
-            ActualDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            DeltaTime = ActualDeltaTime * TimeRate;
+            RawDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            DeltaTime = RawDeltaTime * TimeRate;
 
             //Update input
             MInput.Update();

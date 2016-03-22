@@ -20,7 +20,7 @@ namespace Monocle
 
         public void Update()
         {
-			var dt = (Type.UseActualDeltaTime ? Engine.ActualDeltaTime : Engine.DeltaTime);
+			var dt = (Type.UseActualDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
 
 			//Life
 			Life -= dt;

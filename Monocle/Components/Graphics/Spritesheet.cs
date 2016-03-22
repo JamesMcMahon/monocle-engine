@@ -65,7 +65,7 @@ namespace Monocle
 				if (!UseActualDeltaTime)
 					timer += Engine.DeltaTime * Math.Abs(Rate);
 				else
-					timer += Engine.ActualDeltaTime * Math.Abs(Rate);
+					timer += Engine.RawDeltaTime * Math.Abs(Rate);
 
                 while (timer >= currentAnim.Delay)
                 {
@@ -232,7 +232,7 @@ namespace Monocle
 			if (!UseActualDeltaTime)
 				timer = Engine.DeltaTime * frames;
 			else
-				timer = Engine.ActualDeltaTime * frames;
+				timer = Engine.RawDeltaTime * frames;
 
             AnimationFrame = (int)(timer / currentAnim.Delay) % currentAnim.Frames.Length;
             currentFrame = currentAnim[AnimationFrame];
