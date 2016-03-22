@@ -131,9 +131,17 @@ namespace Monocle
 
         #region Animation Playback
 
+        public bool IsPlaying(T id)
+        {
+            if (CurrentAnimationID == null)
+                return id == null;
+            else
+                return CurrentAnimationID.Equals(id);
+        }
+
         public void Play(T id, bool restart = false)
         {
-            if (!currentAnimation.Equals(id) || restart)
+            if (!IsPlaying(id) || restart)
             {
 #if DEBUG
                 if (!animations.ContainsKey(id))

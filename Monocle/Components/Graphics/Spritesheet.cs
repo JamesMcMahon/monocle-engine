@@ -46,7 +46,7 @@ namespace Monocle
 
         public override void Update()
         {
-            if (Animating)
+            if (Animating && currentAnimation.Delay > 0)
             {
                 //Timer
                 if (UseRawDeltaTime)
@@ -66,7 +66,6 @@ namespace Monocle
                         //Looped
                         if (currentAnimation.Loop)
                         {
-                            Calc.Log("loop");
                             CurrentAnimationFrame -= Math.Sign(CurrentAnimationFrame) * currentAnimation.Frames.Length;
                             CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
 
@@ -122,8 +121,6 @@ namespace Monocle
                 Frames = frames,
                 Loop = loop,
             };
-
-            Calc.Log(loop);
         }
 
         public void Add(T id, float delay, params int[] frames)
@@ -145,9 +142,17 @@ namespace Monocle
 
         #region Animation Playback
 
+        public bool IsPlaying(T id)
+        {
+            if (CurrentAnimationID == null)
+                return id == null;
+            else
+                return CurrentAnimationID.Equals(id);
+        }
+
         public void Play(T id, bool restart = false)
         {
-            if (!currentAnimation.Equals(id) || restart)
+            if (!IsPlaying(id) || restart)
             {
 #if DEBUG
                 if (!animations.ContainsKey(id))
