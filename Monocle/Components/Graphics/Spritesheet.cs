@@ -18,9 +18,9 @@ namespace Monocle
         public T CurrentAnimID { get; private set; }
         public MTexture[] FrameRects { get; private set; }
         public float Rate = 1;
-		public bool UseActualDeltaTime;
+		public bool UseRawDeltaTime;
 
-        private Dictionary<T, Animation> Animations;
+        private Dictionary<T, Animation> animations;
         private int currentFrame;
         private Animation currentAnim;
         private float timer;
@@ -28,7 +28,7 @@ namespace Monocle
         public Spritesheet(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, true)
         {
-            Animations = new Dictionary<T, Animation>();
+            animations = new Dictionary<T, Animation>();
 
             //Get the amounts of frames
             {
@@ -62,7 +62,7 @@ namespace Monocle
         {
             if (Playing && currentAnim.Delay > 0)
             {
-				if (!UseActualDeltaTime)
+				if (!UseRawDeltaTime)
 					timer += Engine.DeltaTime * Math.Abs(Rate);
 				else
 					timer += Engine.RawDeltaTime * Math.Abs(Rate);
@@ -134,7 +134,7 @@ namespace Monocle
         {
             get
             {
-                return Animations.Count;
+                return animations.Count;
             }
         }
 
@@ -229,7 +229,7 @@ namespace Monocle
 
         public void SetTimerFrames(float frames)
         {
-			if (!UseActualDeltaTime)
+			if (!UseRawDeltaTime)
 				timer = Engine.DeltaTime * frames;
 			else
 				timer = Engine.RawDeltaTime * frames;
@@ -264,7 +264,7 @@ namespace Monocle
 #endif
 
             var anim = new Animation(delay, loop, frames);
-            Animations.Add(id, anim);
+            animations.Add(id, anim);
         }
 
         public void Add(T id, float delay, params int[] frames)
@@ -286,7 +286,7 @@ namespace Monocle
             if (restart || (!Playing && !Finished) || !CurrentAnimID.Equals(id))
             {
                 CurrentAnimID = id;
-                currentAnim = Animations[id];
+                currentAnim = animations[id];
 
                 AnimationFrame = 0;
                 currentFrame = currentAnim[AnimationFrame];
@@ -316,7 +316,7 @@ namespace Monocle
 #if DEBUG
         public void LogAnimations()
         {
-            foreach (var kv in Animations)
+            foreach (var kv in animations)
                 Calc.Log(kv.Key.ToString() + ": " + kv.Value.ToString());
         }
 #endif
