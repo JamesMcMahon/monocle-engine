@@ -7,9 +7,6 @@ namespace Monocle
 {
     public class Sprite<T> : Image
     {
-        private MTexture[] frames;
-        private Dictionary<T, Animation> animations;
-
         public int CurrentFrame;
         public float Rate = 1f;
         public bool UseRawDeltaTime;
@@ -17,7 +14,7 @@ namespace Monocle
         public Action<T> OnLoop;
         public Action<T> OnAnimate;
 
-        public bool Animating;
+        private Dictionary<T, Animation> animations;
         private Animation currentAnimation;
         private float animationTimer;
 
@@ -30,13 +27,11 @@ namespace Monocle
 
         public void SetFrames(MTexture atlas, string key)
         {
-            frames = atlas.GetAtlasSubtextures(key).ToArray();
+            Frames = atlas.GetAtlasSubtextures(key).ToArray();
         }
 
         public override void Update()
         {
-            base.Update();
-
             if (Animating)
             {
                 //Timer
@@ -61,9 +56,9 @@ namespace Monocle
                             CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
 
                             if (OnAnimate != null)
-                                OnAnimate(currentAnimationID);
+                                OnAnimate(CurrentAnimationID);
                             if (OnLoop != null)
-                                OnLoop(currentAnimationID);
+                                OnLoop(CurrentAnimationID);
                         }
                         else
                         {
@@ -76,7 +71,7 @@ namespace Monocle
                             Animating = false;
                             animationTimer = 0;
                             if (OnFinish != null)
-                                OnFinish(currentAnimationID);
+                                OnFinish(CurrentAnimationID);
                         }
                     }
                     else
@@ -84,7 +79,7 @@ namespace Monocle
                         //Continue Animation
                         CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
                         if (OnAnimate != null)
-                            OnAnimate(currentAnimationID);
+                            OnAnimate(CurrentAnimationID);
                     }
                 }
             }
@@ -92,8 +87,8 @@ namespace Monocle
 
         public override void Render()
         {
-            if (CurrentFrame >= 0 && CurrentFrame < frames.Length)
-                Texture = frames[CurrentFrame];
+            if (CurrentFrame >= 0 && CurrentFrame < Frames.Length)
+                Texture = Frames[CurrentFrame];
             else
                 Texture = null;
             base.Render();
@@ -103,6 +98,12 @@ namespace Monocle
 
         public void Add(T id, bool loop, float delay, params int[] frames)
         {
+#if DEBUG
+            foreach (var f in frames)
+                if (f >= Frames.Length)
+                    throw new IndexOutOfRangeException("Specified frames is out of max range for this Sprite");
+#endif
+
             animations[id] = new Animation()
             {
                 Loop = loop,
@@ -113,12 +114,12 @@ namespace Monocle
 
         public void Add(T id, float delay, params int[] frames)
         {
-            Add(id, false, delay, frames);
+            Add(id, true, delay, frames);
         }
 
         public void Add(T id, int frame)
         {
-            Add(id, false, .1f, frame);
+            Add(id, false, 0, frame);
         }
 
         public void ClearAnimations()
@@ -132,13 +133,13 @@ namespace Monocle
 
         public void Play(T id, bool restart = false)
         {
-            if (!Animating || !currentAnimation.Equals(id) || restart)
+            if (!currentAnimation.Equals(id) || restart)
             {
 #if DEBUG
                 if (!animations.ContainsKey(id))
                     throw new Exception("No Animation defined for ID: " + id.ToString());
 #endif
-                currentAnimationID = id;
+                CurrentAnimationID = id;
                 currentAnimation = animations[id];
                 animationTimer = 0;
                 Animating = currentAnimation.Frames.Length > 1;
@@ -155,11 +156,26 @@ namespace Monocle
                 Rate *= -1;
         }
 
+        public void Stop()
+        {
+            Animating = false;
+        }
+
         #endregion     
 
         #region Properties
 
-        public T currentAnimationID
+        public MTexture[] Frames
+        {
+            get; private set;
+        }
+
+        public bool Animating
+        {
+            get; private set;
+        }
+
+        public T CurrentAnimationID
         {
             get; private set;
         }
@@ -173,8 +189,8 @@ namespace Monocle
         {
             get
             {
-                if (frames.Length > 0)
-                    return frames[0].Width;
+                if (Frames.Length > 0)
+                    return Frames[0].Width;
                 else
                     return 0;
             }
@@ -184,8 +200,8 @@ namespace Monocle
         {
             get
             {
-                if (frames.Length > 0)
-                    return frames[0].Height;
+                if (Frames.Length > 0)
+                    return Frames[0].Height;
                 else
                     return 0;
             }

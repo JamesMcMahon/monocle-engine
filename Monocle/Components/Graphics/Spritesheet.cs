@@ -6,198 +6,207 @@ namespace Monocle
 {
     public class Spritesheet<T> : Image
     {
-        public Action<Spritesheet<T>> OnAnimationComplete;
-        public Action<Spritesheet<T>> OnAnimate;
-        public Action<Spritesheet<T>> OnFrameChange;
-
-        public int FramesX { get; private set; }
-        public int FramesY { get; private set; }
-        public int AnimationFrame { get; private set; }
-        public bool Playing { get; private set; }
-        public bool Finished { get; private set; }
-        public T CurrentAnimID { get; private set; }
-        public MTexture[] FrameRects { get; private set; }
+        public int CurrentFrame;
         public float Rate = 1;
 		public bool UseRawDeltaTime;
+        public Action<T> OnFinish;
+        public Action<T> OnLoop;
+        public Action<T> OnAnimate;
 
         private Dictionary<T, Animation> animations;
-        private int currentFrame;
-        private Animation currentAnim;
-        private float timer;
+        private Animation currentAnimation;
+        private float animationTimer;
 
         public Spritesheet(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, true)
         {
+            SetFrames(texture, frameWidth, frameHeight, frameSep);
             animations = new Dictionary<T, Animation>();
+        }
 
-            //Get the amounts of frames
+        public void SetFrames(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
+        {
+            List<MTexture> frames = new List<MTexture>();
+            int x = 0, y = 0;
+
+            while (y <= texture.Height - frameHeight)            
             {
-                for (int i = 0; i <= Texture.Width - frameWidth; i += frameWidth + frameSep)
-                    FramesX++;
-                for (int i = 0; i <= Texture.Height - frameHeight; i += frameHeight + frameSep)
-                    FramesY++;
-            }
-
-            //Build the frame rects
-            {
-                FrameRects = new MTexture[FramesTotal];
-                int x = 0, y = 0;
-
-                for (int i = 0; i < FramesTotal; i++)
+                while (x <= texture.Width - frameWidth)
                 {
-                    FrameRects[i] = Texture.GetSubtexture(x, y, frameWidth, frameHeight);
-
-                    if ((i + 1) % FramesX == 0)
-                    {
-                        x = 0;
-                        y += frameHeight + frameSep;
-                    }
-                    else
-                        x += frameWidth + frameSep;
+                    frames.Add(texture.GetSubtexture(x, y, frameWidth, frameHeight));
+                    x += frameWidth + frameSep;
                 }
+
+                y += frameHeight + frameSep;
+                x = 0;
             }
+
+            Frames = frames.ToArray();
         }
 
         public override void Update()
         {
-            if (Playing && currentAnim.Delay > 0)
+            if (Animating)
             {
-				if (!UseRawDeltaTime)
-					timer += Engine.DeltaTime * Math.Abs(Rate);
-				else
-					timer += Engine.RawDeltaTime * Math.Abs(Rate);
+                //Timer
+                if (UseRawDeltaTime)
+                    animationTimer += Engine.RawDeltaTime * Rate;
+                else
+                    animationTimer += Engine.DeltaTime * Rate;
 
-                while (timer >= currentAnim.Delay)
+                //Next Frame
+                if (Math.Abs(animationTimer) >= currentAnimation.Delay)
                 {
-                    int oldFrame = currentFrame;
-                    timer -= currentAnim.Delay;
-                    AnimationFrame += Math.Sign(Rate);
+                    CurrentAnimationFrame += Math.Sign(animationTimer);
+                    animationTimer -= Math.Sign(animationTimer) * currentAnimation.Delay;
 
-                    if (AnimationFrame == currentAnim.Length)
+                    //End of Animation
+                    if (CurrentAnimationFrame < 0 || CurrentAnimationFrame >= currentAnimation.Frames.Length)
                     {
-                        //Looping
-                        AnimationFrame = 0;
-                        if (currentAnim.Loop)
+                        //Looped
+                        if (currentAnimation.Loop)
                         {
-                            currentFrame = currentAnim[0];
+                            Calc.Log("loop");
+                            CurrentAnimationFrame -= Math.Sign(CurrentAnimationFrame) * currentAnimation.Frames.Length;
+                            CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
 
                             if (OnAnimate != null)
-                                OnAnimate(this);
-                            if (OnFrameChange != null && currentFrame != oldFrame)
-                                OnFrameChange(this);
+                                OnAnimate(CurrentAnimationID);
+                            if (OnLoop != null)
+                                OnLoop(CurrentAnimationID);
                         }
                         else
                         {
-                            Finished = true;
-                            Playing = false;
-                        }
+                            //Ended
+                            if (CurrentAnimationFrame < 0)
+                                CurrentAnimationFrame = 0;
+                            else
+                                CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
 
-                        if (OnAnimationComplete != null)
-                            OnAnimationComplete(this);
-                    }
-                    else if (AnimationFrame == -1)
-                    {
-                        //Reverse looping
-                        AnimationFrame = currentAnim.Length - 1;
-                        if (currentAnim.Loop)
-                        {
-                            currentFrame = currentAnim[0];
-
-                            if (OnAnimate != null)
-                                OnAnimate(this);
-                            if (OnFrameChange != null && currentFrame != oldFrame)
-                                OnFrameChange(this);
+                            Animating = false;
+                            animationTimer = 0;
+                            if (OnFinish != null)
+                                OnFinish(CurrentAnimationID);
                         }
-                        else
-                        {
-                            Finished = true;
-                            Playing = false;
-                        }
-
-                        if (OnAnimationComplete != null)
-                            OnAnimationComplete(this);
                     }
                     else
                     {
-                        currentFrame = currentAnim[AnimationFrame];
-
+                        //Continue Animation
+                        CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
                         if (OnAnimate != null)
-                            OnAnimate(this);
-                        if (OnFrameChange != null && currentFrame != oldFrame)
-                            OnFrameChange(this);
+                            OnAnimate(CurrentAnimationID);
                     }
                 }
             }
         }
 
-        public int TotalAnimations
+        public override void Render()
         {
-            get
+            Texture = Frames[CurrentFrame];
+            base.Render();
+        }
+
+        #region Animation Definition
+
+        public void Add(T id, bool loop, float delay, params int[] frames)
+        {
+#if DEBUG
+            foreach (var i in frames)
+                if (i >= Frames.Length)
+                    throw new IndexOutOfRangeException("Specified frames is out of max range for this Spritesheet");
+#endif
+
+            animations[id] = new Animation()
             {
-                return animations.Count;
+                Delay = delay,
+                Frames = frames,
+                Loop = loop,
+            };
+
+            Calc.Log(loop);
+        }
+
+        public void Add(T id, float delay, params int[] frames)
+        {
+            Add(id, true, delay, frames);
+        }
+
+        public void Add(T id, int frame)
+        {
+            Add(id, false, 0, frame);
+        }
+
+        public void ClearAnimations()
+        {
+            animations.Clear();
+        }
+
+        #endregion
+
+        #region Animation Playback
+
+        public void Play(T id, bool restart = false)
+        {
+            if (!currentAnimation.Equals(id) || restart)
+            {
+#if DEBUG
+                if (!animations.ContainsKey(id))
+                    throw new Exception("No Animation defined for ID: " + id.ToString());
+#endif
+                CurrentAnimationID = id;
+                currentAnimation = animations[id];
+                animationTimer = 0;              
+                CurrentAnimationFrame = 0;
+
+                Animating = currentAnimation.Frames.Length > 1;
+                CurrentFrame = currentAnimation.Frames[0];
             }
         }
 
-        public int CurrentAnimationFrames
+        public void Reverse(T id, bool restart = false)
         {
-            get
-            {
-                if (Playing)
-                    return currentAnim.Frames.Length;
-                else
-                    return 0;
-            }
+            Play(id, restart);
+            if (Rate > 0)
+                Rate *= -1;
         }
 
-        public int CurrentFrame
+        public void Stop()
         {
-            get
-            {
-                return currentFrame;
-            }
-
-            set
-            {
-                if (Playing)
-                    Stop();
-                if (value != currentFrame)
-                {
-                    currentFrame = value;
-                    if (OnFrameChange != null)
-                        OnFrameChange(this);
-                }
-            }
+            Animating = false;
         }
 
-        public bool Looping
+        #endregion
+
+        #region Properties
+
+        public MTexture[] Frames
         {
-            get
-            {
-                return currentAnim.Loop;
-            }
+            get; private set;
         }
 
-        public MTexture CurrentClip
+        public bool Animating
         {
-            get
-            {
-                return FrameRects[currentFrame];
-            }
+            get; private set;
         }
 
-        public int FramesTotal
+        public T CurrentAnimationID
         {
-            get
-            {
-                return FramesX * FramesY;
-            }
+            get; private set;
+        }
+
+        public int CurrentAnimationFrame
+        {
+            get; private set;
         }
 
         public override float Width
         {
             get
             {
-                return FrameRects[0].Width;
+                if (Frames.Length > 0)
+                    return Frames[0].Width;
+                else
+                    return 0;
             }
         }
 
@@ -205,153 +214,20 @@ namespace Monocle
         {
             get
             {
-                return FrameRects[0].Height;
+                if (Frames.Length > 0)
+                    return Frames[0].Height;
+                else
+                    return 0;
             }
         }
 
-        public override void Render()
-        {
-            Texture = CurrentClip;
-            base.Render();
-        }
-
-        public void CopyState(Spritesheet<T> other)
-        {
-            AnimationFrame = other.AnimationFrame;
-            Playing = other.Playing;
-            Finished = other.Finished;
-            CurrentAnimID = other.CurrentAnimID;
-            Rate = other.Rate;
-            currentFrame = other.currentFrame;
-            currentAnim = other.currentAnim;
-            timer = other.timer;
-        }
-
-        public void SetTimerFrames(float frames)
-        {
-			if (!UseRawDeltaTime)
-				timer = Engine.DeltaTime * frames;
-			else
-				timer = Engine.RawDeltaTime * frames;
-
-            AnimationFrame = (int)(timer / currentAnim.Delay) % currentAnim.Frames.Length;
-            currentFrame = currentAnim[AnimationFrame];
-
-            timer %= currentAnim.Delay;
-        }
-
-        public void RandomizeFrame()
-        {
-            if (Playing)
-            {
-                AnimationFrame = Calc.Random.Next(currentAnim.Frames.Length);
-                currentFrame = currentAnim[AnimationFrame];
-            }
-            else
-                currentFrame = Calc.Random.Next(FrameRects.Length);
-        }
-
-        /*
-         *  Animation definition
-         */
-
-        public void Add(T id, float delay, bool loop, params int[] frames)
-        {
-#if DEBUG
-            foreach (var i in frames)
-                if (i >= FrameRects.Length)
-                    throw new Exception("Specified frames is out of max range for this Spritesheet");
-#endif
-
-            var anim = new Animation(delay, loop, frames);
-            animations.Add(id, anim);
-        }
-
-        public void Add(T id, float delay, params int[] frames)
-        {
-            Add(id, delay, true, frames);
-        }
-
-        public void Add(T id, int frame)
-        {
-            Add(id, 0, false, frame);
-        }
-
-        /*
-         *  Playing animations
-         */
-
-        public void Play(T id, bool restart = false)
-        {
-            if (restart || (!Playing && !Finished) || !CurrentAnimID.Equals(id))
-            {
-                CurrentAnimID = id;
-                currentAnim = animations[id];
-
-                AnimationFrame = 0;
-                currentFrame = currentAnim[AnimationFrame];
-                timer = 0;
-
-                Finished = false;
-                Playing = true;
-            }
-        }
-
-        public void Play(T id, int startFrame, bool restart = false)
-        {
-            if (!Playing || !CurrentAnimID.Equals(id) || restart)
-            {
-                Play(id, true);
-                AnimationFrame = startFrame;
-                currentFrame = currentAnim[AnimationFrame];
-            }
-        }
-
-        public void Stop()
-        {
-            AnimationFrame = 0;
-            Finished = Playing = false;
-        }
-
-#if DEBUG
-        public void LogAnimations()
-        {
-            foreach (var kv in animations)
-                Calc.Log(kv.Key.ToString() + ": " + kv.Value.ToString());
-        }
-#endif
-
-        /*
-         *  Animation struct
-         */
+        #endregion
 
         private struct Animation
         {
             public float Delay;
             public int[] Frames;
             public bool Loop;
-
-            public Animation(float delay, bool loop, int[] frames)
-            {
-                Delay = delay;
-                Loop = loop;
-                Frames = frames;
-            }
-
-            public int this[int i]
-            {
-                get { return Frames[i]; }
-            }
-
-            public int Length
-            {
-                get { return Frames.Length; }
-            }
-
-            override public string ToString()
-            {
-                return "{ Delay: " + Delay + ", Loop: " + Loop + ", Frames: [" + string.Join(", ", Frames) + "] }";
-            }
         }
     }
 }

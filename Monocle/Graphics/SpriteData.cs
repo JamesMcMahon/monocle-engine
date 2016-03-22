@@ -43,7 +43,7 @@ namespace Monocle
             XmlElement anims = xml["Animations"];
             if (anims != null)
                 foreach (XmlElement anim in anims.GetElementsByTagName("Anim"))
-                    sprite.Add(anim.Attr("id"), anim.AttrFloat("delay", 0), anim.AttrBool("loop", true), Calc.ReadCSVInt(anim.Attr("frames"))); 
+                    sprite.Add(anim.Attr("id"), anim.AttrBool("loop", true), anim.AttrFloat("delay", 0), Calc.ReadCSVInt(anim.Attr("frames"))); 
 
             return sprite;
         }
@@ -60,7 +60,7 @@ namespace Monocle
             XmlElement anims = xml["Animations"];
             if (anims != null)
                 foreach (XmlElement anim in anims.GetElementsByTagName("Anim"))
-                    sprite.Add(anim.AttrInt("id"), anim.AttrFloat("delay", 0), anim.AttrBool("loop", true), Calc.ReadCSVInt(anim.Attr("frames")));
+                    sprite.Add(anim.AttrInt("id"), anim.AttrBool("loop", true), anim.AttrFloat("delay", 0), Calc.ReadCSVInt(anim.Attr("frames")));
 
             return sprite;
         }
