@@ -343,5 +343,89 @@ namespace Monocle
         }
 
         #endregion
+
+        #region Draw Outline Centered
+
+        public void DrawOutlineCentered(Vector2 position)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color, float scale)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color, float scale, float rotation)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color, float scale, float rotation, SpriteEffects flip)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, rotation, Center - DrawOffset, scale, flip, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, flip, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color, Vector2 scale)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color, Vector2 scale, float rotation)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
+        }
+
+        public void DrawOutlineCentered(Vector2 position, Color color, Vector2 scale, float rotation, SpriteEffects flip)
+        {
+            for (var i = -1; i <= 1; i++)
+                for (var j = -1; j <= 1; j++)
+                    if (i != 0 || j != 0)
+                        Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.Black, rotation, Center - DrawOffset, scale, flip, 0);
+
+            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, flip, 0);
+        }
+
+        #endregion
     }
 }
