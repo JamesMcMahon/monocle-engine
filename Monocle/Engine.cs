@@ -25,6 +25,7 @@ namespace Monocle
         private Scene scene;
         private Scene nextScene;
         private string windowTitle;
+        private Viewport viewport;
         internal Matrix screenMatrix;
 #if DEBUG
         private TimeSpan counterElapsed = TimeSpan.Zero;
@@ -73,6 +74,8 @@ namespace Monocle
 
         protected virtual void OnGraphicsCreate(object sender, EventArgs e)
         {
+            UpdateView();
+
             if (scene != null)
                 scene.HandleGraphicsCreate();
             if (nextScene != null && nextScene != scene)
@@ -95,40 +98,10 @@ namespace Monocle
                 scene.LoseFocus();
         }
 
-        protected virtual void UpdateView()
-        {
-            float screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
-            float screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-
-            if (screenWidth / Width > screenHeight / Height)
-            {
-                ViewWidth = (int)(screenHeight / Height * Width);
-                ViewHeight = (int)screenHeight;
-            }
-            else
-            {
-                ViewWidth = (int)screenWidth;
-                ViewHeight = (int)(screenWidth / Width * Height);
-            }
-
-            screenMatrix = Matrix.CreateScale(ViewWidth / (float)Width);
-
-            GraphicsDevice.Viewport = new Viewport
-            {
-                X = (int)(screenWidth / 2 - ViewWidth / 2),
-                Y = (int)(screenHeight / 2 - ViewHeight / 2),
-                Width = ViewWidth,
-                Height = ViewHeight,
-                MinDepth = 0,
-                MaxDepth = 1
-            };
-        }
-
         protected override void Initialize()
         {
             base.Initialize();
 
-            UpdateView();
             MInput.Initialize();
             Tracker.Initialize();
             Pooler = new Monocle.Pooler();
@@ -226,8 +199,9 @@ namespace Monocle
 
             //Draw the buffer scaled up to the screen
             if (RenderBuffer != null)
-            {
+            {           
                 GraphicsDevice.SetRenderTarget(null);
+                GraphicsDevice.Viewport = viewport;
                 GraphicsDevice.Clear(ClearColor);
 
                 Monocle.Draw.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, screenMatrix);
@@ -289,8 +263,40 @@ namespace Monocle
         {
             Graphics.PreferredBackBufferWidth = Instance.GraphicsDevice.DisplayMode.Width;
             Graphics.PreferredBackBufferHeight = Instance.GraphicsDevice.DisplayMode.Height;
-            Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = true;         
             Graphics.ApplyChanges();
+        }
+
+        private void UpdateView()
+        {
+            float screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            float screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+            if (screenWidth / Width > screenHeight / Height)
+            {
+                ViewWidth = (int)(screenHeight / Height * Width);
+                ViewHeight = (int)screenHeight;
+            }
+            else
+            {
+                ViewWidth = (int)screenWidth;
+                ViewHeight = (int)(screenWidth / Width * Height);
+            }
+
+            screenMatrix = Matrix.CreateScale(ViewWidth / (float)Width);
+
+            viewport = new Viewport
+            {
+                X = (int)(screenWidth / 2 - ViewWidth / 2),
+                Y = (int)(screenHeight / 2 - ViewHeight / 2),
+                Width = ViewWidth,
+                Height = ViewHeight,
+                MinDepth = 0,
+                MaxDepth = 1
+            };
+
+            //Debug Log
+            //Calc.Log("Update View - " + screenWidth + "x" + screenHeight + " - " + viewport.Width + "x" + viewport.Height + " - " + viewport.X + "," + viewport.Y);
         }
 
         #endregion
