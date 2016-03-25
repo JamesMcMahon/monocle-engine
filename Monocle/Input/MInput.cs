@@ -778,6 +778,11 @@ namespace Monocle
 
         #region Helpers
 
+        static public void RumbleFirst(float strength, float time)
+        {
+            GamePads[0].Rumble(strength, time);
+        }
+
         static public int Axis(bool negative, bool positive, int bothValue)
         {
             if (negative)
