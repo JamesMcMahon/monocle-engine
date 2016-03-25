@@ -16,6 +16,7 @@ namespace Monocle
         private Dictionary<T, Animation> animations;
         private Animation currentAnimation;
         private float animationTimer;
+        private bool played;
 
         public Spritesheet(MTexture texture, int frameWidth, int frameHeight, int frameSep = 0)
             : base(texture, true)
@@ -144,7 +145,9 @@ namespace Monocle
 
         public bool IsPlaying(T id)
         {
-            if (CurrentAnimationID == null)
+            if (!played)
+                return false;
+            else if (CurrentAnimationID == null)
                 return id == null;
             else
                 return CurrentAnimationID.Equals(id);
@@ -162,6 +165,7 @@ namespace Monocle
                 currentAnimation = animations[id];
                 animationTimer = 0;              
                 CurrentAnimationFrame = 0;
+                played = true;
 
                 Animating = currentAnimation.Frames.Length > 1;
                 CurrentFrame = currentAnimation.Frames[0];
@@ -178,6 +182,7 @@ namespace Monocle
         public void Stop()
         {
             Animating = false;
+            played = false;
         }
 
         #endregion
