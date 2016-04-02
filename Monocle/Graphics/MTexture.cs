@@ -119,7 +119,7 @@ namespace Monocle
             set
             {
                 if (atlas == null)
-                    atlas = new Dictionary<string, MTexture>(StringComparer.OrdinalIgnoreCase);
+                    atlas = new Dictionary<string, MTexture>(StringComparer.InvariantCultureIgnoreCase);
                 atlas[id] = value;
             }
         }
@@ -148,7 +148,7 @@ namespace Monocle
                         XmlElement at = xml["TextureAtlas"];
                         var subtextures = at.GetElementsByTagName("SubTexture");
 
-                        atlas = new Dictionary<string, MTexture>(subtextures.Count, StringComparer.OrdinalIgnoreCase);
+                        atlas = new Dictionary<string, MTexture>(subtextures.Count, StringComparer.InvariantCultureIgnoreCase);
                         foreach (XmlElement sub in subtextures)
                         {
                             var clipRect = sub.Rect();

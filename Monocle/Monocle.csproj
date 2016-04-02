@@ -77,6 +77,7 @@
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
     <Compile Include="Renderers\TagExcludeRenderer.cs" />
+    <Compile Include="Util\Chooser.cs" />
     <Compile Include="Util\PixelFont.cs" />
     <Compile Include="Util\Pooler.cs" />
     <Compile Include="Util\ChoiceSet.cs" />

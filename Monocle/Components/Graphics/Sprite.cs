@@ -5,30 +5,29 @@ using System.Text;
 
 namespace Monocle
 {
-    public class Sprite<T> : Image
+    public class Sprite : Image
     {
-        public int CurrentFrame;
         public float Rate = 1f;
         public bool UseRawDeltaTime;
-        public Action<T> OnFinish;
-        public Action<T> OnLoop;
-        public Action<T> OnAnimate;
+        public Action<string> OnFinish;
+        public Action<string> OnLoop;
+        public Action<string> OnAnimate;
 
-        private Dictionary<T, Animation> animations;
+        private MTexture atlas;
+        private string path;
+        private Dictionary<string, Animation> animations;
         private Animation currentAnimation;
         private float animationTimer;
-        private bool played;
+        private int width;
+        private int height;
 
-        public Sprite(MTexture atlas, string key)
+        public Sprite(MTexture atlas, string path)
             : base(null, true)
         {
-            SetFrames(atlas, key);
-            animations = new Dictionary<T, Animation>();
-        }
+            this.atlas = atlas;
+            this.path = path;
 
-        public void SetFrames(MTexture atlas, string key)
-        {
-            Frames = atlas.GetAtlasSubtextures(key).ToArray();
+            animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         public override void Update()
@@ -51,10 +50,16 @@ namespace Monocle
                     if (CurrentAnimationFrame < 0 || CurrentAnimationFrame >= currentAnimation.Frames.Length)
                     {
                         //Looped
-                        if (currentAnimation.Loop)
+                        if (currentAnimation.Goto != null)
                         {
+                            currentAnimation = animations[currentAnimation.Goto.Choose()];
+                            if (CurrentAnimationFrame < 0)
+                                CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
+                            else
+                                CurrentAnimationFrame = 0;
+
                             CurrentAnimationFrame -= Math.Sign(CurrentAnimationFrame) * currentAnimation.Frames.Length;
-                            CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
+                            Texture = currentAnimation.Frames[CurrentAnimationFrame];
 
                             if (OnAnimate != null)
                                 OnAnimate(CurrentAnimationID);
@@ -70,15 +75,18 @@ namespace Monocle
                                 CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
 
                             Animating = false;
+                            var id = CurrentAnimationID;
+                            CurrentAnimationID = null;
+                            currentAnimation = null;
                             animationTimer = 0;
                             if (OnFinish != null)
-                                OnFinish(CurrentAnimationID);
+                                OnFinish(id);
                         }
                     }
                     else
                     {
                         //Continue Animation
-                        CurrentFrame = currentAnimation.Frames[CurrentAnimationFrame];
+                        Texture = currentAnimation.Frames[CurrentAnimationFrame];
                         if (OnAnimate != null)
                             OnAnimate(CurrentAnimationID);
                     }
@@ -86,41 +94,112 @@ namespace Monocle
             }
         }
 
-        public override void Render()
-        {
-            if (CurrentFrame >= 0 && CurrentFrame < Frames.Length)
-                Texture = Frames[CurrentFrame];
-            else
-                Texture = null;
-            base.Render();
-        }
-
         #region Define Animations
 
-        public void Add(T id, bool loop, float delay, params int[] frames)
+        public void AddLoop(string id, string path, float delay)
         {
-#if DEBUG
-            foreach (var f in frames)
-                if (f >= Frames.Length)
-                    throw new IndexOutOfRangeException("Specified frames is out of max range for this Sprite");
-#endif
-
             animations[id] = new Animation()
             {
-                Loop = loop,
                 Delay = delay,
-                Frames = frames
+                Frames = GetFrames(path),
+                Goto = new Chooser<string>(id, 1f)
             };
         }
 
-        public void Add(T id, float delay, params int[] frames)
+        public void Add(string id, string path)
         {
-            Add(id, true, delay, frames);
+            animations[id] = new Animation()
+            {
+                Delay = 0,
+                Frames = GetFrames(path),
+                Goto = null
+            };
         }
 
-        public void Add(T id, int frame)
+        public void Add(string id, string path, float delay)
         {
-            Add(id, false, 0, frame);
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path),
+                Goto = null
+            };
+        }
+
+        public void Add(string id, string path, float delay, params int[] frames)
+        {
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path, frames),
+                Goto = null
+            };
+        }
+
+        public void Add(string id, string path, float delay, string into)
+        {
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path),
+                Goto = Chooser<string>.FromString<string>(into)
+            };
+        }
+
+        public void Add(string id, string path, float delay, Chooser<string> into)
+        {
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path),
+                Goto = into
+            };
+        }
+
+        public void Add(string id, string path, float delay, string into, params int[] frames)
+        {
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path, frames),
+                Goto = Chooser<string>.FromString<string>(into)
+            };
+        }
+
+        public void Add(string id, string path, float delay, Chooser<string> into, params int[] frames)
+        {
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path, frames),
+                Goto = into
+            };
+        }
+
+        private MTexture[] GetFrames(string path, int[] frames = null)
+        {
+            MTexture[] ret;
+
+            if (frames == null)
+                ret = atlas.GetAtlasSubtextures(this.path + path).ToArray();
+            else
+            {
+                var allFrames = atlas.GetAtlasSubtextures(this.path + path).ToArray();
+                var finalFrames = new MTexture[frames.Length];
+                for (int i = 0; i < frames.Length; i++)
+                    finalFrames[i] = allFrames[frames[i]];
+                ret = finalFrames;
+            }
+
+#if DEBUG
+            if (ret.Length == 0)
+                throw new Exception("No frames found for animation path '" + this.path + path + "'!");
+#endif
+
+            width = Math.Max(ret[0].Width, width);
+            height = Math.Max(ret[0].Height, height);
+
+            return ret;
         }
 
         public void ClearAnimations()
@@ -132,19 +211,9 @@ namespace Monocle
 
         #region Animation Playback
 
-        public bool IsPlaying(T id)
+        public void Play(string id, bool restart = false)
         {
-            if (!played)
-                return false;
-            else if (CurrentAnimationID == null)
-                return id == null;
-            else
-                return CurrentAnimationID.Equals(id);
-        }
-
-        public void Play(T id, bool restart = false)
-        {
-            if (!IsPlaying(id) || restart)
+            if (CurrentAnimationID != id || restart)
             {
 #if DEBUG
                 if (!animations.ContainsKey(id))
@@ -155,13 +224,11 @@ namespace Monocle
                 animationTimer = 0;
                 Animating = currentAnimation.Frames.Length > 1;
                 CurrentAnimationFrame = 0;
-                played = true;
-
-                CurrentFrame = currentAnimation.Frames[0];
+                Texture = currentAnimation.Frames[0];
             }
         }
 
-        public void Reverse(T id, bool restart = false)
+        public void Reverse(string id, bool restart = false)
         {
             Play(id, restart);
             if (Rate > 0)
@@ -171,24 +238,20 @@ namespace Monocle
         public void Stop()
         {
             Animating = false;
-            played = false;
+            currentAnimation = null;
+            CurrentAnimationID = null;
         }
 
         #endregion     
 
         #region Properties
 
-        public MTexture[] Frames
-        {
-            get; private set;
-        }
-
         public bool Animating
         {
             get; private set;
         }
 
-        public T CurrentAnimationID
+        public string CurrentAnimationID
         {
             get; private set;
         }
@@ -202,10 +265,7 @@ namespace Monocle
         {
             get
             {
-                if (Frames.Length > 0)
-                    return Frames[0].Width;
-                else
-                    return 0;
+                return width;
             }
         }
 
@@ -213,20 +273,17 @@ namespace Monocle
         {
             get
             {
-                if (Frames.Length > 0)
-                    return Frames[0].Height;
-                else
-                    return 0;
+                return height;
             }
         }
 
         #endregion
 
-        private struct Animation
+        private class Animation
         {
             public float Delay;
-            public int[] Frames;
-            public bool Loop;
+            public MTexture[] Frames;
+            public Chooser<string> Goto;
         }
     }
 }
