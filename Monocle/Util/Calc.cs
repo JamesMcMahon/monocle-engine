@@ -950,6 +950,49 @@ namespace Monocle
             return ret;
         }
 
+        /// <summary>
+        /// Read positive-integer CSV with some added tricks.
+        /// Use - to add inclusive range. Ex: 3-6 = 3,4,5,6
+        /// Use * to add multiple values. Ex: 4*3 = 4,4,4
+        /// </summary>
+        /// <param name="csv"></param>
+        /// <returns></returns>
+        static public int[] ReadCSVIntWithTricks(string csv)
+        {
+            if (csv == "")
+                return new int[0];
+
+            string[] values = csv.Split(',');
+            List<int> ret = new List<int>();
+
+            foreach (var val in values)
+            {
+                if (val.IndexOf('-') != -1)
+                {
+                    var split = val.Split('-');
+                    int a = Convert.ToInt32(split[0]);
+                    int b = Convert.ToInt32(split[1]);
+
+                    for (int i = a; i != b; i += Math.Sign(b - a))
+                        ret.Add(i);
+                    ret.Add(b);
+                }
+                else if (val.IndexOf('*') != -1)
+                {
+                    var split = val.Split('*');
+                    int a = Convert.ToInt32(split[0]);
+                    int b = Convert.ToInt32(split[1]);
+
+                    for (int i = 0; i < b; i++)
+                        ret.Add(a);
+                }
+                else
+                    ret.Add(Convert.ToInt32(val));
+            }
+
+            return ret.ToArray();
+        }
+
         static public string[] ReadCSV(string csv)
         {
             if (csv == "")
