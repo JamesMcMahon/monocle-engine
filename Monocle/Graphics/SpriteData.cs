@@ -11,10 +11,11 @@ namespace Monocle
         private XmlDocument document;
         private Dictionary<string, XmlElement> sprites;
 
-        public SpriteData(MTexture atlas, string xmlPath)
+        public SpriteData(MTexture atlas, XmlDocument xmlDocument)
         {
             this.atlas = atlas;
-            document = Calc.LoadXML(xmlPath);
+            this.document = xmlDocument;
+
             sprites = new Dictionary<string, XmlElement>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var xml in document["Sprites"].ChildNodes)
@@ -29,6 +30,12 @@ namespace Monocle
             }
 
             ErrorCheck();
+        }
+
+        public SpriteData(MTexture atlas, string xmlPath)
+            : this(atlas, Calc.LoadXML(xmlPath))
+        {
+
         }
 
         public void ErrorCheck()
