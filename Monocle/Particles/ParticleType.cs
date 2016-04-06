@@ -17,6 +17,7 @@ namespace Monocle
         public float SpeedRange;
         public float SpeedMultiplier;
         public Vector2 Acceleration;
+		public float Friction;
         public float Direction;
         public float DirectionRange;
         public float Life;
@@ -36,6 +37,7 @@ namespace Monocle
             Speed = SpeedRange = 0;
             SpeedMultiplier = 1;
             Acceleration = Vector2.Zero;
+			Friction = 0f;
             Direction = DirectionRange = 0;
             Life = LifeRange = 0;
             Size = 2;
@@ -56,6 +58,7 @@ namespace Monocle
             SpeedRange = copy.SpeedRange;
             SpeedMultiplier = copy.SpeedMultiplier;
             Acceleration = copy.Acceleration;
+			Friction = copy.Friction;
             Direction = copy.Direction;
             DirectionRange = copy.DirectionRange;
             Life = copy.Life;

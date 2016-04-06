@@ -49,6 +49,7 @@ namespace Monocle
             //Speed
             Position += Speed * dt;
             Speed += Type.Acceleration * dt;
+			Speed = Calc.Approach(Speed, Vector2.Zero, Type.Friction * dt);
             if (Type.SpeedMultiplier != 1)
                 Speed *= (float)Math.Pow(Type.SpeedMultiplier, dt);
 
