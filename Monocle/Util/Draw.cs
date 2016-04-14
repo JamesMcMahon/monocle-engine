@@ -248,6 +248,24 @@ namespace Monocle
             }
         }
 
+        static public void TextCentered(PixelFont font, string text, Vector2 position, Vector2 scale, Color color)
+        {
+            Vector2 size = font.Measure(text);
+            size.X *= scale.X;
+            size.Y *= scale.Y;
+
+            Text(font, text, position - size * .5f, scale, color);
+        }
+
+        static public void TextJustified(PixelFont font, string text, Vector2 position, Vector2 justify, Vector2 scale, Color color)
+        {
+            Vector2 offset = font.Measure(text);
+            offset.X *= scale.X * -justify.X;
+            offset.Y *= scale.Y * -justify.Y;
+
+            Text(font, text, position + offset, scale, color);
+        }
+
         static public void Text(PixelFont font, string text, Vector2 position, Color color)
         {
             Text(font, text, position, Vector2.One, color);

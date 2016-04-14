@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,6 +61,28 @@ namespace Monocle
 			int lines = str.Split('\n').Length;
 			return lines * LineHeight;
 		}
+
+        public Vector2 Measure(string str)
+        {
+            Vector2 size = new Vector2(0, LineHeight);
+            int lineWidth = 0;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '\n')
+                {
+                    size.Y += LineHeight;
+
+                    size.X = Math.Max(lineWidth, size.X);
+                    lineWidth = 0;
+                }
+                else if (CharDatas.ContainsKey((int)str[i]))
+                    lineWidth += CharDatas[(int)str[i]].XAdvance;
+            }
+            size.X = Math.Max(lineWidth, size.X);
+
+            return size;
+        }
 
 		public string AutoNewLine(int maxWidth, string str)
 		{
