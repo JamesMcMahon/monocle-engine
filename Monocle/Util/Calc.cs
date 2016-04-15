@@ -509,6 +509,36 @@ namespace Monocle
 
         #endregion
 
+        #region Time
+
+        static public string ShortGameplayFormat(this TimeSpan time)
+        {
+            if (time.TotalHours >= 1)
+                return ((int)time.TotalHours) + ":" + time.ToString(@"mm\:ss\.fff");
+            else
+                return time.ToString(@"m\:ss\.fff");
+        }
+
+        static public string LongGameplayFormat(this TimeSpan time)
+        {
+            StringBuilder str = new StringBuilder();
+
+            if (time.TotalDays >= 2)
+            {
+                str.Append((int)time.TotalDays);
+                str.Append(" days, ");
+            }
+            else if (time.TotalDays >= 1)
+                str.Append("1 day, ");
+
+            str.Append((time.TotalHours - ((int)time.TotalDays * 24)).ToString("0.0"));
+            str.Append(" hours");
+
+            return str.ToString();
+        }
+
+        #endregion
+
         #region Math
 
         public const float RIGHT = 0;
