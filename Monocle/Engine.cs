@@ -45,6 +45,7 @@ namespace Monocle
             Graphics.DeviceReset += OnGraphicsReset;
             Graphics.DeviceCreated += OnGraphicsCreate;
             Graphics.SynchronizeWithVerticalRetrace = true;
+			Graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
             if (fullscreen)
                 Graphics.IsFullScreen = true;
