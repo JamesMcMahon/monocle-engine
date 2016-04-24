@@ -122,9 +122,13 @@ namespace Monocle
                     atlas = new Dictionary<string, MTexture>(StringComparer.InvariantCultureIgnoreCase);
                 atlas[id] = value;
             }
-        }
+		}
+		public bool Has(string id)
+		{
+			return atlas.ContainsKey(id);
+		}
 
-        public List<MTexture> GetAtlasSubtextures(string key)
+		public List<MTexture> GetAtlasSubtextures(string key)
         {
             List<MTexture> list = new List<MTexture>();
 
