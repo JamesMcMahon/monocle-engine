@@ -1623,6 +1623,14 @@ namespace Monocle
                 return new Vector2(xml["node"].AttrInt("x"), xml["node"].AttrInt("y"));
         }
 
+        static public Vector2? FirstNodeNullable(this XmlElement xml, Vector2 offset)
+        {
+            if (xml["node"] == null)
+                return null;
+            else
+                return new Vector2(xml["node"].AttrInt("x"), xml["node"].AttrInt("y")) + offset;
+        }
+
         static public Vector2[] Nodes(this XmlElement xml, bool includePosition = false)
         {
             XmlNodeList nodes = xml.GetElementsByTagName("node");
@@ -1645,6 +1653,16 @@ namespace Monocle
             }
 
             return ret;
+        }
+
+        static public Vector2[] Nodes(this XmlElement xml, Vector2 offset, bool includePosition = false)
+        {
+            var nodes = Calc.Nodes(xml, includePosition);
+
+            for (int i = 0; i < nodes.Length; i++)
+                nodes[i] += offset;
+
+            return nodes;
         }
 
         static public Vector2 GetNode(this XmlElement xml, int nodeNum)
