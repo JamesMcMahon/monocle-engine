@@ -515,6 +515,34 @@ namespace Monocle
             return Collide.Check(this, Scene.Tracker.Entities[typeof(T)], at);
         }
 
+        public bool CollideCheck<T, Exclude>() where T : Entity where Exclude : Entity
+        {
+#if DEBUG
+            if (Scene == null)
+                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
+            else if (!Scene.Tracker.Entities.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked Entity type");
+            else if (!Scene.Tracker.Entities.ContainsKey(typeof(Exclude)))
+                throw new Exception("Excluded type is an untracked Entity type!");
+#endif
+
+            var exclude = Scene.Tracker.Entities[typeof(Exclude)];
+            foreach (var e in Scene.Tracker.Entities[typeof(T)])
+                if (!exclude.Contains(e))
+                    if (Collide.Check(this, e))
+                        return true;
+            return false;
+        }
+
+        public bool CollideCheck<T, Exclude>(Vector2 at) where T : Entity where Exclude : Entity
+        {
+            var was = Position;
+            Position = at;
+            var ret = CollideCheck<T, Exclude>();
+            Position = was;
+            return ret;
+        }
+
         public bool CollideCheckByComponent<T>() where T : Component
         {
 #if DEBUG
