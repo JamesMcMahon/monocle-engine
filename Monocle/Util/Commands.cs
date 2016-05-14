@@ -545,7 +545,14 @@ namespace Monocle
                                         param[i] = ArgBool(args[i]);
                                 }
 
-                                method.Invoke(null, param);
+								try
+								{
+									method.Invoke(null, param);
+								}
+								catch (Exception e)
+								{
+									Console.WriteLine(e.ToString());
+								}
                             }
                         };
 
