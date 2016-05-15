@@ -13,7 +13,7 @@ namespace Monocle
         private const float UNDERSCORE_TIME = .5f;
         private const float REPEAT_DELAY = .5f;
         private const float REPEAT_EVERY = 1 / 30f;
-        private const float OPACITY = .65f;
+        private const float OPACITY = .8f;
 
         public bool Enabled = true;
         public bool Open;
@@ -25,7 +25,7 @@ namespace Monocle
         private KeyboardState oldState;
         private KeyboardState currentState;
         private string currentText = "";
-        private List<string> drawCommands;
+        private List<Line> drawCommands;
         private bool underscore;
         private float underscoreCounter;
         private List<string> commandHistory;
@@ -39,7 +39,7 @@ namespace Monocle
         public Commands()
         {
             commandHistory = new List<string>();
-            drawCommands = new List<string>();
+            drawCommands = new List<Line>();
             commands = new Dictionary<string, CommandInfo>();
             sorted = new List<string>();
             FunctionKeyActions = new Action[12];
@@ -47,7 +47,7 @@ namespace Monocle
             BuildCommandsList();
         }
 
-        public void Log(object obj)
+        public void Log(object obj, Color color)
         {
             string str = obj.ToString();
 
@@ -70,16 +70,21 @@ namespace Monocle
                 if (split == -1)
                     break;
 
-                drawCommands.Insert(0, str.Substring(0, split));
+                drawCommands.Insert(0, new Line(str.Substring(0, split), color));
                 str = str.Substring(split + 1);
             }
 
-            drawCommands.Insert(0, str);
+            drawCommands.Insert(0, new Line(str, color));
 
             //Don't overflow top of window
             int maxCommands = (Engine.Instance.Window.ClientBounds.Height - 100) / 30;
             while (drawCommands.Count > maxCommands)
                 drawCommands.RemoveAt(drawCommands.Count - 1);
+        }
+
+        public void Log(object obj)
+        {
+            Log(obj, Color.White);
         }
 
         #region Updating and Rendering
@@ -375,7 +380,7 @@ namespace Monocle
             string[] data = currentText.Split(new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
             if (commandHistory.Count == 0 || commandHistory[0] != currentText)
                 commandHistory.Insert(0, currentText);
-            drawCommands.Insert(0, ">" + currentText);
+            drawCommands.Insert(0, new Line(currentText, Color.Aqua));
             currentText = "";
             seekIndex = -1;
 
@@ -422,7 +427,7 @@ namespace Monocle
                 int height = 10 + (30 * drawCommands.Count);
                 Draw.Rect(10, screenHeight - height - 60, screenWidth - 20, height, Color.Black * OPACITY);
                 for (int i = 0; i < drawCommands.Count; i++)
-                    Draw.SpriteBatch.DrawString(Draw.DefaultFont, drawCommands[i], new Vector2(20, screenHeight - 92 - (30 * i)), drawCommands[i].IndexOf(">") == 0 ? Color.Yellow : Color.White);
+                    Draw.SpriteBatch.DrawString(Draw.DefaultFont, drawCommands[i].Text, new Vector2(20, screenHeight - 92 - (30 * i)), drawCommands[i].Color);
             }
 
             Draw.SpriteBatch.End();
@@ -437,7 +442,7 @@ namespace Monocle
             if (commands.ContainsKey(command))
                 commands[command].Action(args);
             else
-                Log("Command '" + command + "' not found! Type 'help' for list of commands");
+                Log("Command '" + command + "' not found! Type 'help' for list of commands", Color.Yellow);
         }
 
         public void ExecuteFunctionKeyAction(int num)
@@ -528,14 +533,14 @@ namespace Monocle
                     info.Action = (args) =>
                         {
                             if (parameters.Length == 0)
-                                method.Invoke(null, null);
+                                InvokeMethod(method);
                             else
                             {
                                 object[] param = (object[])defaults.Clone();
 
                                 for (int i = 0; i < param.Length && i < args.Length; i++)
                                 {
-                                    if (parameters[i].ParameterType == typeof(string))                                 
+                                    if (parameters[i].ParameterType == typeof(string))
                                         param[i] = ArgString(args[i]);
                                     else if (parameters[i].ParameterType == typeof(int))
                                         param[i] = ArgInt(args[i]);
@@ -545,19 +550,59 @@ namespace Monocle
                                         param[i] = ArgBool(args[i]);
                                 }
 
-								try
-								{
-									method.Invoke(null, param);
-								}
-								catch (Exception e)
-								{
-									Console.WriteLine(e.ToString());
-								}
+                                InvokeMethod(method, param);
                             }
                         };
 
                     commands[attr.Name] = info;
                 }
+            }
+        }
+
+        private void InvokeMethod(MethodInfo method, object[] param = null)
+        {
+            try
+            {
+                method.Invoke(null, param);
+            }
+            catch (Exception e)
+            {
+                Engine.Commands.Log(e.InnerException.Message, Color.Yellow);
+                LogStackTrace(e.InnerException.StackTrace);
+            }
+        }
+
+        private void LogStackTrace(string stackTrace)
+        {
+            foreach (var call in stackTrace.Split('\n'))
+            {
+                string log = call;
+
+                //Remove File Path
+                {
+                    var from = log.LastIndexOf(" in ") + 4;
+                    var to = log.LastIndexOf('\\') + 1;
+                    if (from != -1 && to != -1)
+                        log = log.Substring(0, from) + log.Substring(to);
+                }
+
+                //Remove arguments list
+                {
+                    var from = log.IndexOf('(') + 1;
+                    var to = log.IndexOf(')');
+                    if (from != -1 && to != -1)
+                        log = log.Substring(0, from) + log.Substring(to);
+                }
+
+                //Space out the colon line number
+                var colon = log.LastIndexOf(':');
+                if (colon != -1)
+                    log = log.Insert(colon + 1, " ").Insert(colon, " ");
+
+                log = log.TrimStart();
+                log = "-> " + log;
+
+                Engine.Commands.Log(log, Color.White);
             }
         }
 
@@ -747,6 +792,24 @@ namespace Monocle
         }
 
         #endregion
+
+        private struct Line
+        {
+            public string Text;
+            public Color Color;
+
+            public Line(string text)
+            {
+                Text = text;
+                Color = Color.White;
+            }
+
+            public Line(string text, Color color)
+            {
+                Text = text;
+                Color = color;
+            }
+        }
     }
 
     public class Command : Attribute
