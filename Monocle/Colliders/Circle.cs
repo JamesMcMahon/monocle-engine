@@ -55,7 +55,7 @@ namespace Monocle
             return new Circle(Radius, Position.X, Position.Y);
         }
 
-        public override void Render(Color color)
+        public override void Render(Camera camera, Color color)
         {
             Draw.Circle(AbsolutePosition, Radius, color, 4);
         }

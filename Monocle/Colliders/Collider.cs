@@ -53,7 +53,7 @@ namespace Monocle
         public abstract bool Collide(Circle circle);
         public abstract bool Collide(ColliderList list);
         public abstract Collider Clone();
-        public abstract void Render(Color color);
+        public abstract void Render(Camera camera, Color color);
         public abstract float Width { get; set; }
         public abstract float Height { get; set; }
         public abstract float Top { get; set; }
@@ -213,9 +213,9 @@ namespace Monocle
             }
         }
 
-        public void Render()
+        public void Render(Camera camera)
         {
-            Render(Color.Red);
+            Render(camera, Color.Red);
         }
 
         public Vector2 AbsolutePosition

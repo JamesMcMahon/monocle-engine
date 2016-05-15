@@ -337,12 +337,27 @@ namespace Monocle
             return new Grid(CellWidth, CellHeight, data);
         }
 
-        public override void Render(Color color)
+        public override void Render(Camera camera, Color color)
         {
-            for (int i = 0; i < CellsX; i++)
-                for (int j = 0; j < CellsY; j++)
-                    if (data[i, j])
-                        Draw.HollowRect(AbsoluteLeft + i * CellWidth, AbsoluteTop + j * CellHeight, CellWidth, CellHeight, color);
+			if (camera == null)
+			{
+				for (int i = 0; i < CellsX; i++)
+					for (int j = 0; j < CellsY; j++)
+						if (data[i, j])
+							Draw.HollowRect(AbsoluteLeft + i * CellWidth, AbsoluteTop + j * CellHeight, CellWidth, CellHeight, color);
+			}
+			else
+			{
+				int left = (int)Math.Max(0, ((camera.Left - AbsoluteLeft) / CellWidth));
+				int right = (int)Math.Min(CellsX - 1, Math.Ceiling((camera.Right - AbsoluteLeft) / CellWidth));
+				int top = (int)Math.Max(0, ((camera.Top - AbsoluteTop) / CellHeight));
+				int bottom = (int)Math.Min(CellsY - 1, Math.Ceiling((camera.Bottom - AbsoluteTop) / CellHeight));
+
+				for (int tx = left; tx <= right; tx++)
+					for (int ty = top; ty <= bottom; ty++)
+						if (data[tx, ty])
+							Draw.HollowRect(AbsoluteLeft + tx * CellWidth, AbsoluteTop + ty * CellHeight, CellWidth, CellHeight, color);
+			}
         }
 
         /*

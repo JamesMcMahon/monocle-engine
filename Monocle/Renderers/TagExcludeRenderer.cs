@@ -38,7 +38,7 @@ namespace Monocle
             if (Engine.Commands.Open)
                 foreach (var entity in scene.Entities)
                     if (!entity.Tags.Contains(ExcludeTag))
-                        entity.DebugRender();
+                        entity.DebugRender(Camera);
 
             Draw.SpriteBatch.End();
         }

@@ -74,7 +74,7 @@ namespace Monocle
             return new Hitbox(width, height, Position.X, Position.Y);
         }
 
-        public override void Render(Color color)
+        public override void Render(Camera camera, Color color)
         {
             Draw.HollowRect(AbsoluteX, AbsoluteY, Width, Height, color);
         }

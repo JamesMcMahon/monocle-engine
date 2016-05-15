@@ -194,10 +194,10 @@ namespace Monocle
                     entity.Render();
         }
 
-        public void DebugRender()
+        public void DebugRender(Camera camera)
         {
             foreach (var entity in entities)
-                entity.DebugRender();
+                entity.DebugRender(camera);
         }
 
         internal void HandleGraphicsReset()

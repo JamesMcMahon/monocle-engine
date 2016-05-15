@@ -27,7 +27,7 @@ namespace Monocle
 
             scene.Entities.Render();
             if (Engine.Commands.Open)
-                scene.Entities.DebugRender();
+                scene.Entities.DebugRender(Camera);
 
             Draw.SpriteBatch.End();
         }

@@ -33,7 +33,7 @@ namespace Monocle
 
             if (Engine.Commands.Open)
                 foreach (var entity in scene[Tag])
-                    entity.DebugRender();
+                    entity.DebugRender(Camera);
 
             Draw.SpriteBatch.End();
         }

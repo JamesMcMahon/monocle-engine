@@ -106,10 +106,10 @@ namespace Monocle
         /// <summary>
         /// Draw any debug visuals here. Only called if the console is open, but still called even if the Entity is not Visible
         /// </summary>
-        public virtual void DebugRender()
+        public virtual void DebugRender(Camera camera)
         {
             if (Collider != null)
-                Collider.Render(Collidable ? Color.Red : Color.DarkRed);
+                Collider.Render(camera, Collidable ? Color.Red : Color.DarkRed);
         }
 
         /// <summary>

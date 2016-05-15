@@ -190,10 +190,10 @@ namespace Monocle
             return new ColliderList(clones);
         }
 
-        public override void Render(Color color)
+        public override void Render(Camera camera, Color color)
         {
             foreach (var c in colliders)
-                c.Render(color);
+                c.Render(camera, color);
         }
 
         /*
