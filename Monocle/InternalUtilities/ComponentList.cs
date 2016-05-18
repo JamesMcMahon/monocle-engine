@@ -185,11 +185,11 @@ namespace Monocle
             LockMode = ComponentList.LockModes.Open;
         }
 
-        internal void DebugRender()
+        internal void DebugRender(Camera camera)
         {
             LockMode = ComponentList.LockModes.Error;
             foreach (var component in components)
-                component.DebugRender();
+                component.DebugRender(camera);
             LockMode = ComponentList.LockModes.Open;
         }
 

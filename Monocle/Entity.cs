@@ -110,6 +110,8 @@ namespace Monocle
         {
             if (Collider != null)
                 Collider.Render(camera, Collidable ? Color.Red : Color.DarkRed);
+
+            Components.DebugRender(camera);
         }
 
         /// <summary>

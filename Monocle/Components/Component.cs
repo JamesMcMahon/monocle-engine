@@ -48,7 +48,7 @@ namespace Monocle
 
         }
 
-        public virtual void DebugRender()
+        public virtual void DebugRender(Camera camera)
         {
 
         }
