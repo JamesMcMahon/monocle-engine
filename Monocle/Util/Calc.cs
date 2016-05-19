@@ -627,6 +627,16 @@ namespace Monocle
                 return 1 - ((value - .5f) * 2);
         }
 
+        static public float Map(float val, float min, float max, float newMin = 0, float newMax = 1)
+        {
+            return ((val - min) / (max - min)) * (newMax - newMin) + newMin;
+        }
+
+        static public float ClampedMap(float val, float min, float max, float newMin = 0, float newMax = 1)
+        {
+            return MathHelper.Clamp((val - min) / (max - min), 0, 1) * (newMax - newMin) + newMin;
+        }
+
         static public float LerpSnap(float value1, float value2, float amount, float snapThreshold = .1f)
         {
             float ret = MathHelper.Lerp(value1, value2, amount);
