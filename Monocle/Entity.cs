@@ -460,7 +460,7 @@ namespace Monocle
         {
             if (Tags.Contains(tag))
             {
-                Tags.Add(tag);
+                Tags.Remove(tag);
                 if (Scene != null)
                     Scene.TagLists[tag].Remove(this);
             }
