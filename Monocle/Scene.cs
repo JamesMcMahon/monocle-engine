@@ -137,6 +137,12 @@ namespace Monocle
             return Math.Floor((TimeActive - offset - Engine.DeltaTime) / interval) < Math.Floor((TimeActive - offset) / interval);
         }
 
+
+        public bool BetweenInterval(float interval)
+        {
+            return TimeActive % (interval * 2) > interval;
+        }
+
         #region Collisions v Tags
 
         public bool CollideCheck(Vector2 point, int tag)
