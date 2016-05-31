@@ -7,7 +7,7 @@ namespace Monocle
 {
     public class Scene : IEnumerable<Entity>, IEnumerable
     {
-        public float TimeActive { get; private set; }
+        public float TimeActive;
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
         public TagLists TagLists { get; private set; }

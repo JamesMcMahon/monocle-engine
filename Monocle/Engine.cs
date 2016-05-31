@@ -29,7 +29,7 @@ namespace Monocle
         internal Matrix screenMatrix;
 #if DEBUG
         private TimeSpan counterElapsed = TimeSpan.Zero;
-        private int counterFrames = 0;
+        private int fpsCounter = 0;
 #endif
 
         public Engine(int width, int height, int windowedScale, string windowTitle, bool fullscreen)
@@ -169,12 +169,12 @@ namespace Monocle
                 Commands.Render();
 #if DEBUG
             //Frame counter
-            counterFrames++;
+            fpsCounter++;
             counterElapsed += gameTime.ElapsedGameTime;
-            if (counterElapsed > TimeSpan.FromSeconds(1))
+            if (counterElapsed >= TimeSpan.FromSeconds(1))
             {
-                Window.Title = windowTitle + " " + counterFrames.ToString() + " fps - " + (GC.GetTotalMemory(true) / 1048576f).ToString("F") + " MB";
-                counterFrames = 0;
+                Window.Title = windowTitle + " " + fpsCounter.ToString() + " fps - " + (GC.GetTotalMemory(true) / 1048576f).ToString("F") + " MB";
+                fpsCounter = 0;
                 counterElapsed -= TimeSpan.FromSeconds(1);
             }
 #endif

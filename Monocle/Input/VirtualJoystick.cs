@@ -11,6 +11,7 @@ namespace Monocle
     {
         public List<Node> Nodes;
         public bool Normalized;
+        public float? SnapSlices;
 
         public VirtualJoystick(bool normalized)
             : base()
@@ -42,7 +43,15 @@ namespace Monocle
                     if (value != Vector2.Zero)
                     {
                         if (Normalized)
-                            value.Normalize();
+                        {
+                            if (SnapSlices.HasValue)
+                                value = value.SnappedNormal(SnapSlices.Value);
+                            else
+                                value.Normalize();
+                        }
+                        else if (SnapSlices.HasValue)
+                            value = value.Snapped(SnapSlices.Value);
+
                         return value;
                     }
                 }

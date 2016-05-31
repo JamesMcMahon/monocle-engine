@@ -430,6 +430,44 @@ namespace Monocle
             return best;
         }
 
+        static public Vector2 ClosestTo(this Vector2[] list, Vector2 to)
+        {
+            Vector2 best = list[0];
+            float distSq = Vector2.DistanceSquared(list[0], to);
+
+            for (int i = 1; i < list.Length; i++)
+            {
+                float d = Vector2.DistanceSquared(list[i], to);
+                if (d < distSq)
+                {
+                    distSq = d;
+                    best = list[i];
+                }
+            }
+
+            return best;
+        }
+
+        static public Vector2 ClosestTo(this Vector2[] list, Vector2 to, out int index)
+        {
+            index = 0;
+            Vector2 best = list[0];
+            float distSq = Vector2.DistanceSquared(list[0], to);
+
+            for (int i = 1; i < list.Length; i++)
+            {
+                float d = Vector2.DistanceSquared(list[i], to);
+                if (d < distSq)
+                {
+                    index = i;
+                    distSq = d;
+                    best = list[i];
+                }
+            }
+
+            return best;
+        }
+
         static public void Shuffle<T>(this List<T> list, Random random)
         {
             int i = list.Count;
@@ -843,6 +881,19 @@ namespace Monocle
 
         #region Vector2
 
+        static public Vector2 Toward(Vector2 from, Vector2 to, float length)
+        {
+            if (from == to)
+                return Vector2.Zero;
+            else
+                return (to - from).SafeNormalize(length);
+        }
+
+        static public Vector2 Toward(Entity from, Entity to, float length)
+        {
+            return Toward(from.Position, to.Position, length);
+        }
+
         static public Vector2 Perpendicular(this Vector2 vector)
         {
             return new Vector2(-vector.Y, vector.X);
@@ -936,6 +987,15 @@ namespace Monocle
             float angle = vec.Angle();
             angle = (float)Math.Floor((angle + divider / 2f) / divider) * divider;
             return AngleToVector(angle, 1f);
+        }
+
+        static public Vector2 Snapped(this Vector2 vec, float slices)
+        {
+            float divider = MathHelper.TwoPi / slices;
+
+            float angle = vec.Angle();
+            angle = (float)Math.Floor((angle + divider / 2f) / divider) * divider;
+            return AngleToVector(angle, vec.Length());
         }
 
         static public Vector2 Rotate(this Vector2 vec, float angleRadians)
@@ -1313,6 +1373,16 @@ namespace Monocle
                 return defaultValue;
             else
                 return Convert.ToSingle(xml.Attributes[attributeName].InnerText, CultureInfo.InvariantCulture);
+        }
+
+        static public Vector2 AttrVector2(this XmlElement xml, string xAttributeName, string yAttributeName)
+        {
+            return new Vector2(xml.AttrFloat(xAttributeName), xml.AttrFloat(yAttributeName));
+        }
+
+        static public Vector2 AttrVector2(this XmlElement xml, string xAttributeName, string yAttributeName, Vector2 defaultValue)
+        {
+            return new Vector2(xml.AttrFloat(xAttributeName, defaultValue.X), xml.AttrFloat(yAttributeName, defaultValue.Y));
         }
 
         static public bool AttrBool(this XmlElement xml, string attributeName)
