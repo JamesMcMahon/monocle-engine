@@ -13,6 +13,8 @@ namespace Monocle
 
         static internal List<VirtualInput> VirtualInputs;
 
+        static public bool Active = true;
+
         static internal void Initialize()
         {
             //Init devices
@@ -32,7 +34,7 @@ namespace Monocle
 
         static internal void Update()
         {
-            if (Engine.Instance.IsActive)
+            if (Engine.Instance.IsActive && Active)
             {
                 if (Engine.Commands.Open)
                 {
@@ -55,6 +57,17 @@ namespace Monocle
                 for (int i = 0; i < 4; i++)
                     GamePads[i].UpdateNull();
             }
+
+            foreach (var virtualInput in VirtualInputs)
+                virtualInput.Update();
+        }
+
+        static public void UpdateNull()
+        {
+            Keyboard.UpdateNull();
+            Mouse.UpdateNull();
+            for (int i = 0; i < 4; i++)
+                GamePads[i].UpdateNull();
 
             foreach (var virtualInput in VirtualInputs)
                 virtualInput.Update();

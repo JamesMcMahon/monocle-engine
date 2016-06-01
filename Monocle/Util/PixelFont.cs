@@ -113,5 +113,138 @@ namespace Monocle
 			return result;
 		}
 
-	}
+        #region Drawing
+
+        public void Draw(string text, Vector2 position, Vector2 scale, Color color)
+        {
+            var offset = Vector2.Zero;
+            for (int i = 0; i < text.Length; i++)
+            {
+                // new line
+                if (text[i] == '\n')
+                {
+                    offset.X = 0;
+                    offset.Y += LineHeight;
+                }
+
+                // add char
+                var fontChar = Get(text[i]);
+                if (fontChar != null)
+                {
+                    var pos = position + (offset + new Vector2(fontChar.XOffset, fontChar.YOffset)) * scale;
+                    fontChar.Texture.Draw(Calc.Floor(pos), Vector2.Zero, color, scale);
+                    offset.X += fontChar.XAdvance;
+                }
+            }
+        }
+
+        public void Draw(string text, Vector2 position, Color color)
+        {
+            Draw(text, position, Vector2.One, color);
+        }
+
+        public void DrawCentered(string text, Vector2 position, Vector2 scale, Color color)
+        {
+            Vector2 size = Measure(text);
+            size.X *= scale.X;
+            size.Y *= scale.Y;
+
+            Draw(text, position - size * .5f, scale, color);
+        }
+
+        public void DrawCentered(string text, Vector2 position, Color color)
+        {
+            Vector2 size = Measure(text);
+            Draw(text, position - size * .5f, Vector2.One, color);
+        }
+
+        public void DrawJustified(string text, Vector2 position, Vector2 justify, Vector2 scale, Color color)
+        {
+            Vector2 offset = Measure(text);
+            offset.X *= scale.X * -justify.X;
+            offset.Y *= scale.Y * -justify.Y;
+
+            Draw(text, position + offset, scale, color);
+        }
+
+        public void DrawJustified(string text, Vector2 position, Vector2 justify, Color color)
+        {
+            DrawJustified(text, position, justify, Vector2.One, color);
+        }
+
+        #endregion
+
+        #region Draw Outlined
+
+        public void DrawOutlined(string text, Vector2 position, Vector2 scale, Color outline, Color color)
+        {
+            Draw(text, position + new Vector2(-1, 0), scale, outline);
+            Draw(text, position + new Vector2(1, 0), scale, outline);
+            Draw(text, position + new Vector2(0, -1), scale, outline);
+            Draw(text, position + new Vector2(0, 1), scale, outline);
+            Draw(text, position + new Vector2(-1, -1), scale, outline);
+            Draw(text, position + new Vector2(1, 1), scale, outline);
+            Draw(text, position + new Vector2(1, -1), scale, outline);
+            Draw(text, position + new Vector2(-1, 1), scale, outline);
+            Draw(text, position, scale, color);
+        }
+
+        public void DrawOutlined(string text, Vector2 position, Color outline, Color color)
+        {
+            DrawOutlined(text, position, Vector2.One, outline, color);
+        }
+
+        public void DrawOutlined(string text, Vector2 position, Color color)
+        {
+            DrawOutlined(text, position, Vector2.One, Color.Black, color);
+        }
+
+        public void DrawOutlinedCentered(string text, Vector2 position, Vector2 scale, Color outline, Color color)
+        {
+            DrawCentered(text, position + new Vector2(-1, 0), scale, outline);
+            DrawCentered(text, position + new Vector2(1, 0), scale, outline);
+            DrawCentered(text, position + new Vector2(0, -1), scale, outline);
+            DrawCentered(text, position + new Vector2(0, 1), scale, outline);
+            DrawCentered(text, position + new Vector2(-1, -1), scale, outline);
+            DrawCentered(text, position + new Vector2(1, 1), scale, outline);
+            DrawCentered(text, position + new Vector2(1, -1), scale, outline);
+            DrawCentered(text, position + new Vector2(-1, 1), scale, outline);
+            DrawCentered(text, position, scale, color);
+        }
+
+        public void DrawOutlinedCentered(string text, Vector2 position, Color outline, Color color)
+        {
+            DrawOutlinedCentered(text, position, Vector2.One, outline, color);
+        }
+
+        public void DrawOutlinedCentered(string text, Vector2 position, Color color)
+        {
+            DrawOutlinedCentered(text, position, Vector2.One, Color.Black, color);
+        }
+
+        public void DrawOutlinedJustified(string text, Vector2 position, Vector2 justify, Vector2 scale, Color outline, Color color)
+        {
+            DrawJustified(text, position + new Vector2(-1, 0), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(1, 0), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(0, -1), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(0, 1), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(-1, -1), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(1, 1), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(1, -1), justify, scale, outline);
+            DrawJustified(text, position + new Vector2(-1, 1), justify, scale, outline);
+            DrawJustified(text, position, justify, scale, color);
+        }
+
+        public void DrawOutlinedJustified(string text, Vector2 position, Vector2 justify, Color outline, Color color)
+        {
+            DrawOutlinedJustified(text, position, justify, Vector2.One, outline, color);
+        }
+
+        public void DrawOutlinedJustified(string text, Vector2 position, Vector2 justify, Color color)
+        {
+            DrawOutlinedJustified(text, position, justify, Vector2.One, Color.Black, color);
+        }
+
+        #endregion
+    }
 }
