@@ -225,68 +225,6 @@ namespace Monocle
 
         #region Text
 
-        public static void Text(PixelFont font, string text, Vector2 position, Vector2 scale, Color color)
-        {
-            var offset = Vector2.Zero;
-            for (int i = 0; i < text.Length; i++)
-            {
-                // new line
-                if (text[i] == '\n')
-                {
-                    offset.X = 0;
-                    offset.Y += font.LineHeight;
-                }
-
-                // add char
-                var fontChar = font.Get(text[i]);
-                if (fontChar != null)
-                {
-                    var pos = position + (offset + new Vector2(fontChar.XOffset, fontChar.YOffset)) * scale;
-                    fontChar.Texture.Draw(Calc.Floor(pos), Vector2.Zero, color, scale);
-                    offset.X += fontChar.XAdvance;
-                }
-            }
-        }
-
-        static public void TextCentered(PixelFont font, string text, Vector2 position, Color color)
-        {
-            Vector2 size = font.Measure(text);
-            Text(font, text, position - size * .5f, Vector2.One, color);
-        }
-
-        static public void TextCentered(PixelFont font, string text, Vector2 position, Vector2 scale, Color color)
-        {
-            Vector2 size = font.Measure(text);
-            size.X *= scale.X;
-            size.Y *= scale.Y;
-
-            Text(font, text, position - size * .5f, scale, color);
-        }
-
-        static public void TextJustified(PixelFont font, string text, Vector2 position, Vector2 justify, Vector2 scale, Color color)
-        {
-            Vector2 offset = font.Measure(text);
-            offset.X *= scale.X * -justify.X;
-            offset.Y *= scale.Y * -justify.Y;
-
-            Text(font, text, position + offset, scale, color);
-        }
-
-        static public void Text(PixelFont font, string text, Vector2 position, Color color)
-        {
-            Text(font, text, position, Vector2.One, color);
-        }
-
-
-        static public void TextBorder(PixelFont font, string text, Vector2 position, Color border, Color color)
-        {
-            Text(font, text, position + new Vector2(-1, 0), border);
-            Text(font, text, position + new Vector2(1, 0), border);
-            Text(font, text, position + new Vector2(0, -1), border);
-            Text(font, text, position + new Vector2(0, 1), border);
-            Text(font, text, position, color);
-        }
-
         static public void Text(SpriteFont font, string text, Vector2 position, Color color)
         {
             Draw.SpriteBatch.DrawString(font, text, Calc.Floor(position), color);
