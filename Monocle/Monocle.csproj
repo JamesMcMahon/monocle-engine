@@ -73,6 +73,7 @@
     <Compile Include="Components\Graphics\Sprite.cs" />
     <Compile Include="Components\Logic\CounterSet.cs" />
     <Compile Include="Components\Logic\Shaker.cs" />
+    <Compile Include="Components\Logic\ShakerList.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
