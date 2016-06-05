@@ -217,12 +217,12 @@ namespace Monocle
             changed = true;
         }
 
-        public Vector2 GlobalToCamera(Vector2 position)
+        public Vector2 ScreenToCamera(Vector2 position)
         {
             return Vector2.Transform(position, Inverse);
         }
 
-        public Vector2 CameraToGlobal(Vector2 position)
+        public Vector2 CameraToScreen(Vector2 position)
         {
             return Vector2.Transform(position, Matrix);
         }
