@@ -194,6 +194,20 @@ namespace Monocle
                     entity.Render();
         }
 
+        public void RenderOnly(int onlyTag)
+        {
+            foreach (var entity in entities)
+                if (entity.Visible && entity.Tags.Contains(onlyTag))
+                    entity.Render();
+        }
+
+        public void RenderExcept(int excludeTag)
+        {
+            foreach (var entity in entities)
+                if (entity.Visible && !entity.Tags.Contains(excludeTag))
+                    entity.Render();
+        }
+
         public void DebugRender(Camera camera)
         {
             foreach (var entity in entities)
