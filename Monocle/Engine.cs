@@ -23,8 +23,7 @@ namespace Monocle
         static public RenderTarget2D RenderBuffer;
 
         private Scene scene;
-        private Scene nextScene;
-        private string windowTitle;
+        private Scene nextScene;        
         private Viewport viewport;
         internal Matrix screenMatrix;
 #if DEBUG
@@ -32,13 +31,16 @@ namespace Monocle
         private int fpsCounter = 0;
 #endif
 
+        public string Title;
+        public Version Version;
+
         public Engine(int width, int height, int windowedScale, string windowTitle, bool fullscreen)
         {
             Instance = this;
 
             Width = width;
             Height = height;
-            Window.Title = this.windowTitle = windowTitle;
+            Window.Title = this.Title = windowTitle;
             ClearColor = Color.Black;
 
             Graphics = new GraphicsDeviceManager(this);
@@ -215,6 +217,19 @@ namespace Monocle
         {
             base.OnExiting(sender, args);
             MInput.Shutdown();
+        }
+
+        public void RunWithLogging()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception e)
+            {
+                ErrorLog.Write(e);
+                ErrorLog.Open();
+            }
         }
 
         #region Scene
