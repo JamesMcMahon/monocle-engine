@@ -106,7 +106,17 @@ namespace Monocle
             };
         }
 
-        public void Add(string id, string path)
+		public void AddLoop(string id, string path, float delay, params int[] frames)
+		{
+			animations[id] = new Animation()
+			{
+				Delay = delay,
+				Frames = GetFrames(path, frames),
+				Goto = new Chooser<string>(id, 1f)
+			};
+		}
+
+		public void Add(string id, string path)
         {
             animations[id] = new Animation()
             {
