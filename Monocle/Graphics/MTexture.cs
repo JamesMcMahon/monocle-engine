@@ -258,11 +258,16 @@ namespace Monocle
             Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, flip, 0);
         }
 
-        #endregion
+		public void Draw(Vector2 position, Vector2 origin, Color color, Vector2 scale, float rotation, Rectangle clip)
+		{
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, GetRelativeRect(clip), color, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
+		}
 
-        #region Draw Centered
+		#endregion
 
-        public void DrawCentered(Vector2 position)
+		#region Draw Centered
+
+		public void DrawCentered(Vector2 position)
         {
             Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
         }
