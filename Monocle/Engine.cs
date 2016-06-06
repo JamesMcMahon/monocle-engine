@@ -175,7 +175,7 @@ namespace Monocle
             counterElapsed += gameTime.ElapsedGameTime;
             if (counterElapsed >= TimeSpan.FromSeconds(1))
             {
-                Window.Title = windowTitle + " " + fpsCounter.ToString() + " fps - " + (GC.GetTotalMemory(true) / 1048576f).ToString("F") + " MB";
+                Window.Title = Title + " " + fpsCounter.ToString() + " fps - " + (GC.GetTotalMemory(true) / 1048576f).ToString("F") + " MB";
                 fpsCounter = 0;
                 counterElapsed -= TimeSpan.FromSeconds(1);
             }
