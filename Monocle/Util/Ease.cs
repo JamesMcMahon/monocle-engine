@@ -7,6 +7,8 @@ namespace Monocle
     {
         public delegate float Easer(float t);
 
+        static public readonly Easer Linear = (float t) => { return t; };
+
         static public readonly Easer SineIn = (float t) => { return -(float)Math.Cos(MathHelper.PiOver2 * t) + 1; };
         static public readonly Easer SineOut = (float t) => { return (float)Math.Sin(MathHelper.PiOver2 * t); };
         static public readonly Easer SineInOut = (float t) => { return -(float)Math.Cos(MathHelper.Pi * t) / 2f + .5f; };
