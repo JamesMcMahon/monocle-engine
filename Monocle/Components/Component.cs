@@ -69,6 +69,16 @@ namespace Monocle
                 Entity.Remove(this);
         }
 
+        public T SceneAs<T>() where T : Scene
+        {
+            return Scene as T;
+        }
+
+        public T EntityAs<T>() where T : Entity
+        {
+            return Entity as T;
+        }
+
         public Scene Scene
         {
             get { return Entity != null ? Entity.Scene : null; }
