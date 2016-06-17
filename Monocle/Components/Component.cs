@@ -22,20 +22,19 @@ namespace Monocle
 
         public virtual void Removed(Entity entity)
         {
-            Entity = null;
             if (Scene != null)
                 Scene.Tracker.ComponentRemoved(this);
+            Entity = null;
         }
 
         public virtual void EntityAdded(Scene scene)
         {
-            if (Scene != null)
-                Scene.Tracker.ComponentAdded(this);
+            scene.Tracker.ComponentAdded(this);
         }
 
         public virtual void EntityRemoved(Scene scene)
         {
-            Scene.Tracker.ComponentRemoved(this);
+            scene.Tracker.ComponentRemoved(this);
         }
 
         public virtual void Update()
