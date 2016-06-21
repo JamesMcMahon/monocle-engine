@@ -67,6 +67,11 @@ namespace Monocle
             Counter = Calc.Random.NextFloat() * MathHelper.TwoPi * 2;
         }
 
+        public void Reset()
+        {
+            Counter = 0;
+        }
+
         public void StartUp()
         {
             Counter = MathHelper.PiOver2;
