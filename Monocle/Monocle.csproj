@@ -133,7 +133,7 @@
     <Compile Include="Util\Tiler.cs" />
     <Compile Include="Input\VirtualJoystick.cs" />
     <Compile Include="Input\VirtualButton.cs" />
-    <Compile Include="Util\Zip.cs" />
+    <Compile Include="Util\SaveLoad.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
