@@ -15,6 +15,9 @@ namespace Monocle
     {
         public enum SerializeModes { Binary, XML };
 
+        /// <summary>
+        /// Use the overload without compression for OS X portability!
+        /// </summary>
         static public void SerializeToFile<T>(T obj, string filepath, SerializeModes mode, bool compressed)
         {
             FileStream fileStream = File.OpenWrite(filepath);
@@ -49,6 +52,9 @@ namespace Monocle
             fileStream.Dispose();
         }
 
+        /// <summary>
+        /// Use the overload without compression for OS X portability!
+        /// </summary>
         static public T DeserializeFromFile<T>(string filepath, SerializeModes mode, bool compressed)
         {
             T data;
@@ -82,6 +88,51 @@ namespace Monocle
                 zipStream.Close();
                 zipStream.Dispose();
             }
+
+            return data;
+        }
+
+        static public void SerializeToFile<T>(T obj, string filepath, SerializeModes mode)
+        {
+            FileStream fileStream = File.OpenWrite(filepath);
+
+            //Serialize
+            if (mode == SerializeModes.Binary)
+            {
+                var bf = new BinaryFormatter();
+                bf.Serialize(fileStream, obj);
+            }
+            else if (mode == SerializeModes.XML)
+            {
+                var xs = new XmlSerializer(typeof(T));
+                xs.Serialize(fileStream, obj);
+            }
+
+            //Cleanup
+            fileStream.Close();
+            fileStream.Dispose();
+        }
+
+        static public T DeserializeFromFile<T>(string filepath, SerializeModes mode)
+        {
+            T data;
+            FileStream fileStream = File.OpenRead(filepath);
+
+            //Deserialize
+            if (mode == SerializeModes.Binary)
+            {
+                var bf = new BinaryFormatter();
+                data = (T)bf.Deserialize(fileStream);
+            }
+            else
+            {
+                var xs = new XmlSerializer(typeof(T));
+                data = (T)xs.Deserialize(fileStream);
+            }
+
+            //Cleanup
+            fileStream.Close();
+            fileStream.Dispose();
 
             return data;
         }
