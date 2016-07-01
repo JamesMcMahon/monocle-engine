@@ -106,7 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Monocle\MonocleDefault.spritefont" />
-    <None Include="Content\Monocle\MonocleDefault.xnb" />
+    <None Include="Content\Monocle\MonocleDefault.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\FNA\FNA.csproj">
