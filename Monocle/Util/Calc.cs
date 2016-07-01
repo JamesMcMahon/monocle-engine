@@ -657,6 +657,11 @@ namespace Monocle
             return Math.Min(Math.Max(value, min), max);
         }
 
+        static public float Clamp(float value, float min, float max)
+        {
+            return Math.Min(Math.Max(value, min), max);
+        }
+
         static public float YoYo(float value)
         {
             if (value <= .5f)
