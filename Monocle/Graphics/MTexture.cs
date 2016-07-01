@@ -28,7 +28,7 @@ namespace Monocle
             if (Engine.Instance.GraphicsDevice == null)
                 throw new Exception("Cannot load until GraphicsDevice has been initialized");
             if (!File.Exists(Path.Combine(Engine.Instance.Content.RootDirectory, ImagePath)))
-                throw new FileNotFoundException("Texture file does not exist!");
+                throw new FileNotFoundException("Texture file does not exist: " + Path.Combine(Engine.Instance.Content.RootDirectory, ImagePath));
 #endif
             FileStream stream = new FileStream(Engine.Instance.Content.RootDirectory + ImagePath, FileMode.Open);
             Texture2D = Texture2D.FromStream(Engine.Instance.GraphicsDevice, stream);
