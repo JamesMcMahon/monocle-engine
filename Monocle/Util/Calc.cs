@@ -1921,5 +1921,10 @@ namespace Monocle
         }
 
         #endregion
+
+        static public string ConvertPath(string path)
+        {
+            return path.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
+        }
     }
 }
