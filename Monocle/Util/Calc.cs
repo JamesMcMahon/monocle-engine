@@ -1301,7 +1301,7 @@ namespace Monocle
         static public XmlDocument LoadContentXML(string filename)
         {
             XmlDocument xml = new XmlDocument();
-            xml.Load(Engine.Instance.Content.RootDirectory + filename);
+            xml.Load(Path.Combine(Engine.Instance.Content.RootDirectory, filename));
             return xml;
         }
 
@@ -1314,7 +1314,7 @@ namespace Monocle
 
         static public bool ContentXMLExists(string filename)
         {
-            return File.Exists(Engine.Instance.Content.RootDirectory + filename);
+            return File.Exists(Path.Combine(Engine.Instance.Content.RootDirectory, filename));
         }
 
         static public bool XMLExists(string filename)
@@ -1921,5 +1921,10 @@ namespace Monocle
         }
 
         #endregion
+
+        static public string ConvertPath(string path)
+        {
+            return path.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
+        }
     }
 }

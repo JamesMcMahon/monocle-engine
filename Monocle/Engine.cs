@@ -58,7 +58,7 @@ namespace Monocle
                 Graphics.IsFullScreen = false;
             }
 
-            Content.RootDirectory = @"Content\";
+            Content.RootDirectory = @"Content";
 
             IsMouseVisible = false;
             IsFixedTimeStep = false;
