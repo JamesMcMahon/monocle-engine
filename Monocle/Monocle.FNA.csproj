@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6EC3C0A6-C5BE-42CE-AEA5-881D8A97EB60}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Monocle</RootNamespace>
+    <AssemblyName>Monocle</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Colliders\Circle.cs" />
+    <Compile Include="Colliders\Collide.cs" />
+    <Compile Include="Colliders\Collider.cs" />
+    <Compile Include="Colliders\ColliderList.cs" />
+    <Compile Include="Colliders\Grid.cs" />
+    <Compile Include="Colliders\Hitbox.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\Graphics\GraphicsComponent.cs" />
+    <Compile Include="Components\Graphics\Image.cs" />
+    <Compile Include="Components\Graphics\PixelText.cs" />
+    <Compile Include="Components\Graphics\Sprite.cs" />
+    <Compile Include="Components\Graphics\Spritesheet.cs" />
+    <Compile Include="Components\Graphics\Text\NumberText.cs" />
+    <Compile Include="Components\Graphics\Text\OutlineText.cs" />
+    <Compile Include="Components\Graphics\Text\Text.cs" />
+    <Compile Include="Components\Graphics\Text\TimerText.cs" />
+    <Compile Include="Components\Logic\Alarm.cs" />
+    <Compile Include="Components\Logic\Coroutine.cs" />
+    <Compile Include="Components\Logic\CoroutineHolder.cs" />
+    <Compile Include="Components\Logic\CounterSet.cs" />
+    <Compile Include="Components\Logic\Shaker.cs" />
+    <Compile Include="Components\Logic\ShakerList.cs" />
+    <Compile Include="Components\Logic\SineWave.cs" />
+    <Compile Include="Components\Logic\StateMachine.cs" />
+    <Compile Include="Components\Logic\Tween.cs" />
+    <Compile Include="Components\Logic\Wiggler.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Graphics\MTexture.cs" />
+    <Compile Include="Graphics\SpriteData.cs" />
+    <Compile Include="Input\MInput.cs" />
+    <Compile Include="Input\VirtualAxis.cs" />
+    <Compile Include="Input\VirtualButton.cs" />
+    <Compile Include="Input\VirtualInput.cs" />
+    <Compile Include="Input\VirtualIntegerAxis.cs" />
+    <Compile Include="Input\VirtualJoystick.cs" />
+    <Compile Include="InternalUtilities\ComponentList.cs" />
+    <Compile Include="InternalUtilities\EntityList.cs" />
+    <Compile Include="InternalUtilities\TagLists.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\ParticleSystem.cs" />
+    <Compile Include="Particles\ParticleType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\EverythingRenderer.cs" />
+    <Compile Include="Renderers\Renderer.cs" />
+    <Compile Include="Renderers\TagExcludeRenderer.cs" />
+    <Compile Include="Renderers\TagRenderer.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="Util\Cache.cs" />
+    <Compile Include="Util\Calc.cs" />
+    <Compile Include="Util\Camera.cs" />
+    <Compile Include="Util\CheatListener.cs" />
+    <Compile Include="Util\ChoiceSet.cs" />
+    <Compile Include="Util\Chooser.cs" />
+    <Compile Include="Util\Commands.cs" />
+    <Compile Include="Util\Draw.cs" />
+    <Compile Include="Util\Ease.cs" />
+    <Compile Include="Util\ErrorLog.cs" />
+    <Compile Include="Util\MethodHandle.cs" />
+    <Compile Include="Util\PixelFont.cs" />
+    <Compile Include="Util\Pooler.cs" />
+    <Compile Include="Util\SaveLoad.cs" />
+    <Compile Include="Util\SimpleCurve.cs" />
+    <Compile Include="Util\SpecEntity.cs" />
+    <Compile Include="Util\Tiler.cs" />
+    <Compile Include="Util\Tracker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\Monocle\MonocleDefault.spritefont" />
+    <None Include="Content\Monocle\MonocleDefault.xnb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FNA\FNA.csproj">
+      <Project>{35253ce1-c864-4cd3-8249-4d1319748e8f}</Project>
+      <Name>FNA</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
