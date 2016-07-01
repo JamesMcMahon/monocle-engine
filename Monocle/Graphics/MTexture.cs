@@ -30,7 +30,7 @@ namespace Monocle
             if (!File.Exists(Path.Combine(Engine.Instance.Content.RootDirectory, ImagePath)))
                 throw new FileNotFoundException("Texture file does not exist!");
 #endif
-            FileStream stream = new FileStream(Engine.Instance.Content.RootDirectory + ImagePath, FileMode.Open);
+            FileStream stream = new FileStream(Path.Combine(Engine.Instance.Content.RootDirectory, ImagePath), FileMode.Open);
             Texture2D = Texture2D.FromStream(Engine.Instance.GraphicsDevice, stream);
             stream.Close();
 
