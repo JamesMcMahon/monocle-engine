@@ -80,6 +80,7 @@
     <Compile Include="Util\Chooser.cs" />
     <Compile Include="Util\ErrorLog.cs" />
     <Compile Include="Util\PixelFont.cs" />
+    <Compile Include="Util\Pnt.cs" />
     <Compile Include="Util\Pooler.cs" />
     <Compile Include="Util\ChoiceSet.cs" />
     <Compile Include="Util\Tracker.cs" />

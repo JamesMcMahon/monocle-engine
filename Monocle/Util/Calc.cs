@@ -1922,6 +1922,11 @@ namespace Monocle
 
         #endregion
 
+        static public T At<T>(this T[,] arr, Pnt at)
+        {
+            return arr[at.X, at.Y];
+        }
+
         static public string ConvertPath(string path)
         {
             return path.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
