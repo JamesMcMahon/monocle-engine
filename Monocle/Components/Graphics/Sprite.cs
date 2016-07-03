@@ -30,6 +30,17 @@ namespace Monocle
             animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
         }
 
+        public void Reset(MTexture atlas, string path)
+        {
+            this.atlas = atlas;
+            this.path = path;
+            animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
+            currentAnimation = null;
+            OnFinish = null;
+            OnLoop = null;
+            OnAnimate = null;
+        }
+
         public override void Update()
         {
             if (Animating)
