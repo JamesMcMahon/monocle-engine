@@ -7,6 +7,7 @@ namespace Monocle
 {
     public class Scene : IEnumerable<Entity>, IEnumerable
     {
+        public bool Paused;
         public float TimeActive;
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
@@ -48,7 +49,8 @@ namespace Monocle
 
         public virtual void BeforeUpdate()
         {
-            TimeActive += Engine.DeltaTime;
+            if (!Paused)
+                TimeActive += Engine.DeltaTime;
 
             Entities.UpdateLists();
             TagLists.UpdateLists();
@@ -56,7 +58,8 @@ namespace Monocle
 
         public virtual void Update()
         {
-            Entities.Update();
+            if (!Paused)
+                Entities.Update();
         }
 
         public virtual void AfterUpdate()
