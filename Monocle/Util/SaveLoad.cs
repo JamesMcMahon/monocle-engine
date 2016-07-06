@@ -90,9 +90,10 @@ namespace Monocle
         }
 
         /// <summary>
-        /// Load an object that was previously serialized to a file. If the load fails or the file does not exist, will instead create a new instance of the object.
+        /// Load an object that was previously serialized to a file
+        /// If the load fails or the file does not exist, default(T) will be returned
         /// </summary>
-        static public T SafeDeserializeFromFile<T>(string filepath, SerializeModes mode, bool debugUnsafe = false) where T : new()
+        static public T SafeDeserializeFromFile<T>(string filepath, SerializeModes mode, bool debugUnsafe = false)
         {
             if (File.Exists(filepath))
             {
@@ -106,19 +107,20 @@ namespace Monocle
                     }
                     catch
                     {
-                        return new T();
+                        return default(T);
                     }
                 }
             }
             else
-                return new T();
+                return default(T);
         }
 
         /// <summary>
-        /// Load an object that was previously serialized to a file. If the load fails or the file does not exist, will instead create a new instance of the object.
+        /// Load an object that was previously serialized to a file
+        /// If the load fails or the file does not exist, default(T) will be returned
         /// </summary>
         /// <param name="loadError">True if the load fails despite the requested file existing (for example due to corrupted data)</param>
-        static public T SafeDeserializeFromFile<T>(string filepath, SerializeModes mode, out bool loadError, bool debugUnsafe = false) where T : new()
+        static public T SafeDeserializeFromFile<T>(string filepath, SerializeModes mode, out bool loadError, bool debugUnsafe = false)
         {
             if (File.Exists(filepath))
             {
@@ -137,14 +139,14 @@ namespace Monocle
                     catch
                     {
                         loadError = true;
-                        return new T();
+                        return default(T);
                     }
                 }
             }
             else
             {
                 loadError = false;
-                return new T();
+                return default(T);
             }
         }
 
