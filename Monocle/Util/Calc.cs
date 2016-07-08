@@ -1752,10 +1752,7 @@ namespace Monocle
 
         static public Vector2 GetNode(this XmlElement xml, int nodeNum)
         {
-            if (xml.Nodes().Length > nodeNum)
-                return xml.Nodes()[nodeNum];
-            else
-                return Vector2.Zero;
+            return xml.Nodes()[nodeNum];
         }
 
         static public Vector2? GetNodeNullable(this XmlElement xml, int nodeNum)
