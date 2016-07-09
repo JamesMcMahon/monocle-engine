@@ -36,6 +36,7 @@ namespace Monocle
             this.path = path;
             animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
             currentAnimation = null;
+            CurrentAnimationID = "";
             OnFinish = null;
             OnLoop = null;
             OnAnimate = null;
