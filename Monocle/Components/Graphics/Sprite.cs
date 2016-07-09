@@ -39,6 +39,7 @@ namespace Monocle
             OnFinish = null;
             OnLoop = null;
             OnAnimate = null;
+            Animating = false;
         }
 
         public override void Update()
@@ -254,6 +255,11 @@ namespace Monocle
             Play(id, restart);
             if (Rate > 0)
                 Rate *= -1;
+        }
+
+        public bool Has(string id)
+        {
+            return animations.ContainsKey(id);
         }
 
         public void Stop()
