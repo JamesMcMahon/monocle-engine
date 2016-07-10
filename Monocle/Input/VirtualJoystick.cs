@@ -13,6 +13,9 @@ namespace Monocle
         public bool Normalized;
         public float? SnapSlices;
 
+        public Vector2 Value { get; private set; }
+        public Vector2 PreviousValue { get; private set; }
+
         public VirtualJoystick(bool normalized)
             : base()
         {
@@ -31,32 +34,27 @@ namespace Monocle
         {
             foreach (var node in Nodes)
                 node.Update();
-        }
 
-        public Vector2 Value
-        {
-            get
+            PreviousValue = Value;
+            Value = Vector2.Zero;
+            foreach (var node in Nodes)
             {
-                foreach (var node in Nodes)
+                Vector2 value = node.Value;
+                if (value != Vector2.Zero)
                 {
-                    Vector2 value = node.Value;
-                    if (value != Vector2.Zero)
+                    if (Normalized)
                     {
-                        if (Normalized)
-                        {
-                            if (SnapSlices.HasValue)
-                                value = value.SnappedNormal(SnapSlices.Value);
-                            else
-                                value.Normalize();
-                        }
-                        else if (SnapSlices.HasValue)
-                            value = value.Snapped(SnapSlices.Value);
-
-                        return value;
+                        if (SnapSlices.HasValue)
+                            value = value.SnappedNormal(SnapSlices.Value);
+                        else
+                            value.Normalize();
                     }
-                }
+                    else if (SnapSlices.HasValue)
+                        value = value.Snapped(SnapSlices.Value);
 
-                return Vector2.Zero;
+                    Value = value;
+                    break;
+                }
             }
         }
 

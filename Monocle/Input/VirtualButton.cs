@@ -17,6 +17,7 @@ namespace Monocle
         private float bufferCounter;
         private float repeatCounter;
         private bool canRepeat;
+        private bool consumed;
 
         public VirtualButton(float bufferTime)
             : base()
@@ -113,6 +114,9 @@ namespace Monocle
         {
             get
             {
+                if (consumed)
+                    return false;
+
                 if (bufferCounter > 0 || Repeating)
                     return true;
 
@@ -137,6 +141,12 @@ namespace Monocle
         public void ConsumeBuffer()
         {
             bufferCounter = 0;
+        }
+
+        public void ConsumePress()
+        {
+            bufferCounter = 0;
+            consumed = true;
         }
 
         static public implicit operator bool(VirtualButton button)
