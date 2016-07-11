@@ -17,6 +17,7 @@ namespace Monocle
         private float bufferCounter;
         private float repeatCounter;
         private bool canRepeat;
+        private bool consumed;
 
         public VirtualButton(float bufferTime)
             : base()
@@ -60,6 +61,7 @@ namespace Monocle
 
         public override void Update()
         {
+            consumed = false;
             bufferCounter -= Engine.DeltaTime;
 
             bool check = false;
@@ -113,6 +115,9 @@ namespace Monocle
         {
             get
             {
+                if (consumed)
+                    return false;
+
                 if (bufferCounter > 0 || Repeating)
                     return true;
 
@@ -134,9 +139,21 @@ namespace Monocle
             }
         }
 
+        /// <summary>
+        /// Ends the Press buffer for this button
+        /// </summary>
         public void ConsumeBuffer()
         {
             bufferCounter = 0;
+        }
+
+        /// <summary>
+        /// This button will not register a Press for the rest of the current frame, but otherwise continues to function normally. If the player continues to hold the button, next frame will not count as a Press. Also ends the Press buffer for this button
+        /// </summary>
+        public void ConsumePress()
+        {
+            bufferCounter = 0;
+            consumed = true;
         }
 
         static public implicit operator bool(VirtualButton button)
