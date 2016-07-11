@@ -124,7 +124,7 @@ namespace Monocle
         {
 #if DEBUG
             if (!IsEntityTracked<T>())
-                throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
+                throw new Exception("Entity type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
             var list = Entities[typeof(T)];
@@ -138,7 +138,7 @@ namespace Monocle
         {
 #if DEBUG
             if (!IsEntityTracked<T>())
-                throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
+                throw new Exception("Entity type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
 			return Entities[typeof(T)];
@@ -153,7 +153,7 @@ namespace Monocle
         {
 #if DEBUG
             if (!IsEntityTracked<T>())
-                throw new Exception("Provided Entity type is not marked with the Tracked attribute!");
+                throw new Exception("Entity type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
             foreach (var e in Entities[typeof(T)])
@@ -164,7 +164,7 @@ namespace Monocle
         {
 #if DEBUG
             if (!IsComponentTracked<T>())
-                throw new Exception("Provided Component type is not marked with the Tracked attribute!");
+                throw new Exception("Component type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
             var list = Components[typeof(T)];
@@ -178,7 +178,7 @@ namespace Monocle
         {
 #if DEBUG
             if (!IsComponentTracked<T>())
-                throw new Exception("Provided Component type is not marked with the Tracked attribute!");
+                throw new Exception("Component type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
             return Components[typeof(T)];
@@ -193,7 +193,7 @@ namespace Monocle
         {
 #if DEBUG
             if (!IsComponentTracked<T>())
-                throw new Exception("Provided Component type is not marked with the Tracked attribute!");
+                throw new Exception("Component type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
             foreach (var c in Components[typeof(T)])

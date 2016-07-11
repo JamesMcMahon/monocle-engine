@@ -61,6 +61,7 @@ namespace Monocle
 
         public override void Update()
         {
+            consumed = false;
             bufferCounter -= Engine.DeltaTime;
 
             bool check = false;
