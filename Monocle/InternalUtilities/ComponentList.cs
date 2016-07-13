@@ -121,6 +121,11 @@ namespace Monocle
                 Remove(component);
         }
 
+        public void RemoveAll<T>() where T : Component
+        {
+            Remove(GetAll<T>());
+        }
+
         public void Add(params Component[] components)
         {
             foreach (var component in components)
@@ -215,6 +220,13 @@ namespace Monocle
                 if (component is T)
                     return component as T;
             return null;
+        }
+
+        public IEnumerable<T> GetAll<T>() where T : Component
+        {
+            foreach (var component in components)
+                if (component is T)
+                    yield return component as T;
         }
     }
 }
