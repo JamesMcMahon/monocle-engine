@@ -663,5 +663,231 @@ namespace Monocle
         }
 
         #endregion
+
+        #region Other Virtual Inputs
+
+        public class VirtualAxisTrigger : Node
+        {
+            public enum Modes { LargerThan, LessThan, Equals };
+
+            public VirtualInput.ThresholdModes Mode;
+            public float Threshold;
+
+            private VirtualAxis axis;
+
+            public VirtualAxisTrigger(VirtualAxis axis, VirtualInput.ThresholdModes mode, float threshold)
+            {
+                this.axis = axis;
+                Mode = mode;
+                Threshold = threshold;
+            }
+
+            public override bool Check
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return axis.Value >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return axis.Value <= Threshold;
+                    else
+                        return axis.Value == Threshold;
+                }
+            }
+
+            public override bool Pressed
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return axis.Value >= Threshold && axis.PreviousValue < Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return axis.Value <= Threshold && axis.PreviousValue > Threshold;
+                    else
+                        return axis.Value == Threshold && axis.PreviousValue != Threshold;
+                }
+            }
+
+            public override bool Released
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return axis.Value < Threshold && axis.PreviousValue >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return axis.Value > Threshold && axis.PreviousValue <= Threshold;
+                    else
+                        return axis.Value != Threshold && axis.PreviousValue == Threshold;
+                }
+            }
+        }
+
+        public class VirtualIntegerAxisTrigger : Node
+        {
+            public enum Modes { LargerThan, LessThan, Equals };
+
+            public VirtualInput.ThresholdModes Mode;
+            public int Threshold;
+
+            private VirtualIntegerAxis axis;
+
+            public VirtualIntegerAxisTrigger(VirtualIntegerAxis axis, VirtualInput.ThresholdModes mode, int threshold)
+            {
+                this.axis = axis;
+                Mode = mode;
+                Threshold = threshold;
+            }
+
+            public override bool Check
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return axis.Value >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return axis.Value <= Threshold;
+                    else
+                        return axis.Value == Threshold;
+                }
+            }
+
+            public override bool Pressed
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return axis.Value >= Threshold && axis.PreviousValue < Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return axis.Value <= Threshold && axis.PreviousValue > Threshold;
+                    else
+                        return axis.Value == Threshold && axis.PreviousValue != Threshold;
+                }
+            }
+
+            public override bool Released
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return axis.Value < Threshold && axis.PreviousValue >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return axis.Value > Threshold && axis.PreviousValue <= Threshold;
+                    else
+                        return axis.Value != Threshold && axis.PreviousValue == Threshold;
+                }
+            }
+        }
+
+        public class VirtualJoystickXTrigger : Node
+        {
+            public enum Modes { LargerThan, LessThan, Equals };
+
+            public VirtualInput.ThresholdModes Mode;
+            public float Threshold;
+
+            private VirtualJoystick joystick;
+
+            public VirtualJoystickXTrigger(VirtualJoystick joystick, VirtualInput.ThresholdModes mode, float threshold)
+            {
+                this.joystick = joystick;
+                Mode = mode;
+                Threshold = threshold;
+            }
+
+            public override bool Check
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return joystick.Value.X >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return joystick.Value.X <= Threshold;
+                    else
+                        return joystick.Value.X == Threshold;
+                }
+            }
+
+            public override bool Pressed
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return joystick.Value.X >= Threshold && joystick.PreviousValue.X < Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return joystick.Value.X <= Threshold && joystick.PreviousValue.X > Threshold;
+                    else
+                        return joystick.Value.X == Threshold && joystick.PreviousValue.X != Threshold;
+                }
+            }
+
+            public override bool Released
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return joystick.Value.X < Threshold && joystick.PreviousValue.X >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return joystick.Value.X > Threshold && joystick.PreviousValue.X <= Threshold;
+                    else
+                        return joystick.Value.X != Threshold && joystick.PreviousValue.X == Threshold;
+                }
+            }
+        }
+
+        public class VirtualJoystickYTrigger : Node
+        {
+            public VirtualInput.ThresholdModes Mode;
+            public float Threshold;
+
+            private VirtualJoystick joystick;
+
+            public VirtualJoystickYTrigger(VirtualJoystick joystick, VirtualInput.ThresholdModes mode, float threshold)
+            {
+                this.joystick = joystick;
+                Mode = mode;
+                Threshold = threshold;
+            }
+
+            public override bool Check
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return joystick.Value.X >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return joystick.Value.X <= Threshold;
+                    else
+                        return joystick.Value.X == Threshold;
+                }
+            }
+
+            public override bool Pressed
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return joystick.Value.X >= Threshold && joystick.PreviousValue.X < Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return joystick.Value.X <= Threshold && joystick.PreviousValue.X > Threshold;
+                    else
+                        return joystick.Value.X == Threshold && joystick.PreviousValue.X != Threshold;
+                }
+            }
+
+            public override bool Released
+            {
+                get
+                {
+                    if (Mode == VirtualInput.ThresholdModes.LargerThan)
+                        return joystick.Value.X < Threshold && joystick.PreviousValue.X >= Threshold;
+                    else if (Mode == VirtualInput.ThresholdModes.LessThan)
+                        return joystick.Value.X > Threshold && joystick.PreviousValue.X <= Threshold;
+                    else
+                        return joystick.Value.X != Threshold && joystick.PreviousValue.X == Threshold;
+                }
+            }
+        }
+
+        #endregion
     }
 }

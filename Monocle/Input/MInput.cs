@@ -58,8 +58,7 @@ namespace Monocle
                     GamePads[i].UpdateNull();
             }
 
-            foreach (var virtualInput in VirtualInputs)
-                virtualInput.Update();
+            UpdateVirtualInputs();
         }
 
         static public void UpdateNull()
@@ -69,6 +68,11 @@ namespace Monocle
             for (int i = 0; i < 4; i++)
                 GamePads[i].UpdateNull();
 
+            UpdateVirtualInputs();
+        }
+
+        static private void UpdateVirtualInputs()
+        {
             foreach (var virtualInput in VirtualInputs)
                 virtualInput.Update();
         }
