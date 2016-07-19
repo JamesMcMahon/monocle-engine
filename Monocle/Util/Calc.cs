@@ -882,6 +882,11 @@ namespace Monocle
             return array;
         }
 
+        static public bool BetweenInterval(float val, float interval)
+        {
+            return val % (interval * 2) > interval;
+        }
+
         #endregion
 
         #region Vector2
