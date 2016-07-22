@@ -121,7 +121,7 @@ namespace Monocle
             {
                 var parts = choice.Split(':');
                 var key = parts[0].Trim();
-                var weight = parts[1].Trim();
+                var weight = parts.Length >= 2 ? parts[1].Trim() : "1";
 
                 chooser.Add((TT)Convert.ChangeType(key, typeof(TT)), Convert.ToSingle(weight));
             }
