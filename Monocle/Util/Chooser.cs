@@ -119,11 +119,20 @@ namespace Monocle
             //Parse the individual choices
             foreach (var choice in choices)
             {
-                var parts = choice.Split(':');
-                var key = parts[0].Trim();
-                var weight = parts[1].Trim();
+                if (choice.IndexOf(':') == -1)
+                {
+                    //No weight, default to weight of 1
+                    chooser.Add((TT)Convert.ChangeType(choice, typeof(TT)), 1f);
+                }
+                else
+                {
+                    //Has weight, handle that correctly
+                    var parts = choice.Split(':');
+                    var key = parts[0].Trim();
+                    var weight = parts[1].Trim();
 
-                chooser.Add((TT)Convert.ChangeType(key, typeof(TT)), Convert.ToSingle(weight));
+                    chooser.Add((TT)Convert.ChangeType(key, typeof(TT)), Convert.ToSingle(weight));
+                }
             }
 
             return chooser;
