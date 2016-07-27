@@ -1023,6 +1023,20 @@ namespace Monocle
             return Vector2.UnitY * vec.Y;
         }
 
+        static public Vector2[] ParseVector2List(string list, char seperator = '|')
+        {
+            var entries = list.Split(seperator);
+            var data = new Vector2[entries.Length];
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                var sides = entries[i].Split(',');
+                data[i] = new Vector2(Convert.ToInt32(sides[0]), Convert.ToInt32(sides[1]));
+            }
+
+            return data;
+        }
+
         #endregion
 
         #region CSV

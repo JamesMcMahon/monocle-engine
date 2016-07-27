@@ -34,7 +34,7 @@ namespace Monocle
         }
 
         public SpriteData(MTexture atlas, string xmlPath)
-            : this(atlas, Calc.LoadXML(xmlPath))
+            : this(atlas, Calc.LoadContentXML(xmlPath))
         {
 
         }
@@ -78,52 +78,73 @@ namespace Monocle
             ids.Add(xml.Attr("id"));
         }
 
-        public Sprite CreateSprite(string id)
+        public bool Has(string id)
+        {
+            return SpriteXML.ContainsKey(id);
+        }
+
+        public Sprite Create(string id)
         {
             if (SpriteXML.ContainsKey(id))
             {
                 var xml = SpriteXML[id];
-                float masterDelay = xml.AttrFloat("delay", 0);
-
                 Sprite sprite = new Sprite(atlas, xml.Attr("path", ""));
-
-                //Build Animations
-                foreach (XmlElement anim in xml.GetElementsByTagName("Anim"))
-                {
-                    Chooser<string> into;
-                    if (anim.HasAttr("goto"))
-                        into = Chooser<string>.FromString<string>(anim.Attr("goto"));
-                    else
-                        into = null;
-
-                    if (anim.HasAttr("frames"))
-                        sprite.Add(anim.Attr("id"), anim.Attr("path", ""), anim.AttrFloat("delay", masterDelay), into, Calc.ReadCSVIntWithTricks(anim.Attr("frames")));
-                    else
-                        sprite.Add(anim.Attr("id"), anim.Attr("path", ""), anim.AttrFloat("delay", masterDelay), into);
-                }
-
-                //Build Loops
-                foreach (XmlElement loop in xml.GetElementsByTagName("Loop"))
-                    sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay));
-
-                //Origin
-                if (SpriteXML[id]["Justify"] != null)
-                    sprite.JustifyOrigin(SpriteXML[id]["Justify"].Position());
-                else if (SpriteXML[id]["Origin"] != null)
-                    sprite.Origin = SpriteXML[id]["Origin"].Position();
-
-                //Position
-                if (SpriteXML[id]["Position"] != null)
-                    sprite.Position = SpriteXML[id]["Position"].Position();
-
-                //Start Animation
-                if (SpriteXML[id].HasAttr("start"))
-                    sprite.Play(SpriteXML[id].Attr("start"));
-
+                ApplyToSprite(sprite, xml);
                 return sprite;
             }
             else
                 throw new Exception("Missing animation name in SpriteData: '" + id + "'!");
+        }
+
+        public Sprite CreateOn(Sprite sprite, string id)
+        {
+            if (SpriteXML.ContainsKey(id))
+            {
+                var xml = SpriteXML[id];
+                sprite.Reset(atlas, xml.Attr("path", ""));
+                ApplyToSprite(sprite, xml);
+                return sprite;
+            }
+            else
+                throw new Exception("Missing animation name in SpriteData: '" + id + "'!");
+        }
+
+        private void ApplyToSprite(Sprite sprite, XmlElement xml)
+        {
+            float masterDelay = xml.AttrFloat("delay", 0);
+
+            //Build Animations
+            foreach (XmlElement anim in xml.GetElementsByTagName("Anim"))
+            {
+                Chooser<string> into;
+                if (anim.HasAttr("goto"))
+                    into = Chooser<string>.FromString<string>(anim.Attr("goto"));
+                else
+                    into = null;
+
+                if (anim.HasAttr("frames"))
+                    sprite.Add(anim.Attr("id"), anim.Attr("path", ""), anim.AttrFloat("delay", masterDelay), into, Calc.ReadCSVIntWithTricks(anim.Attr("frames")));
+                else
+                    sprite.Add(anim.Attr("id"), anim.Attr("path", ""), anim.AttrFloat("delay", masterDelay), into);
+            }
+
+            //Build Loops
+            foreach (XmlElement loop in xml.GetElementsByTagName("Loop"))
+                sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay));
+
+            //Origin
+            if (xml.HasChild("Justify"))
+                sprite.JustifyOrigin(xml.ChildPosition("Justify"));
+            else if (xml.HasChild("Origin"))
+                sprite.Origin = xml.ChildPosition("Origin");
+
+            //Position
+            if (xml.HasChild("Position"))
+                sprite.Position = xml.ChildPosition("Position");
+
+            //Start Animation
+            if (xml.HasAttr("start"))
+                sprite.Play(xml.Attr("start"));
         }
     }
 }

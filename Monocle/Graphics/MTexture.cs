@@ -9,19 +9,12 @@ namespace Monocle
 {
     public class MTexture
     {
-        public Texture2D Texture2D { get; private set; }
-        public Rectangle ClipRect { get; private set; }
-        public string ImagePath { get; private set; }
-        public Vector2 DrawOffset { get; private set; }
-        public int Width { get; private set; }
-
-        public int Height { get; private set; }
-
         private Dictionary<string, MTexture> atlas;
 
         public MTexture(string imagePath)
         {
             ImagePath = imagePath;
+            AtlasPath = null;
             atlas = null;
 
 #if DEBUG
@@ -43,6 +36,7 @@ namespace Monocle
         public MTexture(int width, int height, Color color)
         {
             ImagePath = null;
+            AtlasPath = null;
             atlas = null;
 
             Texture2D = new Texture2D(Engine.Instance.GraphicsDevice, width, height);
@@ -61,6 +55,7 @@ namespace Monocle
         {
             Texture2D = parent.Texture2D;
             ImagePath = parent.ImagePath;
+            AtlasPath = null;
             atlas = null;
 
             ClipRect = parent.GetRelativeRect(x, y, width, height);
@@ -75,16 +70,23 @@ namespace Monocle
 
         }
 
-        private MTexture(MTexture parent, Rectangle clipRect, Vector2 drawOffset, int width, int height)
+        private MTexture(MTexture parent, string atlasPath, Rectangle clipRect, Vector2 drawOffset, int width, int height)
         {
             Texture2D = parent.Texture2D;
             ImagePath = parent.ImagePath;
+            AtlasPath = atlasPath;
             atlas = null;
 
             ClipRect = parent.GetRelativeRect(clipRect);
             DrawOffset = drawOffset;
             Width = width;
             Height = height;
+        }
+
+        private MTexture(MTexture parent, string atlasPath, Rectangle clipRect)
+            : this(parent, clipRect)
+        {
+            AtlasPath = atlasPath;
         }
 
         public void Unload()
@@ -103,6 +105,45 @@ namespace Monocle
         {
             return new MTexture(this, rect);
         }
+
+        #region Properties
+
+        public Texture2D Texture2D
+        {
+            get; private set;
+        }
+
+        public Rectangle ClipRect
+        {
+            get; private set;
+        }
+
+        public string ImagePath
+        {
+            get; private set;
+        }
+
+        public string AtlasPath
+        {
+            get; private set;
+        }
+
+        public Vector2 DrawOffset
+        {
+            get; private set;
+        }
+
+        public int Width
+        {
+            get; private set;
+        }
+
+        public int Height
+        {
+            get; private set;
+        }
+
+        #endregion
 
         #region Atlas
 
@@ -157,9 +198,9 @@ namespace Monocle
                         {
                             var clipRect = sub.Rect();
                             if (sub.HasAttr("frameX"))
-                                atlas.Add(sub.Attr("name"), new MTexture(this, clipRect, new Vector2(-sub.AttrInt("frameX"), -sub.AttrInt("frameY")), sub.AttrInt("frameWidth"), sub.AttrInt("frameHeight")));
+                                atlas.Add(sub.Attr("name"), new MTexture(this, sub.Attr("name"), clipRect, new Vector2(-sub.AttrInt("frameX"), -sub.AttrInt("frameY")), sub.AttrInt("frameWidth"), sub.AttrInt("frameHeight")));
                             else
-                                atlas.Add(sub.Attr("name"), new MTexture(this, clipRect));
+                                atlas.Add(sub.Attr("name"), new MTexture(this, sub.Attr("name"), clipRect));
                         }
                     }
                     break;
