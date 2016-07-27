@@ -242,7 +242,7 @@ namespace Monocle
                 if (!animations.ContainsKey(id))
                     throw new Exception("No Animation defined for ID: " + id.ToString());
 #endif
-                CurrentAnimationID = id;
+                LastAnimationID = CurrentAnimationID = id;
                 currentAnimation = animations[id];
                 animationTimer = 0;
                 Animating = currentAnimation.Frames.Length > 1;
@@ -280,6 +280,11 @@ namespace Monocle
         }
 
         public string CurrentAnimationID
+        {
+            get; private set;
+        }
+
+        public string LastAnimationID
         {
             get; private set;
         }
