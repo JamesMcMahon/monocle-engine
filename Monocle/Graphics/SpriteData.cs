@@ -133,7 +133,9 @@ namespace Monocle
                 sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay));
 
             //Origin
-            if (xml.HasChild("Justify"))
+            if (xml.HasChild("Center"))
+                sprite.CenterOrigin();
+            else if (xml.HasChild("Justify"))
                 sprite.JustifyOrigin(xml.ChildPosition("Justify"));
             else if (xml.HasChild("Origin"))
                 sprite.Origin = xml.ChildPosition("Origin");
