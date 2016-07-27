@@ -78,7 +78,7 @@ namespace Monocle
             ids.Add(xml.Attr("id"));
         }
 
-        public Sprite GetSprite(string id)
+        public Sprite CreateSprite(string id)
         {
             if (SpriteXML.ContainsKey(id))
             {
