@@ -9,23 +9,24 @@ namespace Monocle
     {
         private MTexture atlas;
         private XmlDocument document;
-        private Dictionary<string, XmlElement> sprites;
+
+        public Dictionary<string, XmlElement> SpriteXML;
 
         public SpriteData(MTexture atlas, XmlDocument xmlDocument)
         {
             this.atlas = atlas;
             this.document = xmlDocument;
 
-            sprites = new Dictionary<string, XmlElement>(StringComparer.InvariantCultureIgnoreCase);
+            SpriteXML = new Dictionary<string, XmlElement>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var xml in document["Sprites"].ChildNodes)
             {
                 if (xml is XmlElement)
                 {
                     var element = xml as XmlElement;
-                    if (sprites.ContainsKey(element.Name))
+                    if (SpriteXML.ContainsKey(element.Name))
                         throw new Exception("Duplicate animation name in SpriteData: '" + element.Name + "'!");
-                    sprites[element.Name] = element;
+                    SpriteXML[element.Name] = element;
                 }
             }
 
@@ -40,7 +41,7 @@ namespace Monocle
 
         public void ErrorCheck()
         {
-            foreach (var kv in sprites)
+            foreach (var kv in SpriteXML)
             {
                 string prefix = "Sprite '" + kv.Key + "': ";
                 var xml = kv.Value;
@@ -79,9 +80,9 @@ namespace Monocle
 
         public Sprite GetSprite(string id)
         {
-            if (sprites.ContainsKey(id))
+            if (SpriteXML.ContainsKey(id))
             {
-                var xml = sprites[id];
+                var xml = SpriteXML[id];
                 float masterDelay = xml.AttrFloat("delay", 0);
 
                 Sprite sprite = new Sprite(atlas, xml.Attr("path", ""));
@@ -106,18 +107,18 @@ namespace Monocle
                     sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay));
 
                 //Origin
-                if (sprites[id]["Justify"] != null)
-                    sprite.JustifyOrigin(sprites[id]["Justify"].Position());
-                else if (sprites[id]["Origin"] != null)
-                    sprite.Origin = sprites[id]["Origin"].Position();
+                if (SpriteXML[id]["Justify"] != null)
+                    sprite.JustifyOrigin(SpriteXML[id]["Justify"].Position());
+                else if (SpriteXML[id]["Origin"] != null)
+                    sprite.Origin = SpriteXML[id]["Origin"].Position();
 
                 //Position
-                if (sprites[id]["Position"] != null)
-                    sprite.Position = sprites[id]["Position"].Position();
+                if (SpriteXML[id]["Position"] != null)
+                    sprite.Position = SpriteXML[id]["Position"].Position();
 
                 //Start Animation
-                if (sprites[id].HasAttr("start"))
-                    sprite.Play(sprites[id].Attr("start"));
+                if (SpriteXML[id].HasAttr("start"))
+                    sprite.Play(SpriteXML[id].Attr("start"));
 
                 return sprite;
             }
