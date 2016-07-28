@@ -139,9 +139,15 @@ namespace Monocle
 
             //Origin
             if (xml.HasChild("Center"))
+            {
                 sprite.CenterOrigin();
+                sprite.Justify = new Vector2(.5f, .5f);
+            }
             else if (xml.HasChild("Justify"))
+            {
                 sprite.JustifyOrigin(xml.ChildPosition("Justify"));
+                sprite.Justify = xml.ChildPosition("Justify");
+            }
             else if (xml.HasChild("Origin"))
                 sprite.Origin = xml.ChildPosition("Origin");
 

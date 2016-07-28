@@ -10,6 +10,7 @@ namespace Monocle
     {
         public float Rate = 1f;
         public bool UseRawDeltaTime;
+        public Vector2? Justify;
         public Action<string> OnFinish;
         public Action<string> OnLoop;
         public Action<string> OnAnimate;
@@ -73,7 +74,7 @@ namespace Monocle
                                 CurrentAnimationFrame = 0;
 
                             CurrentAnimationFrame -= Math.Sign(CurrentAnimationFrame) * currentAnimation.Frames.Length;
-                            Texture = currentAnimation.Frames[CurrentAnimationFrame];
+                            SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
 
                             if (OnAnimate != null)
                                 OnAnimate(CurrentAnimationID);
@@ -100,12 +101,19 @@ namespace Monocle
                     else
                     {
                         //Continue Animation
-                        Texture = currentAnimation.Frames[CurrentAnimationFrame];
+                        SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
                         if (OnAnimate != null)
                             OnAnimate(CurrentAnimationID);
                     }
                 }
             }
+        }
+
+        private void SetFrame(MTexture texture)
+        {
+            Texture = texture;
+            if (Justify.HasValue)
+                Origin = new Vector2(Texture.Width * Justify.Value.X, Texture.Height * Justify.Value.Y);
         }
 
         #region Define Animations
@@ -248,7 +256,7 @@ namespace Monocle
                 animationTimer = 0;
                 Animating = currentAnimation.Frames.Length > 1;
                 CurrentAnimationFrame = 0;
-                Texture = currentAnimation.Frames[0];
+                SetFrame(currentAnimation.Frames[0]);
             }
         }
 
