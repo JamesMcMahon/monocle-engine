@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,6 @@ namespace Monocle
         {
             this.atlas = atlas;
             this.path = path;
-
             animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
         }
 
@@ -35,6 +35,7 @@ namespace Monocle
             this.atlas = atlas;
             this.path = path;
             animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
+
             currentAnimation = null;
             CurrentAnimationID = "";
             OnFinish = null;
@@ -311,6 +312,23 @@ namespace Monocle
         }
 
         #endregion
+
+        public void LogAnimations()
+        {
+            StringBuilder str = new StringBuilder();
+
+            foreach (var kv in animations)
+            {
+                var anim = kv.Value;
+
+                str.Append(kv.Key);
+                str.Append("\n{\n\t");
+                str.Append(string.Join("\n\t", (object[])anim.Frames));
+                str.Append("\n}\n");          
+            }
+
+            Calc.Log(str.ToString());
+        }
 
         private class Animation
         {

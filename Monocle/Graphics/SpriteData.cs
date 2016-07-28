@@ -130,7 +130,12 @@ namespace Monocle
 
             //Build Loops
             foreach (XmlElement loop in xml.GetElementsByTagName("Loop"))
-                sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay));
+            {
+                if (loop.HasAttr("frames"))
+                    sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay), Calc.ReadCSVIntWithTricks(loop.Attr("frames")));
+                else
+                    sprite.AddLoop(loop.Attr("id"), loop.Attr("path", ""), loop.AttrFloat("delay", masterDelay));
+            }
 
             //Origin
             if (xml.HasChild("Center"))

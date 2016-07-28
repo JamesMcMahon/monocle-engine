@@ -214,6 +214,14 @@ namespace Monocle
 
         #region Helpers
 
+        public override string ToString()
+        {
+            if (AtlasPath != null)
+                return AtlasPath;
+            else
+                return ImagePath;
+        }
+
         private Rectangle GetRelativeRect(Rectangle rect)
         {
             return GetRelativeRect(rect.X, rect.Y, rect.Width, rect.Height);
