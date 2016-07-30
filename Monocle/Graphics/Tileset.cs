@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Monocle
 {
@@ -49,7 +50,10 @@ namespace Monocle
         {
             get
             {
-                return tiles[index % tiles.GetLength(0), index / tiles.GetLength(0)];
+                if (index < 0)
+                    return null;
+                else
+                    return tiles[index % tiles.GetLength(0), index / tiles.GetLength(0)];
             }
         }
     }

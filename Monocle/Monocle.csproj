@@ -100,6 +100,7 @@
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
     <Compile Include="Renderers\TagExcludeRenderer.cs" />
+    <Compile Include="Components\Graphics\TileGrid.cs" />
     <Compile Include="Util\Chooser.cs" />
     <Compile Include="Util\ErrorLog.cs" />
     <Compile Include="Util\PixelFont.cs" />
