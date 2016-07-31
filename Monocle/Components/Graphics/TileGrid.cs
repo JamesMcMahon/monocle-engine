@@ -13,6 +13,7 @@ namespace Monocle
         public Color Color = Color.White;
 		public int VisualExtend = 0;
         public MTexture[,] Tiles;
+        public Camera ClipCamera;
 
         public TileGrid(int tileWidth, int tileHeight, int tilesX, int tilesY) 
             : base(false, true)
@@ -152,18 +153,27 @@ namespace Monocle
 		public override void Render()
 		{
 			var pos = Entity.Position + Position;
-			var level = Entity.SceneAs<Level>();
-			var camera = level.Camera;
 
-			// tile bounds
-			int left = (int)Math.Max(-VisualExtend, Math.Floor((camera.Left - pos.X) / TileWidth));
-			int top = (int)Math.Max(-VisualExtend, Math.Floor((camera.Top - pos.Y) / TileHeight));
-			int right = (int)Math.Min(TilesX - 1 + VisualExtend, Math.Ceiling((camera.Right - pos.X) / TileWidth));
-			int bottom = (int)Math.Min(TilesY - 1 + VisualExtend, Math.Ceiling((camera.Bottom - pos.Y) / TileHeight));
-
-            for (int tx = left; tx <= right; tx++)
+            int left, top, right, bottom;
+            if (ClipCamera == null)
             {
-                for (int ty = top; ty <= bottom; ty++)
+                left = -VisualExtend;
+                top = -VisualExtend;
+                right = TilesX + VisualExtend;
+                bottom = TilesY + VisualExtend;
+            }
+            else
+            {
+                var camera = ClipCamera;
+                left = (int)Math.Max(-VisualExtend, Math.Floor((camera.Left - pos.X) / TileWidth));
+                top = (int)Math.Max(-VisualExtend, Math.Floor((camera.Top - pos.Y) / TileHeight));
+                right = (int)Math.Min(TilesX + VisualExtend, Math.Ceiling((camera.Right - pos.X) / TileWidth));
+                bottom = (int)Math.Min(TilesY + VisualExtend, Math.Ceiling((camera.Bottom - pos.Y) / TileHeight));
+            }
+
+            for (int tx = left; tx < right; tx++)
+            {
+                for (int ty = top; ty < bottom; ty++)
                 {
                     int checkX = Calc.Clamp(tx, 0, TilesX);
                     int checkY = Calc.Clamp(ty, 0, TilesY);

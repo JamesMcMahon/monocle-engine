@@ -1426,6 +1426,23 @@ namespace Monocle
                 return AttrBool(xml, attributeName);
         }
 
+        static public char AttrChar(this XmlElement xml, string attributeName)
+        {
+#if DEBUG
+            if (!xml.HasAttr(attributeName))
+                throw new Exception("Element does not contain the attribute \"" + attributeName + "\"");
+#endif
+            return Convert.ToChar(xml.Attributes[attributeName].InnerText);
+        }
+
+        static public char AttrChar(this XmlElement xml, string attributeName, char defaultValue)
+        {
+            if (!xml.HasAttr(attributeName))
+                return defaultValue;
+            else
+                return AttrChar(xml, attributeName);
+        }
+
         static public T AttrEnum<T>(this XmlElement xml, string attributeName) where T : struct
         {
 #if DEBUG
