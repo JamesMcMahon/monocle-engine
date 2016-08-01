@@ -2,15 +2,15 @@
 
 namespace Monocle
 {
-    public class TagRenderer : Renderer
+    public class SingleTagRenderer : Renderer
     {
-        public int Tag;
+        public BitTag Tag;
         public BlendState BlendState;
         public SamplerState SamplerState;
         public Effect Effect;
         public Camera Camera;
 
-        public TagRenderer(int tag)
+        public SingleTagRenderer(BitTag tag)
         {
             Tag = tag;
             BlendState = BlendState.AlphaBlend;

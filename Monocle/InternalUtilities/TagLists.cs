@@ -8,44 +8,37 @@ namespace Monocle
 {
     public class TagLists
     {
-        private List<List<Entity>> lists;
-        private List<bool> unsorted;
+        private List<Entity>[] lists;
+        private bool[] unsorted;
         private bool areAnyUnsorted;
 
         internal TagLists()
         {
-            lists = new List<List<Entity>>();
-            unsorted = new List<bool>();
+            lists = new List<Entity>[BitTag.TotalTags];
+            unsorted = new bool[BitTag.TotalTags];
+            for (int i = 0; i < lists.Length; i++)
+                lists[i] = new List<Entity>();
         }
 
         public List<Entity> this[int index]
         {
             get
             {
-                while (index >= lists.Count)
-                {
-                    lists.Add(new List<Entity>());
-                    unsorted.Add(false);
-                }
-
-                if (lists[index] == null)
-                    lists[index] = new List<Entity>();
-
                 return lists[index];
             }
         }
 
-        internal void MarkUnsorted(int tag)
+        internal void MarkUnsorted(int index)
         {
             areAnyUnsorted = true;
-            unsorted[tag] = true;
+            unsorted[index] = true;
         }
 
         internal void UpdateLists()
         {
             if (areAnyUnsorted)
             {
-                for (int i = 0; i < lists.Count; i++)
+                for (int i = 0; i < lists.Length; i++)
                 {
                     if (unsorted[i])
                     {
@@ -60,20 +53,22 @@ namespace Monocle
 
         internal void EntityAdded(Entity entity)
         {
-            foreach (var tag in entity.Tags)
+            for (int i = 0; i < BitTag.TotalTags; i++)
             {
-                this[tag].Add(entity);
-                areAnyUnsorted = true;
-                unsorted[tag] = true;
+                if (entity.TagCheck(1 << i))
+                {
+                    this[i].Add(entity);
+                    areAnyUnsorted = true;
+                    unsorted[i] = true;
+                }
             }
         }
 
         internal void EntityRemoved(Entity entity)
         {
-            foreach (var tag in entity.Tags)
-            {
-                lists[tag].Remove(entity);
-            }
+            for (int i = 0; i < BitTag.TotalTags; i++)
+                if (entity.TagCheck(1 << i))
+                    lists[i].Remove(entity);
         }
     }
 }

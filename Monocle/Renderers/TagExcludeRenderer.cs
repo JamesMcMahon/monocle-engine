@@ -32,12 +32,12 @@ namespace Monocle
             Draw.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState, SamplerState, DepthStencilState.None, RasterizerState.CullNone, Effect, Camera.Matrix * Engine.ScreenMatrix);
 
             foreach (var entity in scene.Entities)
-                if (entity.Visible && !entity.Tags.Contains(ExcludeTag))
+                if (entity.Visible && (entity.Tag & ExcludeTag) == 0)
                     entity.Render();
 
             if (Engine.Commands.Open)
                 foreach (var entity in scene.Entities)
-                    if (!entity.Tags.Contains(ExcludeTag))
+                    if ((entity.Tag & ExcludeTag) == 0)
                         entity.DebugRender(Camera);
 
             Draw.SpriteBatch.End();

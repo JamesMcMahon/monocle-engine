@@ -14,8 +14,8 @@ namespace Monocle
 
         public Scene Scene { get; private set; }
         public ComponentList Components { get; private set; }
-        public List<int> Tags { get; private set; }
 
+        private int tag;
         private Collider collider;
         internal int depth = 0;
         internal double actualDepth = 0;
@@ -23,9 +23,7 @@ namespace Monocle
         public Entity(Vector2 position)
         {
             Position = position;
-
             Components = new ComponentList(this);
-            Tags = new List<int>();
         }
 
         public Entity()
@@ -444,26 +442,60 @@ namespace Monocle
 
         #endregion
 
-        #region Tags
+        #region Tag
 
-        public void Tag(int tag)
+        public int Tag
         {
-            if (!Tags.Contains(tag))
+            get
             {
-                Tags.Add(tag);
-                if (Scene != null)
-                    Scene.TagLists[tag].Add(this);
+                return tag;
+            }
+
+            set
+            {
+                if (tag != value)
+                {
+                    if (Scene != null)
+                    {
+                        for (int i = 0; i < Monocle.BitTag.TotalTags; i++)
+                        {
+                            int check = 1 << i;
+                            bool add = (value & check) != 0;
+                            bool has = (Tag & check) != 0;
+
+                            if (has != add)
+                            {
+                                if (add)
+                                    Scene.TagLists[i].Add(this);
+                                else
+                                    Scene.TagLists[i].Remove(this);
+                            }
+                        }
+                    }
+
+                    tag = value;
+                }
             }
         }
 
-        public void Untag(int tag)
+        public bool TagFullCheck(int tag)
         {
-            if (Tags.Contains(tag))
-            {
-                Tags.Remove(tag);
-                if (Scene != null)
-                    Scene.TagLists[tag].Remove(this);
-            }
+            return (this.tag & tag) == tag;
+        }
+
+        public bool TagCheck(int tag)
+        {
+            return (this.tag & tag) != 0;
+        }
+
+        public void AddTag(int tag)
+        {
+            Tag |= tag;
+        }
+
+        public void RemoveTag(int tag)
+        {
+            Tag &= ~tag;
         }
 
         #endregion
@@ -482,7 +514,7 @@ namespace Monocle
             return Collide.Check(this, other, at);
         }
 
-        public bool CollideCheck(int tag)
+        public bool CollideCheck(BitTag tag)
         {
 #if DEBUG
             if (Scene == null)
@@ -491,7 +523,7 @@ namespace Monocle
             return Collide.Check(this, Scene[tag]);
         }
 
-        public bool CollideCheck(int tag, Vector2 at)
+        public bool CollideCheck(BitTag tag, Vector2 at)
         {
 #if DEBUG
             if (Scene == null)
@@ -578,7 +610,7 @@ namespace Monocle
             return !Collide.Check(this, other) && Collide.Check(this, other, at);
         }
 
-        public bool CollideCheckOutside(int tag, Vector2 at)
+        public bool CollideCheckOutside(BitTag tag, Vector2 at)
         {
 #if DEBUG
             if (Scene == null)
@@ -626,7 +658,7 @@ namespace Monocle
 
         #region Collide First
 
-        public Entity CollideFirst(int tag)
+        public Entity CollideFirst(BitTag tag)
         {
 #if DEBUG
             if (Scene == null)
@@ -635,7 +667,7 @@ namespace Monocle
             return Collide.First(this, Scene[tag]);
         }
 
-        public Entity CollideFirst(int tag, Vector2 at)
+        public Entity CollideFirst(BitTag tag, Vector2 at)
         {
 #if DEBUG
             if (Scene == null)
@@ -700,7 +732,7 @@ namespace Monocle
 
         #region Collide FirstOutside
 
-        public Entity CollideFirstOutside(int tag, Vector2 at)
+        public Entity CollideFirstOutside(BitTag tag, Vector2 at)
         {
 #if DEBUG
             if (Scene == null)
@@ -747,7 +779,7 @@ namespace Monocle
 
         #region Collide All
 
-        public List<Entity> CollideAll(int tag)
+        public List<Entity> CollideAll(BitTag tag)
         {
 #if DEBUG
             if (Scene == null)
@@ -756,7 +788,7 @@ namespace Monocle
             return Collide.All(this, Scene[tag]);
         }
 
-        public List<Entity> CollideAll(int tag, Vector2 at)
+        public List<Entity> CollideAll(BitTag tag, Vector2 at)
         {
 #if DEBUG
             if (Scene == null)
@@ -818,7 +850,7 @@ namespace Monocle
 
         #region Collide Do
 
-        public bool CollideDo(int tag, Action<Entity> action)
+        public bool CollideDo(BitTag tag, Action<Entity> action)
         {
 #if DEBUG
             if (Scene == null)
@@ -837,7 +869,7 @@ namespace Monocle
             return hit;
         }
 
-        public bool CollideDo(int tag, Action<Entity> action, Vector2 at)
+        public bool CollideDo(BitTag tag, Action<Entity> action, Vector2 at)
         {
 #if DEBUG
             if (Scene == null)
@@ -1076,7 +1108,7 @@ namespace Monocle
             return closest;
         }
 
-        public Entity Closest(int tag)
+        public Entity Closest(BitTag tag)
         {
             var list = Scene[tag];
             Entity closest = null;

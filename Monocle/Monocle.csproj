@@ -101,6 +101,7 @@
     <Compile Include="Input\VirtualIntegerAxis.cs" />
     <Compile Include="Renderers\TagExcludeRenderer.cs" />
     <Compile Include="Components\Graphics\TileGrid.cs" />
+    <Compile Include="Util\BitTag.cs" />
     <Compile Include="Util\Chooser.cs" />
     <Compile Include="Util\ErrorLog.cs" />
     <Compile Include="Util\PixelFont.cs" />
@@ -132,7 +133,7 @@
     <Compile Include="InternalUtilities\EntityList.cs" />
     <Compile Include="Renderers\EverythingRenderer.cs" />
     <Compile Include="Renderers\Renderer.cs" />
-    <Compile Include="Renderers\TagRenderer.cs" />
+    <Compile Include="Renderers\SingleTagRenderer.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Graphics\SpriteData.cs" />

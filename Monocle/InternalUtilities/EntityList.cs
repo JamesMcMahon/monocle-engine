@@ -194,26 +194,26 @@ namespace Monocle
                     entity.Render();
         }
 
-        public void RenderOnly(int onlyTag)
+        public void RenderOnly(int matchTags)
         {
             foreach (var entity in entities)
-                if (entity.Visible && entity.Tags.Contains(onlyTag))
+                if (entity.Visible && entity.TagCheck(matchTags))
                     entity.Render();
         }
 
-        public void RenderExcept(int excludeTag)
+        public void RenderOnlyFullMatch(int matchTags)
         {
             foreach (var entity in entities)
-                if (entity.Visible && !entity.Tags.Contains(excludeTag))
+                if (entity.Visible && entity.TagFullCheck(matchTags))
                     entity.Render();
         }
 
-		public void RenderExcept(int excludeTag1, int excludeTag2)
-		{
-			foreach (var entity in entities)
-				if (entity.Visible && !entity.Tags.Contains(excludeTag1) && !entity.Tags.Contains(excludeTag2))
-					entity.Render();
-		}
+        public void RenderExcept(int excludeTags)
+        {
+            foreach (var entity in entities)
+                if (entity.Visible && !entity.TagCheck(excludeTags))
+                    entity.Render();
+        }
 
         public void DebugRender(Camera camera)
         {

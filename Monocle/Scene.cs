@@ -694,8 +694,9 @@ namespace Monocle
 
             //Mark lists unsorted
             Entities.MarkUnsorted();
-            foreach (var tag in entity.Tags)
-                TagLists.MarkUnsorted(tag);
+            for (int i = 0; i < BitTag.TotalTags; i++)
+                if (entity.TagCheck(1 << i))
+                    TagLists.MarkUnsorted(i);
         }
 
         #endregion
@@ -719,11 +720,11 @@ namespace Monocle
         /// </summary>
         /// <param name="tag">The tag list to fetch</param>
         /// <returns></returns>
-        public List<Entity> this[int tag]
+        public List<Entity> this[BitTag tag]
         {
             get
             {
-                return TagLists[(int)tag];
+                return TagLists[tag.ID];
             }
         }
 
@@ -797,6 +798,24 @@ namespace Monocle
         IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public List<Entity> GetEntitiesByTagMask(int mask)
+        {
+            List<Entity> list = new List<Entity>();
+            foreach (var entity in Entities)
+                if ((entity.Tag & mask) != 0)
+                    list.Add(entity);
+            return list;
+        }
+
+        public List<Entity> GetEntitiesExcludingTagMask(int mask)
+        {
+            List<Entity> list = new List<Entity>();
+            foreach (var entity in Entities)
+                if ((entity.Tag & mask) == 0)
+                    list.Add(entity);
+            return list;
         }
 
         #endregion
