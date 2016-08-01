@@ -208,6 +208,13 @@ namespace Monocle
                     entity.Render();
         }
 
+		public void RenderExcept(int excludeTag1, int excludeTag2)
+		{
+			foreach (var entity in entities)
+				if (entity.Visible && !entity.Tags.Contains(excludeTag1) && !entity.Tags.Contains(excludeTag2))
+					entity.Render();
+		}
+
         public void DebugRender(Camera camera)
         {
             foreach (var entity in entities)
