@@ -14,6 +14,7 @@ namespace Monocle
 		public int VisualExtend = 0;
         public MTexture[,] Tiles;
         public Camera ClipCamera;
+        public float Alpha = 1f;
 
         public TileGrid(int tileWidth, int tileHeight, int tilesX, int tilesY) 
             : base(false, true)
@@ -48,19 +49,6 @@ namespace Monocle
             get
             {
                 return Tiles.GetLength(1);
-            }
-        }
-
-        public float Alpha
-        {
-            get
-            {
-                return Color.A / 255f;
-            }
-
-            set
-            {
-                Color.A = (byte)(value * 255);
             }
         }
 
@@ -171,6 +159,7 @@ namespace Monocle
                 bottom = (int)Math.Min(TilesY + VisualExtend, Math.Ceiling((camera.Bottom - pos.Y) / TileHeight));
             }
 
+            Color color = Color * Alpha;
             for (int tx = left; tx < right; tx++)
             {
                 for (int ty = top; ty < bottom; ty++)
@@ -179,7 +168,7 @@ namespace Monocle
                     int checkY = Calc.Clamp(ty, 0, TilesY);
 
                     if (Tiles[checkX, checkY] != null)
-                        Tiles[checkX, checkY].Draw(pos + new Vector2(tx * TileWidth, ty * TileHeight), Vector2.Zero, Color);
+                        Tiles[checkX, checkY].Draw(pos + new Vector2(tx * TileWidth, ty * TileHeight), Vector2.Zero, color);
                 }
             }
 		}
