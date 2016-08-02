@@ -11,8 +11,7 @@ namespace Monocle
         public MTexture Source;
         public Color Color;
         public Color Color2;
-        public int ColorSwitch;
-        public bool ColorSwitchLoop;
+        public bool FadeColor;
         public float Speed;
         public float SpeedRange;
         public float SpeedMultiplier;
@@ -32,8 +31,7 @@ namespace Monocle
         public ParticleType()
         {
             Color = Color2 = Color.White;
-            ColorSwitch = 0;
-            ColorSwitchLoop = true;
+            FadeColor = false;
             Speed = SpeedRange = 0;
             SpeedMultiplier = 1;
             Acceleration = Vector2.Zero;
@@ -52,8 +50,7 @@ namespace Monocle
             Source = copy.Source;
             Color = copy.Color;
             Color2 = copy.Color2;
-            ColorSwitch = copy.ColorSwitch;
-            ColorSwitchLoop = copy.ColorSwitchLoop;
+            FadeColor = copy.FadeColor;
             Speed = copy.Speed;
             SpeedRange = copy.SpeedRange;
             SpeedMultiplier = copy.SpeedMultiplier;
@@ -85,8 +82,7 @@ namespace Monocle
             particle.Size = Calc.Random.Range(Size, Size + SizeRange);
             particle.Color = Color;
             particle.Speed = Calc.AngleToVector(direction - DirectionRange / 2 + Calc.Random.NextFloat() * DirectionRange, Calc.Random.Range(Speed, SpeedRange));
-            particle.Life = Calc.Random.Range(Life, LifeRange);
-            particle.ColorSwitch = ColorSwitch;
+            particle.MaxLife = particle.Life = Calc.Random.Range(Life, LifeRange);
             if (RandomRotate)
                 particle.Rotation = Calc.Random.NextAngle();
             else if (Rotated)

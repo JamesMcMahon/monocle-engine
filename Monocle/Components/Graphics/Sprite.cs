@@ -254,7 +254,7 @@ namespace Monocle
                 LastAnimationID = CurrentAnimationID = id;
                 currentAnimation = animations[id];
                 animationTimer = 0;
-                Animating = currentAnimation.Frames.Length > 1;
+                Animating = currentAnimation.Delay > 0;
                 CurrentAnimationFrame = 0;
                 SetFrame(currentAnimation.Frames[0]);
             }

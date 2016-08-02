@@ -14,6 +14,7 @@ namespace Monocle
         public Vector2 Speed;
         public float Size;
         public float Life;
+        public float MaxLife;
         public float ColorSwitch;
         public float Rotation;
         public float SizeChange;
@@ -31,20 +32,8 @@ namespace Monocle
             }
 
             //Color switch
-            if (ColorSwitch > 0)
-            {
-                ColorSwitch -= dt;
-                if (ColorSwitch <= 0)
-                {
-                    if (Type.ColorSwitchLoop)
-                        ColorSwitch = Type.ColorSwitch;
-
-                    if (Color == Type.Color)
-                        Color = Type.Color2;
-                    else
-                        Color = Type.Color;
-                }
-            }
+            if (Type.FadeColor)
+                Color = Color.Lerp(Type.Color2, Type.Color, Ease.CubeOut(Life / MaxLife));
 
             //Speed
             Position += Speed * dt;
