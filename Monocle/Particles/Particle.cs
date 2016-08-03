@@ -54,6 +54,12 @@ namespace Monocle
                 Draw.SpriteBatch.Draw(Type.Source.Texture2D, RenderPosition, Type.Source.ClipRect, Color, Rotation, Type.Source.Center, Size, SpriteEffects.None, 0);
         }
 
-        public Vector2 RenderPosition { get { return Calc.Floor(Position); } }
+        public Vector2 RenderPosition
+        {
+            get
+            {
+                return Calc.Floor(Position);
+            }
+        }
     }
 }
