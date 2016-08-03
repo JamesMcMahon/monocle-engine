@@ -65,6 +65,7 @@ namespace Monocle
             Rotated = copy.Rotated;
             RandomRotate = copy.RandomRotate;
             ScaleOut = copy.ScaleOut;
+			UseActualDeltaTime = copy.UseActualDeltaTime;
 
             AllTypes.Add(this);
         }
