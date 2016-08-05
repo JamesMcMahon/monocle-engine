@@ -59,7 +59,11 @@ namespace Monocle
         public virtual void Update()
         {
             if (!Paused)
+            {
                 Entities.Update();
+                foreach (var renderer in Renderers)
+                    renderer.Update(this);
+            }
         }
 
         public virtual void AfterUpdate()
