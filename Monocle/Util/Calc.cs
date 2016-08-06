@@ -552,7 +552,7 @@ namespace Monocle
         static public string ShortGameplayFormat(this TimeSpan time)
         {
             if (time.TotalHours >= 1)
-                return ((int)time.TotalHours) + ":" + time.ToString(@"mm\:ss\.fff");
+                return ((int)time.Hours) + ":" + time.ToString(@"mm\:ss\.fff");
             else
                 return time.ToString(@"m\:ss\.fff");
         }
@@ -592,6 +592,20 @@ namespace Monocle
         public const float DtR = DEG_TO_RAD;
         public const float RtD = RAD_TO_DEG;
         private const string HEX = "0123456789ABCDEF";
+
+        static public int Digits(this int num)
+        {
+            int digits = 1;
+            int target = 10;
+
+            while (num >= target)
+            {
+                digits++;
+                target *= 10;
+            }
+
+            return digits;
+        }
 
         static public byte HexToByte(char c)
         {
