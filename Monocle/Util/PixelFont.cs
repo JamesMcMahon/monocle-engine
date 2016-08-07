@@ -143,6 +143,11 @@ namespace Monocle
             Draw(text, position, Vector2.One, color);
         }
 
+        public void Draw(string text, Vector2 position)
+        {
+            Draw(text, position, Vector2.One, Color.White);
+        }
+
         public void DrawCentered(string text, Vector2 position, Vector2 scale, Color color)
         {
             Vector2 size = Measure(text);
@@ -158,6 +163,12 @@ namespace Monocle
             Draw(text, position - size * .5f, Vector2.One, color);
         }
 
+        public void DrawCentered(string text, Vector2 position)
+        {
+            Vector2 size = Measure(text);
+            Draw(text, position - size * .5f, Vector2.One, Color.White);
+        }
+
         public void DrawJustified(string text, Vector2 position, Vector2 justify, Vector2 scale, Color color)
         {
             Vector2 offset = Measure(text);
@@ -170,6 +181,11 @@ namespace Monocle
         public void DrawJustified(string text, Vector2 position, Vector2 justify, Color color)
         {
             DrawJustified(text, position, justify, Vector2.One, color);
+        }
+
+        public void DrawJustified(string text, Vector2 position, Vector2 justify)
+        {
+            DrawJustified(text, position, justify, Vector2.One, Color.White);
         }
 
         #endregion
@@ -199,6 +215,11 @@ namespace Monocle
             DrawOutlined(text, position, Vector2.One, Color.Black, color);
         }
 
+        public void DrawOutlined(string text, Vector2 position)
+        {
+            DrawOutlined(text, position, Vector2.One, Color.Black, Color.White);
+        }
+
         public void DrawOutlinedCentered(string text, Vector2 position, Vector2 scale, Color outline, Color color)
         {
             DrawCentered(text, position + new Vector2(-1, 0), scale, outline);
@@ -222,6 +243,11 @@ namespace Monocle
             DrawOutlinedCentered(text, position, Vector2.One, Color.Black, color);
         }
 
+        public void DrawOutlinedCentered(string text, Vector2 position)
+        {
+            DrawOutlinedCentered(text, position, Vector2.One, Color.Black, Color.White);
+        }
+
         public void DrawOutlinedJustified(string text, Vector2 position, Vector2 justify, Vector2 scale, Color outline, Color color)
         {
             DrawJustified(text, position + new Vector2(-1, 0), justify, scale, outline);
@@ -243,6 +269,11 @@ namespace Monocle
         public void DrawOutlinedJustified(string text, Vector2 position, Vector2 justify, Color color)
         {
             DrawOutlinedJustified(text, position, justify, Vector2.One, Color.Black, color);
+        }
+
+        public void DrawOutlinedJustified(string text, Vector2 position, Vector2 justify)
+        {
+            DrawOutlinedJustified(text, position, justify, Vector2.One, Color.Black, Color.White);
         }
 
         #endregion
