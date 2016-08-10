@@ -9,6 +9,7 @@ namespace Monocle
     {
         public bool Paused;
         public float TimeActive;
+        public float RawTimeActive;
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
         public TagLists TagLists { get; private set; }
@@ -51,6 +52,7 @@ namespace Monocle
         {
             if (!Paused)
                 TimeActive += Engine.DeltaTime;
+            RawTimeActive += Engine.RawDeltaTime;
 
             Entities.UpdateLists();
             TagLists.UpdateLists();
@@ -124,6 +126,8 @@ namespace Monocle
 
         }
 
+        #region Interval
+
         /// <summary>
         /// Returns whether the Scene timer has passed the given time interval since the last frame. Ex: given 2.0f, this will return true once every 2 seconds
         /// </summary>
@@ -148,6 +152,23 @@ namespace Monocle
         {
             return Calc.BetweenInterval(TimeActive, interval);
         }
+
+        public bool OnRawInterval(float interval)
+        {
+            return (int)((RawTimeActive - Engine.RawDeltaTime) / interval) < (int)(RawTimeActive / interval);
+        }
+
+        public bool OnRawInterval(float interval, float offset)
+        {
+            return Math.Floor((RawTimeActive - offset - Engine.RawDeltaTime) / interval) < Math.Floor((RawTimeActive - offset) / interval);
+        }
+
+        public bool BetweenRawInterval(float interval)
+        {
+            return Calc.BetweenInterval(RawTimeActive, interval);
+        }
+
+        #endregion
 
         #region Collisions v Tags
 
