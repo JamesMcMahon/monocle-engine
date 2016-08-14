@@ -116,6 +116,13 @@ namespace Monocle
                 Origin = new Vector2(Texture.Width * Justify.Value.X, Texture.Height * Justify.Value.Y);
         }
 
+		public void SetAnimationFrame(int frame)
+		{
+			animationTimer = 0;
+			CurrentAnimationFrame = frame % currentAnimation.Frames.Length;
+			SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
+		}
+
         #region Define Animations
 
         public void AddLoop(string id, string path, float delay)
