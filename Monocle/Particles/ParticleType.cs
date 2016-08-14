@@ -80,19 +80,14 @@ namespace Monocle
             particle.Type = this;
             particle.Active = true;
             particle.Position = position;
-            particle.Size = Calc.Random.Range(Size, Size + SizeRange);
+            particle.StartSize = particle.Size = Calc.Random.Range(Size, Size + SizeRange);
             particle.Color = Color;
             particle.Speed = Calc.AngleToVector(direction - DirectionRange / 2 + Calc.Random.NextFloat() * DirectionRange, Calc.Random.Range(Speed, SpeedRange));
-            particle.MaxLife = particle.Life = Calc.Random.Range(Life, LifeRange);
+            particle.StartLife = particle.Life = Calc.Random.Range(Life, LifeRange);
             if (RandomRotate)
                 particle.Rotation = Calc.Random.NextAngle();
             else if (Rotated)
                 particle.Rotation = direction;
-
-			if (ScaleOut)
-				particle.SizeChange = -particle.Size / particle.Life;
-			else
-				particle.SizeChange = 0;
 
             return particle;
         }

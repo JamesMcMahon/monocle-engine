@@ -13,18 +13,19 @@ namespace Monocle
         public Vector2 Position;
         public Vector2 Speed;
         public float Size;
+        public float StartSize;
         public float Life;
-        public float MaxLife;
+        public float StartLife;
         public float ColorSwitch;
         public float Rotation;
-        public float SizeChange;
 
         public void Update()
         {
 			var dt = (Type.UseActualDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
+            var ease = Life / StartLife;
 
-			//Life
-			Life -= dt;
+            //Life
+            Life -= dt;
             if (Life <= 0)
             {
                 Active = false;
@@ -33,7 +34,7 @@ namespace Monocle
 
             //Color switch
             if (Type.FadeColor)
-                Color = Color.Lerp(Type.Color2, Type.Color, Ease.CubeOut(Life / MaxLife));
+                Color = Color.Lerp(Type.Color2, Type.Color, ease);
 
             //Speed
             Position += Speed * dt;
@@ -43,7 +44,8 @@ namespace Monocle
                 Speed *= (float)Math.Pow(Type.SpeedMultiplier, dt);
 
             //Scale Out
-            Size += SizeChange * dt;
+            if (Type.ScaleOut)
+                Size = StartSize * Ease.CubeOut(ease);
         }
 
         public void Render()
