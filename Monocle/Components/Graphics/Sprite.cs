@@ -67,7 +67,8 @@ namespace Monocle
                         //Looped
                         if (currentAnimation.Goto != null)
                         {
-                            currentAnimation = animations[currentAnimation.Goto.Choose()];
+                            CurrentAnimationID = LastAnimationID = currentAnimation.Goto.Choose();
+                            currentAnimation = animations[LastAnimationID];
                             if (CurrentAnimationFrame < 0)
                                 CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
                             else
