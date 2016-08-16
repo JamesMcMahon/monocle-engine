@@ -13,7 +13,7 @@ namespace Monocle
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
         public TagLists TagLists { get; private set; }
-        public List<Renderer> Renderers { get; private set; }
+		public RendererList RendererList { get; private set; }
         public Entity HelperEntity { get; private set; }
         public Tracker Tracker { get; private set; }
 
@@ -26,7 +26,7 @@ namespace Monocle
             Tracker = new Tracker();
             Entities = new EntityList(this);
             TagLists = new TagLists();
-            Renderers = new List<Renderer>();
+			RendererList = new RendererList(this);
 
             actualDepthLookup = new Dictionary<int, double>();
 
@@ -56,6 +56,7 @@ namespace Monocle
 
             Entities.UpdateLists();
             TagLists.UpdateLists();
+			RendererList.UpdateLists();
         }
 
         public virtual void Update()
@@ -63,8 +64,7 @@ namespace Monocle
             if (!Paused)
             {
                 Entities.Update();
-                foreach (var renderer in Renderers)
-                    renderer.Update(this);
+				RendererList.Update();
             }
         }
 
@@ -79,32 +79,18 @@ namespace Monocle
 
         public virtual void BeforeRender()
         {
-            for (int i = 0; i < Renderers.Count; i++)
-            {
-                Draw.Renderer = Renderers[i];
-                Renderers[i].BeforeRender(this);
-            }
+			RendererList.BeforeRender();
         }
 
         public virtual void Render()
-        {
-            for (int i = 0; i < Renderers.Count; i++)
-            {
-                Draw.Renderer = Renderers[i];
-                Renderers[i].Render(this);
-            }
-        }
+		{
+			RendererList.Render();
+		}
 
         public virtual void AfterRender()
-        {
-            for (int i = 0; i < Renderers.Count; i++)
-            {
-                Draw.Renderer = Renderers[i];
-                Renderers[i].AfterRender(this);
-            }
-
-            Draw.Renderer = null;
-        }
+		{
+			RendererList.AfterRender();
+		}
 
         public virtual void HandleGraphicsReset()
         {
@@ -853,7 +839,7 @@ namespace Monocle
         /// <param name="renderer">The Renderer to add</param>
         public void Add(Renderer renderer)
         {
-            Renderers.Add(renderer);
+			RendererList.Add(renderer);
         }
 
         /// <summary>
@@ -862,7 +848,7 @@ namespace Monocle
         /// <param name="renderer">The Renderer to remove</param>
         public void Remove(Renderer renderer)
         {
-            Renderers.Add(renderer);
+			RendererList.Remove(renderer);
         }
 
         #endregion

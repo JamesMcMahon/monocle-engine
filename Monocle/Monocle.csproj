@@ -99,6 +99,7 @@
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
     <Compile Include="Input\VirtualIntegerAxis.cs" />
+    <Compile Include="InternalUtilities\RendererList.cs" />
     <Compile Include="Renderers\TagExcludeRenderer.cs" />
     <Compile Include="Components\Graphics\TileGrid.cs" />
     <Compile Include="Util\BitTag.cs" />
