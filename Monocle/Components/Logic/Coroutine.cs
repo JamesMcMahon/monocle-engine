@@ -7,6 +7,7 @@ namespace Monocle
     {
         public bool Finished { get; private set; }
         public bool RemoveOnComplete = true;
+        public bool UseRawDeltaTime = false;
 
         private Stack<IEnumerator> enumerators;
         private float waitTimer;
@@ -31,7 +32,7 @@ namespace Monocle
             IEnumerator now = enumerators.Peek();
 
             if (waitTimer > 0)
-                waitTimer -= Engine.DeltaTime;
+                waitTimer -= (UseRawDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
             else if (now.MoveNext())
             {
                 if (now.Current is int)
