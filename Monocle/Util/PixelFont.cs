@@ -233,6 +233,11 @@ namespace Monocle
             DrawCentered(text, position, scale, color);
         }
 
+        public void DrawOutlinedCentered(string text, Vector2 position, Vector2 scale, Color color)
+        {
+            DrawOutlinedCentered(text, position, scale, Color.Black, color);
+        }
+
         public void DrawOutlinedCentered(string text, Vector2 position, Color outline, Color color)
         {
             DrawOutlinedCentered(text, position, Vector2.One, outline, color);
