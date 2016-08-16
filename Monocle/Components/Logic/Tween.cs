@@ -13,6 +13,7 @@ namespace Monocle
         public Action<Tween> OnUpdate;
         public Action<Tween> OnComplete;
         public Action<Tween> OnStart;
+        public bool UseRawDeltaTime;
 
         public TweenMode Mode { get; private set; }
         public float Duration { get; private set; }
@@ -76,6 +77,7 @@ namespace Monocle
                 duration = .000001f;
 #endif
 
+            UseRawDeltaTime = false;
             Mode = mode;
             Easer = easer;
             Duration = duration;
@@ -96,7 +98,7 @@ namespace Monocle
 
         public override void Update()
         {
-            TimeLeft -= Engine.DeltaTime;
+            TimeLeft -= (UseRawDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
 
             //Update the percentage and eased percentage
             Percent = Math.Max(0, TimeLeft) / (float)Duration;
