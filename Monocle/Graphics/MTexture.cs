@@ -264,51 +264,91 @@ namespace Monocle
 
         public void Draw(Vector2 position)
         {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, -DrawOffset, 1f, SpriteEffects.None, 0);
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, -DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, origin - DrawOffset, 1f, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, origin - DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, origin - DrawOffset, 1f, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, origin - DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color, float scale)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, origin - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, origin - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color, float scale, float rotation)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color, float scale, float rotation, SpriteEffects flip)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, flip, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, flip, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color, Vector2 scale)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, origin - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, origin - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color, Vector2 scale, float rotation)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void Draw(Vector2 position, Vector2 origin, Color color, Vector2 scale, float rotation, SpriteEffects flip)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, flip, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, origin - DrawOffset, scale, flip, 0);
         }
 
 		public void Draw(Vector2 position, Vector2 origin, Color color, Vector2 scale, float rotation, Rectangle clip)
 		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
 			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, GetRelativeRect(clip), color, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
 		}
 
@@ -317,43 +357,75 @@ namespace Monocle
 		#region Draw Centered
 
 		public void DrawCentered(Vector2 position)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color, float scale)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color, float scale, float rotation)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color, float scale, float rotation, SpriteEffects flip)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, flip, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, flip, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color, Vector2 scale)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color, Vector2 scale, float rotation)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawCentered(Vector2 position, Color color, Vector2 scale, float rotation, SpriteEffects flip)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, flip, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, Center - DrawOffset, scale, flip, 0);
         }
 
         #endregion
@@ -361,43 +433,75 @@ namespace Monocle
         #region Draw Justified
 
         public void DrawJustified(Vector2 position, Vector2 justify)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, 1f, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, Color.White, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, 1f, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, 1f, SpriteEffects.None, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color, float scale)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color, float scale, float rotation)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color, float scale, float rotation, SpriteEffects flip)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, flip, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, flip, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color, Vector2 scale)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color, Vector2 scale, float rotation)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
         }
 
         public void DrawJustified(Vector2 position, Vector2 justify, Color color, Vector2 scale, float rotation, SpriteEffects flip)
-        {
-            Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, flip, 0);
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+			Monocle.Draw.SpriteBatch.Draw(Texture2D, position, ClipRect, color, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, flip, 0);
         }
 
         #endregion
@@ -405,8 +509,13 @@ namespace Monocle
         #region Draw Outline
 
         public void DrawOutline(Vector2 position)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, -DrawOffset, 1f, SpriteEffects.None, 0);
@@ -415,8 +524,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, origin - DrawOffset, 1f, SpriteEffects.None, 0);
@@ -425,8 +539,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, origin - DrawOffset, 1f, SpriteEffects.None, 0);
@@ -435,8 +554,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color, float scale)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, origin - DrawOffset, scale, SpriteEffects.None, 0);
@@ -445,8 +569,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color, float scale, float rotation)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
@@ -455,8 +584,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color, float scale, float rotation, SpriteEffects flip)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, origin - DrawOffset, scale, flip, 0);
@@ -465,8 +599,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color, Vector2 scale)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, origin - DrawOffset, scale, SpriteEffects.None, 0);
@@ -475,8 +614,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color, Vector2 scale, float rotation)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, origin - DrawOffset, scale, SpriteEffects.None, 0);
@@ -485,8 +629,13 @@ namespace Monocle
         }
 
         public void DrawOutline(Vector2 position, Vector2 origin, Color color, Vector2 scale, float rotation, SpriteEffects flip)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, origin - DrawOffset, scale, flip, 0);
@@ -499,8 +648,13 @@ namespace Monocle
         #region Draw Outline Centered
 
         public void DrawOutlineCentered(Vector2 position)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
@@ -509,8 +663,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, Center - DrawOffset, 1f, SpriteEffects.None, 0);
@@ -519,8 +678,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color, float scale)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
@@ -529,8 +693,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color, float scale, float rotation)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
@@ -539,8 +708,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color, float scale, float rotation, SpriteEffects flip)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, Center - DrawOffset, scale, flip, 0);
@@ -549,8 +723,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color, Vector2 scale)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, Center - DrawOffset, scale, SpriteEffects.None, 0);
@@ -559,8 +738,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color, Vector2 scale, float rotation)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, Center - DrawOffset, scale, SpriteEffects.None, 0);
@@ -569,8 +753,13 @@ namespace Monocle
         }
 
         public void DrawOutlineCentered(Vector2 position, Color color, Vector2 scale, float rotation, SpriteEffects flip)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, Center - DrawOffset, scale, flip, 0);
@@ -583,8 +772,13 @@ namespace Monocle
         #region Draw Outline Justified
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, 1f, SpriteEffects.None, 0);
@@ -593,8 +787,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, 1f, SpriteEffects.None, 0);
@@ -603,8 +802,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color, float scale)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
@@ -613,8 +817,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color, float scale, float rotation)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
@@ -623,8 +832,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color, float scale, float rotation, SpriteEffects flip)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, flip, 0);
@@ -633,8 +847,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color, Vector2 scale)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, 0, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
@@ -643,8 +862,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color, Vector2 scale, float rotation)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, SpriteEffects.None, 0);
@@ -653,8 +877,13 @@ namespace Monocle
         }
 
         public void DrawOutlineJustified(Vector2 position, Vector2 justify, Color color, Vector2 scale, float rotation, SpriteEffects flip)
-        {
-            for (var i = -1; i <= 1; i++)
+		{
+#if DEBUG
+			if (Texture2D.IsDisposed)
+				throw new Exception("Texture2D Is Disposed");
+#endif
+
+			for (var i = -1; i <= 1; i++)
                 for (var j = -1; j <= 1; j++)
                     if (i != 0 || j != 0)
                         Monocle.Draw.SpriteBatch.Draw(Texture2D, position + new Vector2(i, j), ClipRect, Color.Black, rotation, new Vector2(Width * justify.X, Height * justify.Y) - DrawOffset, scale, flip, 0);
