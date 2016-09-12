@@ -165,6 +165,13 @@ namespace Monocle
             return list;
         }
 
+        public void With<T>(Action<T> action) where T : Entity
+        {
+            foreach (var e in entities)
+                if (e is T)
+                    action(e as T);
+        }
+
         public IEnumerator<Entity> GetEnumerator()
         {
             return entities.GetEnumerator();
