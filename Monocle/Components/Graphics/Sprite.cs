@@ -74,13 +74,9 @@ namespace Monocle
                             else
                                 CurrentAnimationFrame = 0;
 
-                            CurrentAnimationFrame -= Math.Sign(CurrentAnimationFrame) * currentAnimation.Frames.Length;
                             SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
-
-                            if (OnAnimate != null)
-                                OnAnimate(CurrentAnimationID);
-                            if (OnLoop != null)
-                                OnLoop(CurrentAnimationID);
+                            OnAnimate?.Invoke(CurrentAnimationID);
+                            OnLoop?.Invoke(CurrentAnimationID);
                         }
                         else
                         {
