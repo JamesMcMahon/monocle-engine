@@ -277,8 +277,8 @@ namespace Monocle
 
         static public void SetFullscreen()
         {
-            Graphics.PreferredBackBufferWidth = Instance.GraphicsDevice.DisplayMode.Width;
-            Graphics.PreferredBackBufferHeight = Instance.GraphicsDevice.DisplayMode.Height;
+            Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Graphics.IsFullScreen = true;         
             Graphics.ApplyChanges();
         }
