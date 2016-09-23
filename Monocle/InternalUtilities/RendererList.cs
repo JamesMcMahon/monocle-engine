@@ -44,6 +44,8 @@ namespace Monocle
 		{
 			for (int i = 0; i < Renderers.Count; i++)
 			{
+				if (!Renderers[i].Visible)
+					continue;
 				Draw.Renderer = Renderers[i];
 				Renderers[i].BeforeRender(scene);
 			}
@@ -53,6 +55,8 @@ namespace Monocle
 		{
 			for (int i = 0; i < Renderers.Count; i++)
 			{
+				if (!Renderers[i].Visible)
+					continue;
 				Draw.Renderer = Renderers[i];
 				Renderers[i].Render(scene);
 			}
@@ -62,6 +66,8 @@ namespace Monocle
 		{
 			for (int i = 0; i < Renderers.Count; i++)
 			{
+				if (!Renderers[i].Visible)
+					continue;
 				Draw.Renderer = Renderers[i];
 				Renderers[i].AfterRender(scene);
 			}
