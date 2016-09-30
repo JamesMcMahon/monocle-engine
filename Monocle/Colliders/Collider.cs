@@ -61,6 +61,12 @@ namespace Monocle
         public abstract float Left { get; set; }
         public abstract float Right { get; set; }
 
+        public void CenterOrigin()
+        {
+            Position.X = -Width / 2;
+            Position.Y = -Height / 2;
+        }
+
         public float CenterX
         {
             get
