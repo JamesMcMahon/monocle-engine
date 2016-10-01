@@ -17,12 +17,6 @@ namespace Monocle
             Position.Y = y;
         }
 
-        public void CenterOrigin()
-        {
-            Position.X = -Width / 2;
-            Position.Y = -Height / 2;
-        }
-
         public override float Width
         {
             get { return width; }
