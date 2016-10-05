@@ -1747,7 +1747,7 @@ namespace Monocle
             if (xml["node"] == null)
                 return Vector2.Zero;
             else
-                return new Vector2(xml["node"].AttrInt("x"), xml["node"].AttrInt("y"));
+                return new Vector2((int)xml["node"].AttrFloat("x"), (int)xml["node"].AttrFloat("y"));
         }
 
         static public Vector2? FirstNodeNullable(this XmlElement xml)
@@ -1755,7 +1755,7 @@ namespace Monocle
             if (xml["node"] == null)
                 return null;
             else
-                return new Vector2(xml["node"].AttrInt("x"), xml["node"].AttrInt("y"));
+                return new Vector2((int)xml["node"].AttrFloat("x"), (int)xml["node"].AttrFloat("y"));
         }
 
         static public Vector2? FirstNodeNullable(this XmlElement xml, Vector2 offset)
@@ -1763,7 +1763,7 @@ namespace Monocle
             if (xml["node"] == null)
                 return null;
             else
-                return new Vector2(xml["node"].AttrInt("x"), xml["node"].AttrInt("y")) + offset;
+                return new Vector2((int)xml["node"].AttrFloat("x"), (int)xml["node"].AttrFloat("y")) + offset;
         }
 
         static public Vector2[] Nodes(this XmlElement xml, bool includePosition = false)
