@@ -163,6 +163,22 @@ namespace Monocle
             }
         }
 
+        public Vector2 Size
+        {
+            get
+            {
+                return new Vector2(Width, Height);
+            }
+        }
+
+        public Vector2 HalfSize
+        {
+            get
+            {
+                return Size * .5f;
+            }
+        }
+
         public Vector2 CenterRight
         {
             get
