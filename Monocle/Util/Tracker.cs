@@ -160,6 +160,16 @@ namespace Monocle
                 yield return e as T;
         }
 
+        public int CountEntities<T>() where T : Entity
+        {
+#if DEBUG
+            if (!IsEntityTracked<T>())
+                throw new Exception("Entity type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
+#endif
+
+            return Entities[typeof(T)].Count;
+        }
+
         public T GetComponent<T>() where T : Component
         {
 #if DEBUG
@@ -198,6 +208,16 @@ namespace Monocle
 
             foreach (var c in Components[typeof(T)])
                 yield return c as T;
+        }
+
+        public int CountComponents<T>() where T : Component
+        {
+#if DEBUG
+            if (!IsComponentTracked<T>())
+                throw new Exception("Component type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
+#endif
+
+            return Components[typeof(T)].Count;
         }
 
         internal void EntityAdded(Entity entity)

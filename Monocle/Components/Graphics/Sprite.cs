@@ -264,6 +264,43 @@ namespace Monocle
             }
         }
 
+        public void PlayOffset(string id, float offset, bool restart = false)
+        {
+            if (CurrentAnimationID != id || restart)
+            {
+#if DEBUG
+                if (!animations.ContainsKey(id))
+                    throw new Exception("No Animation defined for ID: " + id.ToString());
+#endif
+                LastAnimationID = CurrentAnimationID = id;
+                currentAnimation = animations[id];
+
+                if (currentAnimation.Delay > 0)
+                {
+                    Animating = true;
+                    float at = (currentAnimation.Delay * currentAnimation.Frames.Length) * offset;
+
+                    CurrentAnimationFrame = 0;
+                    while (at >= currentAnimation.Delay)
+                    {
+                        CurrentAnimationFrame++;
+                        at -= currentAnimation.Delay;
+                    }
+
+                    CurrentAnimationFrame %= currentAnimation.Frames.Length;
+                    animationTimer = at;
+                    SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
+                }
+                else
+                {
+                    animationTimer = 0;
+                    Animating = false;
+                    CurrentAnimationFrame = 0;
+                    SetFrame(currentAnimation.Frames[0]);
+                }
+            }
+        }
+
         public void Reverse(string id, bool restart = false)
         {
             Play(id, restart);
