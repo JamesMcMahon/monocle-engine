@@ -33,8 +33,10 @@ namespace Monocle
             }
 
             //Color switch
-            if (Type.FadeColor)
+            if (Type.ColorMode == ParticleType.ColorModes.Static)
                 Color = Color.Lerp(Type.Color2, Type.Color, ease);
+            else if (Type.ColorMode == ParticleType.ColorModes.Blink)
+                Color = Calc.BetweenInterval(Life, .1f) ? Type.Color : Type.Color2;
 
             //Speed
             Position += Speed * dt;

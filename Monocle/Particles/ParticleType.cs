@@ -6,12 +6,14 @@ namespace Monocle
 {
     public class ParticleType
     {
+        public enum ColorModes { Static, Fade, Blink };
+
         static private List<ParticleType> AllTypes = new List<ParticleType>();
 
         public MTexture Source;
         public Color Color;
         public Color Color2;
-        public bool FadeColor;
+        public ColorModes ColorMode;
         public float Speed;
         public float SpeedRange;
         public float SpeedMultiplier;
@@ -31,7 +33,7 @@ namespace Monocle
         public ParticleType()
         {
             Color = Color2 = Color.White;
-            FadeColor = false;
+            ColorMode = ColorModes.Static;
             Speed = SpeedRange = 0;
             SpeedMultiplier = 1;
             Acceleration = Vector2.Zero;
@@ -50,7 +52,7 @@ namespace Monocle
             Source = copy.Source;
             Color = copy.Color;
             Color2 = copy.Color2;
-            FadeColor = copy.FadeColor;
+            ColorMode = copy.ColorMode;
             Speed = copy.Speed;
             SpeedRange = copy.SpeedRange;
             SpeedMultiplier = copy.SpeedMultiplier;
