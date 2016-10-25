@@ -21,23 +21,20 @@ namespace Monocle
         /// </summary>
         static public void SerializeToFile<T>(T obj, string filepath, SerializeModes mode)
         {
-            FileStream fileStream = File.OpenWrite(filepath);
-
-            //Serialize
-            if (mode == SerializeModes.Binary)
-            {
-                var bf = new BinaryFormatter();
-                bf.Serialize(fileStream, obj);
-            }
-            else if (mode == SerializeModes.XML)
-            {
-                var xs = new XmlSerializer(typeof(T));
-                xs.Serialize(fileStream, obj);
-            }
-
-            //Cleanup
-            fileStream.Close();
-            fileStream.Dispose();
+			using (var fileStream = new FileStream(filepath, FileMode.Create))
+			{
+				//Serialize
+				if (mode == SerializeModes.Binary)
+				{
+					var bf = new BinaryFormatter();
+					bf.Serialize(fileStream, obj);
+				}
+				else if (mode == SerializeModes.XML)
+				{
+					var xs = new XmlSerializer(typeof(T));
+					xs.Serialize(fileStream, obj);
+				}
+			}
         }
 
         /// <summary>
