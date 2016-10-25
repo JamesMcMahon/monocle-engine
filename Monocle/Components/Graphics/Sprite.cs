@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -300,6 +301,13 @@ namespace Monocle
                 }
             }
         }
+
+		public IEnumerator PlayRoutine(string id, bool restart = false)
+		{
+			Play(id, restart);
+			while (Animating)
+				yield return null;
+		}
 
         public void Reverse(string id, bool restart = false)
         {
