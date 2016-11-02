@@ -579,19 +579,19 @@ namespace Monocle
 
         #region Math
 
-        public const float RIGHT = 0;
-        public const float UP = MathHelper.Pi * -.5f;
-        public const float LEFT = MathHelper.Pi;
-        public const float DOWN = MathHelper.Pi * .5f;
-        public const float UP_RIGHT = MathHelper.Pi * -.25f;
-        public const float UP_LEFT = MathHelper.Pi * -.75f;
-        public const float DOWN_RIGHT = MathHelper.Pi * .25f;
-        public const float DOWN_LEFT = MathHelper.Pi * .75f;
-        public const float DEG_TO_RAD = (float)Math.PI / 180f;
-        public const float RAD_TO_DEG = 180f / (float)Math.PI;
-        public const float DtR = DEG_TO_RAD;
-        public const float RtD = RAD_TO_DEG;
-        private const string HEX = "0123456789ABCDEF";
+        public const float Right = 0;
+        public const float Up = MathHelper.Pi * -.5f;
+        public const float Left = MathHelper.Pi;
+        public const float Down = MathHelper.Pi * .5f;
+        public const float UpRight = MathHelper.Pi * -.25f;
+        public const float UpLeft = MathHelper.Pi * -.75f;
+        public const float DownRight = MathHelper.Pi * .25f;
+        public const float DownLeft = MathHelper.Pi * .75f;
+        public const float DegToRad = (float)Math.PI / 180f;
+        public const float RadToDeg = 180f / (float)Math.PI;
+        public const float DtR = DegToRad;
+        public const float RtD = RadToDeg;
+        private const string Hex = "0123456789ABCDEF";
 
         static public int Digits(this int num)
         {
@@ -609,7 +609,7 @@ namespace Monocle
 
         static public byte HexToByte(char c)
         {
-            return (byte)HEX.IndexOf(char.ToUpper(c));
+            return (byte)Hex.IndexOf(char.ToUpper(c));
         }
 
         static public float Percent(float num, float zeroAt, float oneAt)
@@ -643,12 +643,12 @@ namespace Monocle
 
         static public float ToRad(this float f)
         {
-            return f * DEG_TO_RAD;
+            return f * DegToRad;
         }
 
         static public float ToDeg(this float f)
         {
-            return f * RAD_TO_DEG;
+            return f * RadToDeg;
         }
 
         static public int Axis(bool negative, bool positive, int both = 0)
