@@ -50,7 +50,11 @@ namespace Monocle
 			Graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
             if (fullscreen)
+            {
+                Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
                 Graphics.IsFullScreen = true;
+            }
             else
             {
                 Graphics.PreferredBackBufferWidth = Width * windowedScale;
