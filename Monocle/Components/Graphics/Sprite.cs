@@ -352,6 +352,17 @@ namespace Monocle
             get; private set;
         }
 
+        public int CurrentAnimationTotalFrames
+        {
+            get
+            {
+                if (currentAnimation != null)
+                    return currentAnimation.Frames.Length;
+                else
+                    return 0;
+            }
+        }
+
         public override float Width
         {
             get
