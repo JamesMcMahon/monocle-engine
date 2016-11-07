@@ -305,9 +305,14 @@ namespace Monocle
 		public IEnumerator PlayRoutine(string id, bool restart = false)
 		{
 			Play(id, restart);
-			while (Animating)
-				yield return null;
+            return PlayUtil();
 		}
+
+        private IEnumerator PlayUtil()
+        {
+            while (Animating)
+                yield return null;
+        }
 
         public void Reverse(string id, bool restart = false)
         {

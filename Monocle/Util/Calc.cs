@@ -591,6 +591,10 @@ namespace Monocle
         public const float RadToDeg = 180f / (float)Math.PI;
         public const float DtR = DegToRad;
         public const float RtD = RadToDeg;
+        public const float Circle = MathHelper.TwoPi;
+        public const float HalfCircle = MathHelper.Pi;
+        public const float QuarterCircle = MathHelper.PiOver2;
+        public const float EighthCircle = MathHelper.PiOver4;
         private const string Hex = "0123456789ABCDEF";
 
         static public int Digits(this int num)
