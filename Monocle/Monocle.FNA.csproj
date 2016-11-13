@@ -77,6 +77,7 @@
     <Compile Include="Input\VirtualJoystick.cs" />
     <Compile Include="InternalUtilities\ComponentList.cs" />
     <Compile Include="InternalUtilities\EntityList.cs" />
+    <Compile Include="InternalUtilities\RendererList.cs" />
     <Compile Include="InternalUtilities\TagLists.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleSystem.cs" />
