@@ -51,6 +51,15 @@ namespace Monocle
         {
             string str = obj.ToString();
 
+            //Newline splits
+            if (str.Contains("\n"))
+            {
+                var all = str.Split('\n');
+                foreach (var line in all)
+                    Log(line, color);
+                return;
+            }
+
             //Split the string if you overlow horizontally
             int maxWidth = Engine.Instance.Window.ClientBounds.Width - 40;
             while (Draw.DefaultFont.MeasureString(str).X > maxWidth)
