@@ -115,6 +115,7 @@ namespace Monocle
                 Graphics.IsFullScreen = false;
             }
 #endif
+
             Content.RootDirectory = @"Content";
 
             IsMouseVisible = false;
