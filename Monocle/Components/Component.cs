@@ -37,6 +37,16 @@ namespace Monocle
             scene.Tracker.ComponentRemoved(this);
         }
 
+        public virtual void SceneEnd(Scene scene)
+        {
+
+        }
+
+        public virtual void EntityAwake()
+        {
+
+        }
+
         public virtual void Update()
         {
 

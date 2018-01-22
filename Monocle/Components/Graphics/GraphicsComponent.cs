@@ -62,6 +62,11 @@ namespace Monocle
             {
                 return (Entity == null ? Vector2.Zero : Entity.Position) + Position;
             }
+
+            set
+            {
+                Position = value - (Entity == null ? Vector2.Zero : Entity.Position);
+            }
         }
 
         public void DrawOutline(int offset = 1)

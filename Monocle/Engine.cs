@@ -1,53 +1,106 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.IO;
+using System.Reflection;
+using System.Runtime;
 
 namespace Monocle
 {
     public class Engine : Game
     {
-        static public Engine Instance { get; private set; }
-        static public GraphicsDeviceManager Graphics { get; private set; }
-        static public Commands Commands { get; private set; }
-        static public Pooler Pooler { get; private set; }
-        static public int Width { get; private set; }
-        static public int Height { get; private set; }
-        static public int ViewWidth { get; private set; }
-        static public int ViewHeight { get; private set; }
-        static public float DeltaTime { get; private set; }
-        static public float RawDeltaTime { get; private set; }
-        static public float TimeRate = 1f;
-        static public float FreezeTimer;
-        static public Color ClearColor;
-        static public bool ExitOnEscapeKeypress;
-        static public RenderTarget2D RenderBuffer;
-
-        private Scene scene;
-        private Scene nextScene;        
-        private Viewport viewport;
-        internal Matrix screenMatrix;
-#if DEBUG
-        private TimeSpan counterElapsed = TimeSpan.Zero;
-        private int fpsCounter = 0;
-#endif
 
         public string Title;
         public Version Version;
 
-        public Engine(int width, int height, int windowedScale, string windowTitle, bool fullscreen)
+        // references
+        public static Engine Instance { get; private set; }
+        public static GraphicsDeviceManager Graphics { get; private set; }
+        public static Commands Commands { get; private set; }
+        public static Pooler Pooler { get; private set; }
+        public static Action OverloadGameLoop;
+
+        // screen size
+        public static int Width { get; private set; }
+        public static int Height { get; private set; }
+        public static int ViewWidth { get; private set; }
+        public static int ViewHeight { get; private set; }
+        public static int ViewPadding
+        {
+            get { return viewPadding; }
+            set
+            {
+                viewPadding = value;
+                Instance.UpdateView();
+            }
+        }
+        private static int viewPadding = 0;
+        private static bool resizing;
+
+        // time
+        public static float DeltaTime { get; private set; }
+        public static float RawDeltaTime { get; private set; }
+        public static float TimeRate = 1f;
+        public static float TimeRateB = 1f;
+        public static float FreezeTimer;
+        public static int FPS;
+        private TimeSpan counterElapsed = TimeSpan.Zero;
+        private int fpsCounter = 0;
+
+        // content directory
+#if !CONSOLE
+        private static string AssemblyDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+#endif
+
+        public static string ContentDirectory
+        {
+#if PS4
+            get { return Path.Combine("/app0/", Instance.Content.RootDirectory); }
+#elif NSWITCH
+            get { return Path.Combine("rom:/", Instance.Content.RootDirectory); }
+#elif XBOXONE
+            get { return Instance.Content.RootDirectory; }
+#else
+            get { return Path.Combine(AssemblyDirectory, Instance.Content.RootDirectory); }
+#endif
+        }
+
+        // util
+        public static Color ClearColor;
+        public static bool ExitOnEscapeKeypress;
+
+        // scene
+        private Scene scene;
+        private Scene nextScene;
+        
+        public Engine(int width, int height, int windowWidth, int windowHeight, string windowTitle, bool fullscreen)
         {
             Instance = this;
 
+            Title = Window.Title = windowTitle;
             Width = width;
             Height = height;
-            Window.Title = this.Title = windowTitle;
             ClearColor = Color.Black;
 
             Graphics = new GraphicsDeviceManager(this);
             Graphics.DeviceReset += OnGraphicsReset;
             Graphics.DeviceCreated += OnGraphicsCreate;
             Graphics.SynchronizeWithVerticalRetrace = true;
-			Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            Graphics.PreferMultiSampling = false;
+            Graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            Graphics.PreferredBackBufferFormat = SurfaceFormat.Color;
+            Graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+            Graphics.ApplyChanges();
+
+#if PS4 || XBOXONE
+            Graphics.PreferredBackBufferWidth = 1920;
+            Graphics.PreferredBackBufferHeight = 1080;
+#elif NSWITCH
+            Graphics.PreferredBackBufferWidth = 1280;
+            Graphics.PreferredBackBufferHeight = 720;
+#else
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnClientSizeChanged;
 
             if (fullscreen)
             {
@@ -57,17 +110,35 @@ namespace Monocle
             }
             else
             {
-                Graphics.PreferredBackBufferWidth = Width * windowedScale;
-                Graphics.PreferredBackBufferHeight = Height * windowedScale;
+                Graphics.PreferredBackBufferWidth = windowWidth;
+                Graphics.PreferredBackBufferHeight = windowHeight;
                 Graphics.IsFullScreen = false;
             }
-
+#endif
             Content.RootDirectory = @"Content";
 
             IsMouseVisible = false;
             IsFixedTimeStep = false;
             ExitOnEscapeKeypress = true;
+
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
         }
+
+#if !CONSOLE
+        protected virtual void OnClientSizeChanged(object sender, EventArgs e)
+        {
+            if (Window.ClientBounds.Width > 0 && Window.ClientBounds.Height > 0 && !resizing)
+            {
+                resizing = true;
+
+                Graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                Graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                UpdateView();
+
+                resizing = false;
+            }
+        }
+#endif
 
         protected virtual void OnGraphicsReset(object sender, EventArgs e)
         {
@@ -118,21 +189,30 @@ namespace Monocle
         protected override void LoadContent()
         {
             base.LoadContent();
-
+            
             Monocle.Draw.Initialize(GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
         {
             RawDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            DeltaTime = RawDeltaTime * TimeRate;
+            DeltaTime = RawDeltaTime * TimeRate * TimeRateB;
 
             //Update input
             MInput.Update();
 
+#if !CONSOLE
             if (ExitOnEscapeKeypress && MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.Escape))
             {
                 Exit();
+                return;
+            }
+#endif
+
+            if (OverloadGameLoop != null)
+            {
+                OverloadGameLoop();
+                base.Update(gameTime);
                 return;
             }
 
@@ -155,14 +235,15 @@ namespace Monocle
             //Changing scenes
             if (scene != nextScene)
             {
+                var lastScene = scene;
                 if (scene != null)
                     scene.End();
                 scene = nextScene;
-                OnSceneTransition();
+                OnSceneTransition(lastScene, nextScene);
                 if (scene != null)
                     scene.Begin();
             }
-
+            
             base.Update(gameTime);
         }
 
@@ -173,17 +254,19 @@ namespace Monocle
             base.Draw(gameTime);
             if (Commands.Open)
                 Commands.Render();
-#if DEBUG
+
             //Frame counter
             fpsCounter++;
             counterElapsed += gameTime.ElapsedGameTime;
             if (counterElapsed >= TimeSpan.FromSeconds(1))
             {
-                Window.Title = Title + " " + fpsCounter.ToString() + " fps - " + (GC.GetTotalMemory(true) / 1048576f).ToString("F") + " MB";
+#if DEBUG
+                Window.Title = Title + " " + fpsCounter.ToString() + " fps - " + (GC.GetTotalMemory(false) / 1048576f).ToString("F") + " MB";
+#endif
+                FPS = fpsCounter;
                 fpsCounter = 0;
                 counterElapsed -= TimeSpan.FromSeconds(1);
             }
-#endif
         }
 
         /// <summary>
@@ -195,25 +278,14 @@ namespace Monocle
             if (scene != null)
                 scene.BeforeRender();
 
-            GraphicsDevice.SetRenderTarget(RenderBuffer);
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Viewport = Viewport;
             GraphicsDevice.Clear(ClearColor);
 
             if (scene != null)
             {
                 scene.Render();
                 scene.AfterRender();
-            }
-
-            //Draw the buffer scaled up to the screen
-            if (RenderBuffer != null)
-            {           
-                GraphicsDevice.SetRenderTarget(null);
-                GraphicsDevice.Viewport = viewport;
-                GraphicsDevice.Clear(ClearColor);
-
-                Monocle.Draw.SpriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, screenMatrix);
-                Monocle.Draw.SpriteBatch.Draw(RenderBuffer, Vector2.Zero, Color.White);
-                Monocle.Draw.SpriteBatch.End();
             }
         }
 
@@ -241,16 +313,18 @@ namespace Monocle
         /// <summary>
         /// Called after a Scene ends, before the next Scene begins
         /// </summary>
-        protected virtual void OnSceneTransition()
+        protected virtual void OnSceneTransition(Scene from, Scene to)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
+
+            TimeRate = 1f;
         }
 
         /// <summary>
         /// The currently active Scene. Note that if set, the Scene will not actually change until the end of the Update
         /// </summary>
-        static public Scene Scene
+        public static Scene Scene
         {
             get { return Instance.scene; }
             set { Instance.nextScene = value; }
@@ -260,38 +334,44 @@ namespace Monocle
 
         #region Screen
 
-        static public Matrix ScreenMatrix
+        public static Viewport Viewport { get; private set; }
+        public static Matrix ScreenMatrix;
+
+        public static void SetWindowed(int width, int height)
         {
-            get
+#if !CONSOLE
+            if (width > 0 && height > 0)
             {
-                if (RenderBuffer == null)
-                    return Instance.screenMatrix;
-                else
-                    return Matrix.Identity;
+                resizing = true;
+                Graphics.PreferredBackBufferWidth = width;
+                Graphics.PreferredBackBufferHeight = height;
+                Graphics.IsFullScreen = false;
+                Graphics.ApplyChanges();
+                Console.WriteLine("WINDOW-" + width + "x" + height);
+                resizing = false;
             }
+#endif
         }
 
-        static public void SetWindowed(int scale = 1)
+        public static void SetFullscreen()
         {
-            Graphics.PreferredBackBufferWidth = Width * scale;
-            Graphics.PreferredBackBufferHeight = Height * scale;
-            Graphics.IsFullScreen = false;
-            Graphics.ApplyChanges();
-        }
-
-        static public void SetFullscreen()
-        {
+#if !CONSOLE
+            resizing = true;
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Graphics.IsFullScreen = true;         
             Graphics.ApplyChanges();
+            Console.WriteLine("FULLSCREEN");
+            resizing = false;
+#endif
         }
-
+        
         private void UpdateView()
         {
             float screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
             float screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
 
+            // get View Size
             if (screenWidth / Width > screenHeight / Height)
             {
                 ViewWidth = (int)(screenHeight / Height * Width);
@@ -303,9 +383,16 @@ namespace Monocle
                 ViewHeight = (int)(screenWidth / Width * Height);
             }
 
-            screenMatrix = Matrix.CreateScale(ViewWidth / (float)Width);
+            // apply View Padding
+            var aspect = ViewHeight / (float)ViewWidth;
+            ViewWidth -= ViewPadding * 2;
+            ViewHeight -= (int)(aspect * ViewPadding * 2);
 
-            viewport = new Viewport
+            // update screen matrix
+            ScreenMatrix = Matrix.CreateScale(ViewWidth / (float)Width);
+
+            // update viewport
+            Viewport = new Viewport
             {
                 X = (int)(screenWidth / 2 - ViewWidth / 2),
                 Y = (int)(screenHeight / 2 - ViewHeight / 2),
@@ -316,7 +403,7 @@ namespace Monocle
             };
 
             //Debug Log
-            //Calc.Log("Update View - " + screenWidth + "x" + screenHeight + " - " + viewport.Width + "x" + viewport.Height + " - " + viewport.X + "," + viewport.Y);
+            //Calc.Log("Update View - " + screenWidth + "x" + screenHeight + " - " + viewport.Width + "x" + viewport.GuiHeight + " - " + viewport.X + "," + viewport.Y);
         }
 
         #endregion

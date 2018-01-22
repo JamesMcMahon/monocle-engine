@@ -130,11 +130,11 @@ namespace Monocle
             }
         }
 
-        public void SetCallbacks(int state, Func<int> onUpdate, Func<IEnumerator> coroutine = null, Action onEnterState = null, Action onLeaveState = null)
+        public void SetCallbacks(int state, Func<int> onUpdate, Func<IEnumerator> coroutine = null, Action begin = null, Action end = null)
         {
             updates[state] = onUpdate;
-            begins[state] = onEnterState;
-            ends[state] = onLeaveState;
+            begins[state] = begin;
+            ends[state] = end;
             coroutines[state] = coroutine;
         }
 
@@ -160,7 +160,7 @@ namespace Monocle
             }
         }
 
-        static public implicit operator int(StateMachine s)
+        public static implicit operator int(StateMachine s)
         {
             return s.state;
         }

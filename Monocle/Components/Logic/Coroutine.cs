@@ -12,45 +12,50 @@ namespace Monocle
         private Stack<IEnumerator> enumerators;
         private float waitTimer;
         private bool ended;
-
-        public Coroutine(IEnumerator functionCall)
+        
+        public Coroutine(IEnumerator functionCall, bool removeOnComplete = true)
             : base(true, false)
         {
             enumerators = new Stack<IEnumerator>();
             enumerators.Push(functionCall);
+            RemoveOnComplete = removeOnComplete;
         }
 
-        public Coroutine()
+        public Coroutine(bool removeOnComplete = true)
             : base(false, false)
         {
+            RemoveOnComplete = removeOnComplete;
             enumerators = new Stack<IEnumerator>();
         }
 
         public override void Update()
         {
             ended = false;
-            IEnumerator now = enumerators.Peek();
-
+            
             if (waitTimer > 0)
                 waitTimer -= (UseRawDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
-            else if (now.MoveNext())
+            else if (enumerators.Count > 0)
             {
-                if (now.Current is int)
-                    waitTimer = (int)now.Current;
-                if (now.Current is float)
-                    waitTimer = (float)now.Current;
-                else if (now.Current is IEnumerator)
-                    enumerators.Push(now.Current as IEnumerator);
-            }
-            else if (!ended)
-            {
-                enumerators.Pop();
-                if (enumerators.Count == 0)
+                IEnumerator now = enumerators.Peek();
+                if (now.MoveNext() && !ended)
                 {
-                    Finished = true;
-                    Active = false;
-                    if (RemoveOnComplete)
-                        RemoveSelf();
+                    if (now.Current is int)
+                        waitTimer = (int)now.Current;
+                    if (now.Current is float)
+                        waitTimer = (float)now.Current;
+                    else if (now.Current is IEnumerator)
+                        enumerators.Push(now.Current as IEnumerator);
+                }
+                else if (!ended)
+                {
+                    enumerators.Pop();
+                    if (enumerators.Count == 0)
+                    {
+                        Finished = true;
+                        Active = false;
+                        if (RemoveOnComplete)
+                            RemoveSelf();
+                    }
                 }
             }
         }

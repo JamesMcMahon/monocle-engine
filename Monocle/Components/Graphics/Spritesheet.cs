@@ -8,7 +8,7 @@ namespace Monocle
     {
         public int CurrentFrame;
         public float Rate = 1;
-		public bool UseRawDeltaTime;
+        public bool UseRawDeltaTime;
         public Action<T> OnFinish;
         public Action<T> OnLoop;
         public Action<T> OnAnimate;

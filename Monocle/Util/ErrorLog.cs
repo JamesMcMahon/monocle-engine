@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace Monocle
 {
-    static public class ErrorLog
+    public static class ErrorLog
     {
         public const string Filename = "error_log.txt";
         public const string Marker = "==========================================";
 
-        static public void Write(Exception e)
+        public static void Write(Exception e)
         {
             Write(e.ToString());
         }
 
-        static public void Write(string str)
+        public static void Write(string str)
         {
             StringBuilder s = new StringBuilder();
 
@@ -35,7 +35,10 @@ namespace Monocle
             }
 
             //Header
-            s.Append(Engine.Instance.Title);
+            if (Engine.Instance != null)
+                s.Append(Engine.Instance.Title);
+            else
+                s.Append("Monocle Engine");
             s.AppendLine(" Error Log");
             s.AppendLine(Marker);
             s.AppendLine();
@@ -66,7 +69,7 @@ namespace Monocle
             tw.Close();
         }
 
-        static public void Open()
+        public static void Open()
         {
             if (File.Exists(Filename))
                 System.Diagnostics.Process.Start(Filename);

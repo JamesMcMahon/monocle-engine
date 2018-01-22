@@ -26,9 +26,9 @@ namespace Monocle
 
         #region Static
 
-        static private Stack<Tween> cached = new Stack<Tween>();
+        private static Stack<Tween> cached = new Stack<Tween>();
 
-        static public Tween Create(TweenMode mode, Ease.Easer easer = null, float duration = 1f, bool start = false)
+        public static Tween Create(TweenMode mode, Ease.Easer easer = null, float duration = 1f, bool start = false)
         {
             Tween tween;
             if (cached.Count == 0)
@@ -41,7 +41,7 @@ namespace Monocle
             return tween;
         }
 
-        static public Tween Set(Entity entity, TweenMode tweenMode, float duration, Ease.Easer easer, Action<Tween> onUpdate, Action<Tween> onComplete = null)
+        public static Tween Set(Entity entity, TweenMode tweenMode, float duration, Ease.Easer easer, Action<Tween> onUpdate, Action<Tween> onComplete = null)
         {
             Tween tween = Tween.Create(tweenMode, easer, duration, true);
             tween.OnUpdate += onUpdate;
@@ -50,7 +50,7 @@ namespace Monocle
             return tween;
         }
 
-        static public Tween Position(Entity entity, Vector2 targetPosition, float duration, Ease.Easer easer, TweenMode tweenMode = TweenMode.Oneshot)
+        public static Tween Position(Entity entity, Vector2 targetPosition, float duration, Ease.Easer easer, TweenMode tweenMode = TweenMode.Oneshot)
         {
             Vector2 startPosition = entity.Position;
             Tween tween = Tween.Create(tweenMode, easer, duration, true);
@@ -99,7 +99,7 @@ namespace Monocle
         public override void Update()
         {
             TimeLeft -= (UseRawDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
-
+            
             //Update the percentage and eased percentage
             Percent = Math.Max(0, TimeLeft) / (float)Duration;
             if (!Reverse)

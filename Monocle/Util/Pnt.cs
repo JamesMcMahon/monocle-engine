@@ -8,10 +8,10 @@ namespace Monocle
 {
     public struct Pnt
     {
-        static public readonly Pnt Zero = new Pnt(0, 0);
-        static public readonly Pnt UnitX = new Pnt(1, 0);
-        static public readonly Pnt UnitY = new Pnt(0, 1);
-        static public readonly Pnt One = new Pnt(1, 1);
+        public static readonly Pnt Zero = new Pnt(0, 0);
+        public static readonly Pnt UnitX = new Pnt(1, 0);
+        public static readonly Pnt UnitY = new Pnt(0, 1);
+        public static readonly Pnt One = new Pnt(1, 1);
 
         public int X;
         public int Y;
@@ -24,37 +24,37 @@ namespace Monocle
 
         #region Pnt operators
 
-        static public bool operator ==(Pnt a, Pnt b)
+        public static bool operator ==(Pnt a, Pnt b)
         {
             return a.X == b.X && a.Y == b.Y;
         }
 
-        static public bool operator !=(Pnt a, Pnt b)
+        public static bool operator !=(Pnt a, Pnt b)
         {
             return a.X != b.X || a.Y != b.Y;
         }
 
-        static public Pnt operator +(Pnt a, Pnt b)
+        public static Pnt operator +(Pnt a, Pnt b)
         {
             return new Pnt(a.X + b.X, a.Y + b.Y);
         }
 
-        static public Pnt operator -(Pnt a, Pnt b)
+        public static Pnt operator -(Pnt a, Pnt b)
         {
             return new Pnt(a.X - b.X, a.Y - b.Y);
         }
 
-        static public Pnt operator *(Pnt a, Pnt b)
+        public static Pnt operator *(Pnt a, Pnt b)
         {
             return new Pnt(a.X * b.X, a.Y * b.Y);
         }
 
-        static public Pnt operator /(Pnt a, Pnt b)
+        public static Pnt operator /(Pnt a, Pnt b)
         {
             return new Pnt(a.X / b.X, a.Y / b.Y);
         }
 
-        static public Pnt operator %(Pnt a, Pnt b)
+        public static Pnt operator %(Pnt a, Pnt b)
         {
             return new Pnt(a.X % b.X, a.Y % b.Y);
         }
@@ -63,37 +63,37 @@ namespace Monocle
 
         #region int operators
 
-        static public bool operator ==(Pnt a, int b)
+        public static bool operator ==(Pnt a, int b)
         {
             return a.X == b && a.Y == b;
         }
 
-        static public bool operator !=(Pnt a, int b)
+        public static bool operator !=(Pnt a, int b)
         {
             return a.X != b || a.Y != b;
         }
 
-        static public Pnt operator +(Pnt a, int b)
+        public static Pnt operator +(Pnt a, int b)
         {
             return new Pnt(a.X + b, a.Y + b);
         }
 
-        static public Pnt operator -(Pnt a, int b)
+        public static Pnt operator -(Pnt a, int b)
         {
             return new Pnt(a.X - b, a.Y - b);
         }
 
-        static public Pnt operator *(Pnt a, int b)
+        public static Pnt operator *(Pnt a, int b)
         {
             return new Pnt(a.X * b, a.Y * b);
         }
 
-        static public Pnt operator /(Pnt a, int b)
+        public static Pnt operator /(Pnt a, int b)
         {
             return new Pnt(a.X / b, a.Y / b);
         }
 
-        static public Pnt operator %(Pnt a, int b)
+        public static Pnt operator %(Pnt a, int b)
         {
             return new Pnt(a.X % b, a.Y % b);
         }

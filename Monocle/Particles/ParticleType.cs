@@ -6,68 +6,81 @@ namespace Monocle
 {
     public class ParticleType
     {
-        public enum ColorModes { Static, Fade, Blink };
+        public enum ColorModes { Static, Choose, Blink, Fade };
+        public enum FadeModes { None, Linear, Late, InAndOut };
+        public enum RotationModes { None, Random, SameAsDirection };
 
-        static private List<ParticleType> AllTypes = new List<ParticleType>();
+        private static List<ParticleType> AllTypes = new List<ParticleType>();
 
         public MTexture Source;
+        public Chooser<MTexture> SourceChooser;
         public Color Color;
         public Color Color2;
         public ColorModes ColorMode;
-        public float Speed;
-        public float SpeedRange;
+        public FadeModes FadeMode;
+        public float SpeedMin;
+        public float SpeedMax;
         public float SpeedMultiplier;
         public Vector2 Acceleration;
-		public float Friction;
+        public float Friction;
         public float Direction;
         public float DirectionRange;
-        public float Life;
-        public float LifeRange;
+        public float LifeMin;
+        public float LifeMax;
         public float Size;
         public float SizeRange;
-        public bool Rotated;
-        public bool RandomRotate;
+        public float SpinMin;
+        public float SpinMax;
+        public bool SpinFlippedChance;
+        public RotationModes RotationMode;
         public bool ScaleOut;
-		public bool UseActualDeltaTime;
+        public bool UseActualDeltaTime;
 
         public ParticleType()
         {
             Color = Color2 = Color.White;
             ColorMode = ColorModes.Static;
-            Speed = SpeedRange = 0;
+            FadeMode = FadeModes.None;
+            SpeedMin = SpeedMax = 0;
             SpeedMultiplier = 1;
             Acceleration = Vector2.Zero;
-			Friction = 0f;
+            Friction = 0f;
             Direction = DirectionRange = 0;
-            Life = LifeRange = 0;
+            LifeMin = LifeMax = 0;
             Size = 2;
             SizeRange = 0;
-            Rotated = true;
+            SpinMin = SpinMax = 0;
+            SpinFlippedChance = false;
+            RotationMode = RotationModes.None;
 
             AllTypes.Add(this);
         }
 
-        public ParticleType(ParticleType copy)
+        public ParticleType(ParticleType copyFrom)
         {
-            Source = copy.Source;
-            Color = copy.Color;
-            Color2 = copy.Color2;
-            ColorMode = copy.ColorMode;
-            Speed = copy.Speed;
-            SpeedRange = copy.SpeedRange;
-            SpeedMultiplier = copy.SpeedMultiplier;
-            Acceleration = copy.Acceleration;
-			Friction = copy.Friction;
-            Direction = copy.Direction;
-            DirectionRange = copy.DirectionRange;
-            Life = copy.Life;
-            LifeRange = copy.LifeRange;
-            Size = copy.Size;
-            SizeRange = copy.SizeRange;
-            Rotated = copy.Rotated;
-            RandomRotate = copy.RandomRotate;
-            ScaleOut = copy.ScaleOut;
-			UseActualDeltaTime = copy.UseActualDeltaTime;
+            Source = copyFrom.Source;
+            SourceChooser = copyFrom.SourceChooser;
+            Color = copyFrom.Color;
+            Color2 = copyFrom.Color2;
+            ColorMode = copyFrom.ColorMode;
+            FadeMode = copyFrom.FadeMode;
+            SpeedMin = copyFrom.SpeedMin;
+            SpeedMax = copyFrom.SpeedMax;
+            SpeedMultiplier = copyFrom.SpeedMultiplier;
+            Acceleration = copyFrom.Acceleration;
+            Friction = copyFrom.Friction;
+            Direction = copyFrom.Direction;
+            DirectionRange = copyFrom.DirectionRange;
+            LifeMin = copyFrom.LifeMin;
+            LifeMax = copyFrom.LifeMax;
+            Size = copyFrom.Size;
+            SizeRange = copyFrom.SizeRange;
+            RotationMode = copyFrom.RotationMode;
+            SpinMin = copyFrom.SpinMin;
+            SpinMax = copyFrom.SpinMax;
+            SpinFlippedChance = copyFrom.SpinFlippedChance;
+            ScaleOut = copyFrom.ScaleOut;
+            UseActualDeltaTime = copyFrom.UseActualDeltaTime;
 
             AllTypes.Add(this);
         }
@@ -77,21 +90,70 @@ namespace Monocle
             return Create(ref particle, position, Direction);
         }
 
+        public Particle Create(ref Particle particle, Vector2 position, Color color)
+        {
+            return Create(ref particle, null, position, Direction, color);
+        }
+
         public Particle Create(ref Particle particle, Vector2 position, float direction)
         {
+            return Create(ref particle, null, position, direction, Color);
+        }
+
+        public Particle Create(ref Particle particle, Vector2 position, Color color, float direction)
+        {
+            return Create(ref particle, null, position, direction, color);
+        }
+
+        public Particle Create(ref Particle particle, Entity entity, Vector2 position, float direction, Color color)
+        {
+            particle.Track = entity;
             particle.Type = this;
             particle.Active = true;
             particle.Position = position;
-            particle.StartSize = particle.Size = Calc.Random.Range(Size, Size + SizeRange);
-            particle.Color = Color;
-            particle.Speed = Calc.AngleToVector(direction - DirectionRange / 2 + Calc.Random.NextFloat() * DirectionRange, Calc.Random.Range(Speed, SpeedRange));
-            particle.StartLife = particle.Life = Calc.Random.Range(Life, LifeRange);
-            if (RandomRotate)
+
+            // source texture
+            if (SourceChooser != null)
+                particle.Source = SourceChooser.Choose();
+            else if (Source != null)
+                particle.Source = Source;
+            else
+                particle.Source = Draw.Particle; 
+                 
+            // size
+            if (SizeRange != 0)
+                particle.StartSize = particle.Size = Size - SizeRange * .5f + Calc.Random.NextFloat(SizeRange);
+            else
+                particle.StartSize = particle.Size = Size;
+
+            // color
+            if (ColorMode == ColorModes.Choose)
+                particle.StartColor = particle.Color = Calc.Random.Choose(color, Color2);
+            else
+                particle.StartColor = particle.Color = color;
+
+            // speed / direction
+            var moveDirection = direction - DirectionRange / 2 + Calc.Random.NextFloat() * DirectionRange;
+            particle.Speed = Calc.AngleToVector(moveDirection, Calc.Random.Range(SpeedMin, SpeedMax));
+
+            // life
+            particle.StartLife = particle.Life = Calc.Random.Range(LifeMin, LifeMax);
+
+            // rotation
+            if (RotationMode == RotationModes.Random)
                 particle.Rotation = Calc.Random.NextAngle();
-            else if (Rotated)
-                particle.Rotation = direction;
+            else if (RotationMode == RotationModes.SameAsDirection)
+                particle.Rotation = moveDirection;
+            else
+                particle.Rotation = 0;
+
+            // spin
+            particle.Spin = Calc.Random.Range(SpinMin, SpinMax);
+            if (SpinFlippedChance)
+                particle.Spin *= Calc.Random.Choose(1, -1);
 
             return particle;
         }
+
     }
 }

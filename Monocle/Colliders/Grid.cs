@@ -5,14 +5,14 @@ namespace Monocle
 {
     public class Grid : Collider
     {
-        private bool[,] data;
+        public VirtualMap<bool> Data;
 
         public float CellWidth { get; private set; }
         public float CellHeight { get; private set; }
 
         public Grid(int cellsX, int cellsY, float cellWidth, float cellHeight)
         {
-            data = new bool[cellsX, cellsY];
+            Data = new VirtualMap<bool>(cellsX, cellsY);
 
             CellWidth = cellWidth;
             CellHeight = cellHeight;
@@ -39,7 +39,7 @@ namespace Monocle
                     currentX++;
             }
 
-            data = new bool[longest, currentY];
+            Data = new VirtualMap<bool>(longest, currentY);
             LoadBitstring(bitstring);
         }
 
@@ -48,57 +48,65 @@ namespace Monocle
             CellWidth = cellWidth;
             CellHeight = cellHeight;
 
-            this.data = (bool[,])data.Clone();
+            this.Data = new VirtualMap<bool>(data);
+        }
+
+        public Grid(float cellWidth, float cellHeight, VirtualMap<bool> data)
+        {
+            CellWidth = cellWidth;
+            CellHeight = cellHeight;
+
+            this.Data = data;
         }
 
         public void Extend(int left, int right, int up, int down)
         {
             Position -= new Vector2(left * CellWidth, up * CellHeight);
 
-            int newWidth = data.GetLength(0) + left + right;
-            int newHeight = data.GetLength(1) + up + down;
+            int newWidth = Data.Columns + left + right;
+            int newHeight = Data.Rows + up + down;
             if (newWidth <= 0 || newHeight <= 0)
             {
-                data = new bool[0, 0];
+                Data = new VirtualMap<bool>(0, 0);
                 return;
             }
 
-            bool[,] newData = new bool[newWidth, newHeight];
+            var newData = new VirtualMap<bool>(newWidth, newHeight);
 
             //Center
-            for (int x = 0; x < data.GetLength(0); x++)
+            for (int x = 0; x < Data.Columns; x++)
             {
-                for (int y = 0; y < data.GetLength(1); y++)
+                for (int y = 0; y < Data.Rows; y++)
                 {
                     int atX = x + left;
                     int atY = y + up;
 
                     if (atX >= 0 && atX < newWidth && atY >= 0 && atY < newHeight)
-                        newData[atX, atY] = data[x, y];
+                        newData[atX, atY] = Data[x, y];
                 }
             }
 
             //Left
             for (int x = 0; x < left; x++)
                 for (int y = 0; y < newHeight; y++)
-                    newData[x, y] = data[0, Calc.Clamp(y - up, 0, data.GetLength(1) - 1)];
+                    newData[x, y] = Data[0, Calc.Clamp(y - up, 0, Data.Rows - 1)];
 
             //Right
             for (int x = newWidth - right; x < newWidth; x++)
                 for (int y = 0; y < newHeight; y++)
-                    newData[x, y] = data[data.GetLength(0) - 1, Calc.Clamp(y - up, 0, data.GetLength(1) - 1)];
+                    newData[x, y] = Data[Data.Columns - 1, Calc.Clamp(y - up, 0, Data.Rows - 1)];
 
             //Top
             for (int y = 0; y < up; y++)
                 for (int x = 0; x < newWidth; x++)
-                    newData[x, y] = data[Calc.Clamp(x - left, 0, data.GetLength(0) - 1), 0];
+                    newData[x, y] = Data[Calc.Clamp(x - left, 0, Data.Columns - 1), 0];
 
             //Bottom
             for (int y = newHeight - down; y < newHeight; y++)
                 for (int x = 0; x < newWidth; x++)
-                    newData[x, y] = data[Calc.Clamp(x - left, 0, data.GetLength(0) - 1), data.GetLength(1) - 1];
+                    newData[x, y] = Data[Calc.Clamp(x - left, 0, Data.Columns - 1), Data.Rows - 1];
 
-            data = newData;
+            Data = newData;
         }
 
         public void LoadBitstring(string bitstring)
@@ -112,7 +120,7 @@ namespace Monocle
                 {
                     while (x < CellsX)
                     {
-                        data[x, y] = false;
+                        Data[x, y] = false;
                         x++;
                     }
 
@@ -126,12 +134,12 @@ namespace Monocle
                 {
                     if (bitstring[i] == '0')
                     {
-                        data[x, y] = false;
+                        Data[x, y] = false;
                         x++;
                     }
                     else
                     {
-                        data[x, y] = true;
+                        Data[x, y] = true;
                         x++;
                     }
                 }
@@ -148,7 +156,7 @@ namespace Monocle
 
                 for (int x = 0; x < CellsX; x++)
                 {
-                    if (data[x, y])
+                    if (Data[x, y])
                         bits += "1";
                     else
                         bits += "0";
@@ -162,7 +170,7 @@ namespace Monocle
         {
             for (int i = 0; i < CellsX; i++)
                 for (int j = 0; j < CellsY; j++)
-                    data[i, j] = to;
+                    Data[i, j] = to;
         }
 
         public void SetRect(int x, int y, int width, int height, bool to = true)
@@ -187,7 +195,7 @@ namespace Monocle
 
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < height; j++)
-                    data[x + i, y + j] = to;
+                    Data[x + i, y + j] = to;
         }
 
         public bool CheckRect(int x, int y, int width, int height)
@@ -214,7 +222,7 @@ namespace Monocle
             {
                 for (int j = 0; j < height; j++)
                 {
-                    if (data[x + i, y + j])
+                    if (Data[x + i, y + j])
                         return true;
                 }
             }
@@ -225,7 +233,7 @@ namespace Monocle
         public bool CheckColumn(int x)
         {
             for (int i = 0; i < CellsY; i++)
-                if (!data[x, i])
+                if (!Data[x, i])
                     return false;
             return true;
         }
@@ -233,7 +241,7 @@ namespace Monocle
         public bool CheckRow(int y)
         {
             for (int i = 0; i < CellsX; i++)
-                if (!data[i, y])
+                if (!Data[i, y])
                     return false;
             return true;
         }
@@ -243,14 +251,14 @@ namespace Monocle
             get
             {
                 if (x >= 0 && y >= 0 && x < CellsX && y < CellsY)
-                    return data[x, y];
+                    return Data[x, y];
                 else
                     return false;
             }
 
             set
             {
-                data[x, y] = value;
+                Data[x, y] = value;
             }
         }
 
@@ -258,7 +266,7 @@ namespace Monocle
         {
             get
             {
-                return data.GetLength(0);
+                return Data.Columns;
             }
         }
 
@@ -266,7 +274,7 @@ namespace Monocle
         {
             get
             {
-                return data.GetLength(1);
+                return Data.Rows;
             }
         }
 
@@ -302,7 +310,7 @@ namespace Monocle
             {
                 for (int i = 0; i < CellsX; i++)
                     for (int j = 0; j < CellsY; j++)
-                        if (data[i, j])
+                        if (Data[i, j])
                             return false;
                 return true;
             }
@@ -334,30 +342,30 @@ namespace Monocle
 
         public override Collider Clone()
         {
-            return new Grid(CellWidth, CellHeight, data);
+            return new Grid(CellWidth, CellHeight, Data.Clone());
         }
 
         public override void Render(Camera camera, Color color)
         {
-			if (camera == null)
-			{
-				for (int i = 0; i < CellsX; i++)
-					for (int j = 0; j < CellsY; j++)
-						if (data[i, j])
-							Draw.HollowRect(AbsoluteLeft + i * CellWidth, AbsoluteTop + j * CellHeight, CellWidth, CellHeight, color);
-			}
-			else
-			{
-				int left = (int)Math.Max(0, ((camera.Left - AbsoluteLeft) / CellWidth));
-				int right = (int)Math.Min(CellsX - 1, Math.Ceiling((camera.Right - AbsoluteLeft) / CellWidth));
-				int top = (int)Math.Max(0, ((camera.Top - AbsoluteTop) / CellHeight));
-				int bottom = (int)Math.Min(CellsY - 1, Math.Ceiling((camera.Bottom - AbsoluteTop) / CellHeight));
+            if (camera == null)
+            {
+                for (int i = 0; i < CellsX; i++)
+                    for (int j = 0; j < CellsY; j++)
+                        if (Data[i, j])
+                            Draw.HollowRect(AbsoluteLeft + i * CellWidth, AbsoluteTop + j * CellHeight, CellWidth, CellHeight, color);
+            }
+            else
+            {
+                int left = (int)Math.Max(0, ((camera.Left - AbsoluteLeft) / CellWidth));
+                int right = (int)Math.Min(CellsX - 1, Math.Ceiling((camera.Right - AbsoluteLeft) / CellWidth));
+                int top = (int)Math.Max(0, ((camera.Top - AbsoluteTop) / CellHeight));
+                int bottom = (int)Math.Min(CellsY - 1, Math.Ceiling((camera.Bottom - AbsoluteTop) / CellHeight));
 
-				for (int tx = left; tx <= right; tx++)
-					for (int ty = top; ty <= bottom; ty++)
-						if (data[tx, ty])
-							Draw.HollowRect(AbsoluteLeft + tx * CellWidth, AbsoluteTop + ty * CellHeight, CellWidth, CellHeight, color);
-			}
+                for (int tx = left; tx <= right; tx++)
+                    for (int ty = top; ty <= bottom; ty++)
+                        if (Data[tx, ty])
+                            Draw.HollowRect(AbsoluteLeft + tx * CellWidth, AbsoluteTop + ty * CellHeight, CellWidth, CellHeight, color);
+            }
         }
 
         /*
@@ -367,7 +375,7 @@ namespace Monocle
         override public bool Collide(Vector2 point)
         {
             if (point.X >= AbsoluteLeft && point.Y >= AbsoluteTop && point.X < AbsoluteRight && point.Y < AbsoluteBottom)
-                return data[(int)((point.X - AbsoluteLeft) / CellWidth), (int)((point.Y - AbsoluteTop) / CellHeight)];
+                return Data[(int)((point.X - AbsoluteLeft) / CellWidth), (int)((point.Y - AbsoluteTop) / CellHeight)];
             else
                 return false;
         }
@@ -467,7 +475,7 @@ namespace Monocle
          *  Static utilities
          */
 
-        static public bool IsBitstringEmpty(string bitstring)
+        public static bool IsBitstringEmpty(string bitstring)
         {
             for (int i = 0; i < bitstring.Length; i++)
             {

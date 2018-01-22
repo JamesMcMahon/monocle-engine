@@ -13,6 +13,11 @@ namespace Monocle
         private List<Entity> toAdd;
         private List<Entity> toAwake;
         private List<Entity> toRemove;
+
+        private HashSet<Entity> current;
+        private HashSet<Entity> adding;
+        private HashSet<Entity> removing;
+
         private bool unsorted;
 
         internal EntityList(Scene scene)
@@ -23,6 +28,10 @@ namespace Monocle
             toAdd = new List<Entity>();
             toAwake = new List<Entity>();
             toRemove = new List<Entity>();
+
+            current = new HashSet<Entity>();
+            adding = new HashSet<Entity>();
+            removing = new HashSet<Entity>();
         }
 
         internal void MarkUnsorted()
@@ -37,9 +46,11 @@ namespace Monocle
                 for (int i = 0; i < toAdd.Count; i++)
                 {
                     var entity = toAdd[i];
-                    if (!entities.Contains(entity))
+                    if (!current.Contains(entity))
                     {
+                        current.Add(entity);
                         entities.Add(entity);
+
                         if (Scene != null)
                         {
                             Scene.TagLists.EntityAdded(entity);
@@ -59,7 +70,9 @@ namespace Monocle
                     var entity = toRemove[i];
                     if (entities.Contains(entity))
                     {
+                        current.Remove(entity);
                         entities.Remove(entity);
+
                         if (Scene != null)
                         {
                             entity.Removed(Scene);
@@ -71,6 +84,7 @@ namespace Monocle
                 }
 
                 toRemove.Clear();
+                removing.Clear();
             }
 
             if (unsorted)
@@ -83,23 +97,31 @@ namespace Monocle
             {
                 toAwake.AddRange(toAdd);
                 toAdd.Clear();
+                adding.Clear();
 
                 foreach (var entity in toAwake)
-                    entity.Awake(Scene);
+                    if (entity.Scene == Scene)
+                        entity.Awake(Scene);
                 toAwake.Clear();
             }
         }
 
         public void Add(Entity entity)
         {
-            if (!toAdd.Contains(entity) && !entities.Contains(entity))
+            if (!adding.Contains(entity) && !current.Contains(entity))
+            {
+                adding.Add(entity);
                 toAdd.Add(entity);
+            }
         }
 
         public void Remove(Entity entity)
         {
-            if (!toRemove.Contains(entity) && entities.Contains(entity))
+            if (!removing.Contains(entity) && current.Contains(entity))
+            {
+                removing.Add(entity);
                 toRemove.Add(entity);
+            }
         }
 
         public void Add(IEnumerable<Entity> entities)
@@ -145,6 +167,16 @@ namespace Monocle
             }
         }
 
+        public int AmountOf<T>() where T : Entity
+        {
+            int count = 0;
+            foreach (var e in entities)
+                if (e is T)
+                    count++;
+
+            return count;
+        }
+
         public T FindFirst<T>() where T : Entity
         {
             foreach (var e in entities)
@@ -185,6 +217,14 @@ namespace Monocle
         public Entity[] ToArray()
         {
             return entities.ToArray<Entity>();
+        }
+
+        public bool HasVisibleEntities(int matchTags)
+        {
+            foreach (var entity in entities)
+                if (entity.Visible && entity.TagCheck(matchTags))
+                    return true;
+            return false;
         }
 
         internal void Update()
@@ -240,6 +280,6 @@ namespace Monocle
                 entity.HandleGraphicsCreate();
         }
 
-        static public Comparison<Entity> CompareDepth = (a, b) => { return Math.Sign(b.actualDepth - a.actualDepth); };
+        public static Comparison<Entity> CompareDepth = (a, b) => { return Math.Sign(b.actualDepth - a.actualDepth); };
     }
 }

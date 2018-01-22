@@ -6,7 +6,7 @@ namespace Monocle
 {
     public class Wiggler : Component
     {
-        static private Stack<Wiggler> cache = new Stack<Wiggler>();
+        private static Stack<Wiggler> cache = new Stack<Wiggler>();
 
         public float Counter { get; private set; }
         public float Value { get; private set; }
@@ -20,7 +20,7 @@ namespace Monocle
         private Action<float> onChange;
         private bool removeSelfOnFinish;
 
-        static public Wiggler Create(float duration, float frequency,  Action<float> onChange = null, bool start = false, bool removeSelfOnFinish = false)
+        public static Wiggler Create(float duration, float frequency,  Action<float> onChange = null, bool start = false, bool removeSelfOnFinish = false)
         {
             Wiggler wiggler;
 

@@ -25,6 +25,14 @@ namespace Monocle
             UpdateMatrices();
         }
 
+        public Camera(int width, int height)
+        {
+            Viewport = new Viewport();
+            Viewport.Width = width;
+            Viewport.Height = height;
+            UpdateMatrices();
+        }
+
         public override string ToString()
         {
             return "Camera:\n\tViewport: { " + Viewport.X + ", " + Viewport.Y + ", " + Viewport.Width + ", " + Viewport.Height +
@@ -37,10 +45,10 @@ namespace Monocle
         private void UpdateMatrices()
         {
             matrix = Matrix.Identity *
-                    Matrix.CreateTranslation(new Vector3(-new Vector2((int)position.X, (int)position.Y), 0)) *
+                    Matrix.CreateTranslation(new Vector3(-new Vector2((int)Math.Floor(position.X), (int)Math.Floor(position.Y)), 0)) *
                     Matrix.CreateRotationZ(angle) *
                     Matrix.CreateScale(new Vector3(zoom, 1)) *
-                    Matrix.CreateTranslation(new Vector3(new Vector2((int)origin.X, (int)origin.Y), 0));
+                    Matrix.CreateTranslation(new Vector3(new Vector2((int)Math.Floor(origin.X), (int)Math.Floor(origin.Y)), 0));
 
             inverse = Matrix.Invert(matrix);
 

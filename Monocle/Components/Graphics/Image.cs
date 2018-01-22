@@ -34,22 +34,32 @@ namespace Monocle
             get { return Texture.Height; }
         }
 
-        public void CenterOrigin()
+        public Image SetOrigin(float x, float y)
+        {
+            Origin.X = x;
+            Origin.Y = y;
+            return this;
+        }
+
+        public Image CenterOrigin()
         {
             Origin.X = Width / 2f;
             Origin.Y = Height / 2f;
+            return this;
         }
 
-        public void JustifyOrigin(Vector2 at)
+        public Image JustifyOrigin(Vector2 at)
         {
             Origin.X = Width * at.X;
             Origin.Y = Height * at.Y;
+            return this;
         }
 
-        public void JustifyOrigin(float x, float y)
+        public Image JustifyOrigin(float x, float y)
         {
             Origin.X = Width * x;
             Origin.Y = Height * y;
+            return this;
         }
     }
 }

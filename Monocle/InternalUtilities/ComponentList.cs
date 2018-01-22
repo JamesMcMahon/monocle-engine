@@ -13,6 +13,11 @@ namespace Monocle
         private List<Component> components;
         private List<Component> toAdd;
         private List<Component> toRemove;
+
+        private HashSet<Component> current;
+        private HashSet<Component> adding;
+        private HashSet<Component> removing;
+
         private LockModes lockMode;
 
         internal ComponentList(Entity entity)
@@ -22,6 +27,9 @@ namespace Monocle
             components = new List<Component>();
             toAdd = new List<Component>();
             toRemove = new List<Component>();
+            current = new HashSet<Component>();
+            adding = new HashSet<Component>();
+            removing = new HashSet<Component>();
         }
 
         internal LockModes LockMode
@@ -39,13 +47,15 @@ namespace Monocle
                 {
                     foreach (var component in toAdd)
                     {
-                        if (!components.Contains(component))
+                        if (!current.Contains(component))
                         {
+                            current.Add(component);
                             components.Add(component);
                             component.Added(Entity);
                         }
                     }
 
+                    adding.Clear();
                     toAdd.Clear();
                 }
 
@@ -53,13 +63,15 @@ namespace Monocle
                 {
                     foreach (var component in toRemove)
                     {
-                        if (components.Contains(component))
+                        if (current.Contains(component))
                         {
+                            current.Remove(component);
                             components.Remove(component);
                             component.Removed(Entity);
                         }
                     }
 
+                    removing.Clear();
                     toRemove.Clear();
                 }
             }
@@ -70,16 +82,20 @@ namespace Monocle
             switch (lockMode)
             {
                 case LockModes.Open:
-                    if (!components.Contains(component))
+                    if (!current.Contains(component))
                     {
+                        current.Add(component);
                         components.Add(component);
                         component.Added(Entity);
                     }
                     break;
 
                 case LockModes.Locked:
-                    if (!toAdd.Contains(component) && !components.Contains(component))
+                    if (!current.Contains(component) && !adding.Contains(component))
+                    {
+                        adding.Add(component);
                         toAdd.Add(component);
+                    }
                     break;
 
                 case LockModes.Error:
@@ -92,16 +108,20 @@ namespace Monocle
             switch (lockMode)
             {
                 case LockModes.Open:
-                    if (components.Contains(component))
+                    if (current.Contains(component))
                     {
+                        current.Remove(component);
                         components.Remove(component);
                         component.Removed(Entity);
                     }
                     break;
 
                 case LockModes.Locked:
-                    if (!toRemove.Contains(component) && components.Contains(component))
+                    if (current.Contains(component) && !removing.Contains(component))
+                    {
+                        removing.Add(component);
                         toRemove.Add(component);
+                    }
                     break;
 
                 case LockModes.Error:

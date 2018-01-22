@@ -104,6 +104,9 @@ namespace Monocle
         {
             get
             {
+                if (MInput.Disabled)
+                    return false;
+
                 foreach (var node in Nodes)
                     if (node.Check)
                         return true;
@@ -115,6 +118,9 @@ namespace Monocle
         {
             get
             {
+                if (MInput.Disabled)
+                    return false;
+
                 if (consumed)
                     return false;
 
@@ -132,6 +138,9 @@ namespace Monocle
         {
             get
             {
+                if (MInput.Disabled)
+                    return false;
+
                 foreach (var node in Nodes)
                     if (node.Released)
                         return true;
@@ -156,7 +165,7 @@ namespace Monocle
             consumed = true;
         }
 
-        static public implicit operator bool(VirtualButton button)
+        public static implicit operator bool(VirtualButton button)
         {
             return button.Check;
         }
@@ -520,7 +529,7 @@ namespace Monocle
 
             public override bool Pressed
             {
-	            get { return MInput.GamePads[GamepadIndex].DPadRightPressed; }
+                get { return MInput.GamePads[GamepadIndex].DPadRightPressed; }
             }
 
             public override bool Released

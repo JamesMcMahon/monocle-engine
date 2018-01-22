@@ -5,17 +5,18 @@ using System.Collections.Generic;
 
 namespace Monocle
 {
-    static public class MInput
+    public static class MInput
     {
-        static public KeyboardData Keyboard { get; private set; }
-        static public MouseData Mouse { get; private set; }
-        static public GamePadData[] GamePads { get; private set; }
+        public static KeyboardData Keyboard { get; private set; }
+        public static MouseData Mouse { get; private set; }
+        public static GamePadData[] GamePads { get; private set; }
 
-        static internal List<VirtualInput> VirtualInputs;
+        internal static List<VirtualInput> VirtualInputs;
 
-        static public bool Active = true;
+        public static bool Active = true;
+        public static bool Disabled = false;
 
-        static internal void Initialize()
+        internal static void Initialize()
         {
             //Init devices
             Keyboard = new KeyboardData();
@@ -26,13 +27,13 @@ namespace Monocle
             VirtualInputs = new List<VirtualInput>();
         }
 
-        static internal void Shutdown()
+        internal static void Shutdown()
         {
             foreach (var gamepad in GamePads)
                 gamepad.StopRumble();
         }
 
-        static internal void Update()
+        internal static void Update()
         {
             if (Engine.Instance.IsActive && Active)
             {
@@ -61,7 +62,7 @@ namespace Monocle
             UpdateVirtualInputs();
         }
 
-        static public void UpdateNull()
+        public static void UpdateNull()
         {
             Keyboard.UpdateNull();
             Mouse.UpdateNull();
@@ -71,7 +72,7 @@ namespace Monocle
             UpdateVirtualInputs();
         }
 
-        static private void UpdateVirtualInputs()
+        private static void UpdateVirtualInputs()
         {
             foreach (var virtualInput in VirtualInputs)
                 virtualInput.Update();
@@ -105,16 +106,25 @@ namespace Monocle
 
             public bool Check(Keys key)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.IsKeyDown(key);
             }
 
             public bool Pressed(Keys key)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.IsKeyDown(key) && !PreviousState.IsKeyDown(key);
             }
 
             public bool Released(Keys key)
             {
+                if (Disabled)
+                    return false;
+
                 return !CurrentState.IsKeyDown(key) && PreviousState.IsKeyDown(key);
             }
 
@@ -290,28 +300,28 @@ namespace Monocle
                 }
             }
 
-			public float X
-			{
-				get { return Position.X; }
-				set { Position = new Vector2(value, Position.Y); }
-			}
+            public float X
+            {
+                get { return Position.X; }
+                set { Position = new Vector2(value, Position.Y); }
+            }
 
-			public float Y
-			{
-				get { return Position.Y; }
-				set { Position = new Vector2(Position.X, value); }
-			}
+            public float Y
+            {
+                get { return Position.Y; }
+                set { Position = new Vector2(Position.X, value); }
+            }
 
             public Vector2 Position
             {
                 get
                 {
-                    return Vector2.Transform(new Vector2(CurrentState.X, CurrentState.Y), Matrix.Invert(Engine.Instance.screenMatrix));
+                    return Vector2.Transform(new Vector2(CurrentState.X, CurrentState.Y), Matrix.Invert(Engine.ScreenMatrix));
                 }
 
                 set
                 {
-					var vector = Vector2.Transform(value, Engine.Instance.screenMatrix);
+                    var vector = Vector2.Transform(value, Engine.ScreenMatrix);
                     Microsoft.Xna.Framework.Input.Mouse.SetPosition((int)Math.Round(vector.X), (int)Math.Round(vector.Y));
                 }
             }
@@ -328,6 +338,7 @@ namespace Monocle
             public PlayerIndex PlayerIndex { get; private set; }
             public GamePadState PreviousState;
             public GamePadState CurrentState;
+            public bool Attached;
 
             private float rumbleStrength;
             private float rumbleTime;
@@ -341,6 +352,7 @@ namespace Monocle
             {
                 PreviousState = CurrentState;
                 CurrentState = Microsoft.Xna.Framework.Input.GamePad.GetState(PlayerIndex);
+                Attached = CurrentState.IsConnected;
 
                 if (rumbleTime > 0)
                 {
@@ -354,6 +366,12 @@ namespace Monocle
             {
                 PreviousState = CurrentState;
                 CurrentState = new GamePadState();
+                Attached = Microsoft.Xna.Framework.Input.GamePad.GetState(PlayerIndex).IsConnected;
+
+                if (rumbleTime > 0)
+                    rumbleTime -= Engine.DeltaTime;
+
+                GamePad.SetVibration(PlayerIndex, 0, 0);
             }
 
             public void Rumble(float strength, float time)
@@ -372,29 +390,29 @@ namespace Monocle
                 rumbleTime = 0;
             }
 
-            #region Utils
-
-            public bool Attached
-            {
-                get { return CurrentState.IsConnected; }
-            }
-
-            #endregion
-
             #region Buttons
 
             public bool Check(Buttons button)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.IsButtonDown(button);
             }
 
             public bool Pressed(Buttons button)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.IsButtonDown(button) && PreviousState.IsButtonUp(button);
             }
 
             public bool Released(Buttons button)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.IsButtonUp(button) && PreviousState.IsButtonDown(button);
             }
 
@@ -760,31 +778,49 @@ namespace Monocle
 
             public bool LeftTriggerCheck(float threshold)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.Triggers.Left >= threshold;
             }
 
             public bool LeftTriggerPressed(float threshold)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.Triggers.Left >= threshold && PreviousState.Triggers.Left < threshold;
             }
 
             public bool LeftTriggerReleased(float threshold)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.Triggers.Left < threshold && PreviousState.Triggers.Left >= threshold;
             }
 
             public bool RightTriggerCheck(float threshold)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.Triggers.Right >= threshold;
             }
 
             public bool RightTriggerPressed(float threshold)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.Triggers.Right >= threshold && PreviousState.Triggers.Right < threshold;
             }
 
             public bool RightTriggerReleased(float threshold)
             {
+                if (Disabled)
+                    return false;
+
                 return CurrentState.Triggers.Right < threshold && PreviousState.Triggers.Right >= threshold;
             }
 
@@ -795,12 +831,12 @@ namespace Monocle
 
         #region Helpers
 
-        static public void RumbleFirst(float strength, float time)
+        public static void RumbleFirst(float strength, float time)
         {
             GamePads[0].Rumble(strength, time);
         }
 
-        static public int Axis(bool negative, bool positive, int bothValue)
+        public static int Axis(bool negative, bool positive, int bothValue)
         {
             if (negative)
             {
@@ -815,7 +851,7 @@ namespace Monocle
                 return 0;
         }
 
-        static public int Axis(float axisValue, float deadzone)
+        public static int Axis(float axisValue, float deadzone)
         {
             if (Math.Abs(axisValue) >= deadzone)
                 return Math.Sign(axisValue);
@@ -823,7 +859,7 @@ namespace Monocle
                 return 0;
         }
 
-        static public int Axis(bool negative, bool positive, int bothValue, float axisValue, float deadzone)
+        public static int Axis(bool negative, bool positive, int bothValue, float axisValue, float deadzone)
         {
             int ret = Axis(axisValue, deadzone);
             if (ret == 0)

@@ -68,7 +68,7 @@ namespace Monocle
             return data.ID;
         }
 
-        static public IEnumerator WaitForFrames(int frames)
+        public static IEnumerator WaitForFrames(int frames)
         {
             for (int i = 0; i < frames; i++)
                 yield return 0;

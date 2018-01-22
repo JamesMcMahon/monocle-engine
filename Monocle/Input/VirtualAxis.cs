@@ -44,7 +44,7 @@ namespace Monocle
             }
         }
 
-        static public implicit operator float(VirtualAxis axis)
+        public static implicit operator float(VirtualAxis axis)
         {
             return axis.Value;
         }

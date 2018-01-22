@@ -6,7 +6,7 @@ namespace Monocle
     public class SineWave : Component
     {
         /*
-         *     SINE WAVE:
+         *    SINE WAVE:
          * 
          *  1       x      
          *  |    x     x   
@@ -37,7 +37,8 @@ namespace Monocle
         public float Value { get; private set; }
         public float ValueOverTwo { get; private set; }
         public float TwoValue { get; private set; }
-		public Action<float> OnUpdate;
+        public Action<float> OnUpdate;
+        public bool UseRawDeltaTime;
 
         private float counter;
 
@@ -55,8 +56,9 @@ namespace Monocle
 
         public override void Update()
         {
-            Counter += MathHelper.TwoPi * Frequency * Rate * Engine.DeltaTime;
-			OnUpdate?.Invoke(Value);
+            Counter += MathHelper.TwoPi * Frequency * Rate * (UseRawDeltaTime ? Engine.RawDeltaTime : Engine.DeltaTime);
+            if (OnUpdate != null)
+                OnUpdate(Value);
         }
 
         public float ValueOffset(float offset)
@@ -64,9 +66,10 @@ namespace Monocle
             return (float)Math.Sin(counter + offset);
         }
 
-        public void Randomize()
+        public SineWave Randomize()
         {
             Counter = Calc.Random.NextFloat() * MathHelper.TwoPi * 2;
+            return this;
         }
 
         public void Reset()

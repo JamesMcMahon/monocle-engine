@@ -90,11 +90,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Graphics\ParticleEmitter.cs" />
     <Compile Include="Components\Graphics\PixelText.cs" />
     <Compile Include="Components\Graphics\Sprite.cs" />
     <Compile Include="Components\Logic\CounterSet.cs" />
     <Compile Include="Components\Logic\Shaker.cs" />
     <Compile Include="Components\Logic\ShakerList.cs" />
+    <Compile Include="Graphics\Atlas.cs" />
+    <Compile Include="Graphics\SpriteBank.cs" />
     <Compile Include="Graphics\Tileset.cs" />
     <Compile Include="Input\VirtualAxis.cs" />
     <Compile Include="Input\VirtualInput.cs" />
@@ -161,6 +164,7 @@
     <Compile Include="Input\VirtualJoystick.cs" />
     <Compile Include="Input\VirtualButton.cs" />
     <Compile Include="Util\SaveLoad.cs" />
+    <Compile Include="Util\VirtualMap.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

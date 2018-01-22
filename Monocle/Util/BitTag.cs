@@ -8,11 +8,11 @@ namespace Monocle
 {
     public class BitTag
     {
-        static internal int TotalTags = 0;
-        static internal BitTag[] byID = new BitTag[32];
-        static private Dictionary<string, BitTag> byName = new Dictionary<string, BitTag>(StringComparer.InvariantCultureIgnoreCase);
+        internal static int TotalTags = 0;
+        internal static BitTag[] byID = new BitTag[32];
+        private static Dictionary<string, BitTag> byName = new Dictionary<string, BitTag>(StringComparer.OrdinalIgnoreCase);
 
-        static public BitTag Get(string name)
+        public static BitTag Get(string name)
         {
 #if DEBUG
             if (!byName.ContainsKey(name))
@@ -44,7 +44,7 @@ namespace Monocle
             TotalTags++;
         }
 
-        static public implicit operator int(BitTag tag)
+        public static implicit operator int(BitTag tag)
         {
             return tag.Value;
         }

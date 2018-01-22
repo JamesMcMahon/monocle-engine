@@ -7,11 +7,11 @@ namespace Monocle
     [Flags]
     public enum PointSectors { Center = 0, Top = 1, Bottom = 2, TopLeft = 9, TopRight = 5, Left = 8, Right = 4, BottomLeft = 10, BottomRight = 6 };
 
-    static public class Collide
+    public static class Collide
     {
         #region Entity vs Entity
 
-        static public bool Check(Entity a, Entity b)
+        public static bool Check(Entity a, Entity b)
         {
             if (a.Collider == null || b.Collider == null)
                 return false;
@@ -19,7 +19,7 @@ namespace Monocle
                 return a != b && b.Collidable && a.Collider.Collide(b);
         }
 
-        static public bool Check(Entity a, Entity b, Vector2 at)
+        public static bool Check(Entity a, Entity b, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -34,7 +34,7 @@ namespace Monocle
 
         #region Check
 
-        static public bool Check(Entity a, IEnumerable<Entity> b)
+        public static bool Check(Entity a, IEnumerable<Entity> b)
         {
             foreach (var e in b)
                 if (Check(a, e))
@@ -43,7 +43,7 @@ namespace Monocle
             return false;
         }
 
-        static public bool Check(Entity a, IEnumerable<Entity> b, Vector2 at)
+        public static bool Check(Entity a, IEnumerable<Entity> b, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -56,7 +56,7 @@ namespace Monocle
 
         #region First
 
-        static public Entity First(Entity a, IEnumerable<Entity> b)
+        public static Entity First(Entity a, IEnumerable<Entity> b)
         {
             foreach (var e in b)
                 if (Check(a, e))
@@ -65,7 +65,7 @@ namespace Monocle
             return null;
         }
 
-        static public Entity First(Entity a, IEnumerable<Entity> b, Vector2 at)
+        public static Entity First(Entity a, IEnumerable<Entity> b, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -78,7 +78,7 @@ namespace Monocle
 
         #region All
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into)
+        public static List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into)
         {
             foreach (var e in b)
                 if (Check(a, e))
@@ -87,7 +87,7 @@ namespace Monocle
             return into;
         }
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into, Vector2 at)
+        public static List<Entity> All(Entity a, IEnumerable<Entity> b, List<Entity> into, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -96,12 +96,12 @@ namespace Monocle
             return ret;
         }
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b)
+        public static List<Entity> All(Entity a, IEnumerable<Entity> b)
         {
             return All(a, b, new List<Entity>());
         }
 
-        static public List<Entity> All(Entity a, IEnumerable<Entity> b, Vector2 at)
+        public static List<Entity> All(Entity a, IEnumerable<Entity> b, Vector2 at)
         {
             return All(a, b, new List<Entity>(), at);
         }
@@ -112,7 +112,7 @@ namespace Monocle
 
         #region Entity vs Point
 
-        static public bool CheckPoint(Entity a, Vector2 point)
+        public static bool CheckPoint(Entity a, Vector2 point)
         {
             if (a.Collider == null)
                 return false;
@@ -120,7 +120,7 @@ namespace Monocle
                 return a.Collider.Collide(point);
         }
 
-        static public bool CheckPoint(Entity a, Vector2 point, Vector2 at)
+        public static bool CheckPoint(Entity a, Vector2 point, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -133,7 +133,7 @@ namespace Monocle
 
         #region Entity vs Line
 
-        static public bool CheckLine(Entity a, Vector2 from, Vector2 to)
+        public static bool CheckLine(Entity a, Vector2 from, Vector2 to)
         {
             if (a.Collider == null)
                 return false;
@@ -141,7 +141,7 @@ namespace Monocle
                 return a.Collider.Collide(from, to);
         }
 
-        static public bool CheckLine(Entity a, Vector2 from, Vector2 to, Vector2 at)
+        public static bool CheckLine(Entity a, Vector2 from, Vector2 to, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -154,7 +154,7 @@ namespace Monocle
 
         #region Entity vs Rectangle
 
-        static public bool CheckRect(Entity a, Rectangle rect)
+        public static bool CheckRect(Entity a, Rectangle rect)
         {
             if (a.Collider == null)
                 return false;
@@ -162,7 +162,7 @@ namespace Monocle
                 return a.Collider.Collide(rect);
         }
 
-        static public bool CheckRect(Entity a, Rectangle rect, Vector2 at)
+        public static bool CheckRect(Entity a, Rectangle rect, Vector2 at)
         {
             Vector2 old = a.Position;
             a.Position = at;
@@ -175,7 +175,7 @@ namespace Monocle
 
         #region Line
 
-        static public bool LineCheck(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
+        public static bool LineCheck(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2)
         {
             Vector2 b = a2 - a1;
             Vector2 d = b2 - b1;
@@ -197,7 +197,7 @@ namespace Monocle
             return true;
         } 
 
-        static public bool LineCheck(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2, out Vector2 intersection)
+        public static bool LineCheck(Vector2 a1, Vector2 a2, Vector2 b1, Vector2 b2, out Vector2 intersection)
         {
             intersection = Vector2.Zero;
 
@@ -227,22 +227,22 @@ namespace Monocle
 
         #region Circle
 
-        static public bool CircleToLine(Vector2 cPosiition, float cRadius, Vector2 lineFrom, Vector2 lineTo)
+        public static bool CircleToLine(Vector2 cPosiition, float cRadius, Vector2 lineFrom, Vector2 lineTo)
         {
             return Vector2.DistanceSquared(cPosiition, Calc.ClosestPointOnLine(lineFrom, lineTo, cPosiition)) < cRadius * cRadius;
         }
 
-        static public bool CircleToPoint(Vector2 cPosition, float cRadius, Vector2 point)
+        public static bool CircleToPoint(Vector2 cPosition, float cRadius, Vector2 point)
         {
             return Vector2.DistanceSquared(cPosition, point) < cRadius * cRadius;
         }
 
-        static public bool CircleToRect(Vector2 cPosition, float cRadius, float rX, float rY, float rW, float rH)
+        public static bool CircleToRect(Vector2 cPosition, float cRadius, float rX, float rY, float rW, float rH)
         {
             return RectToCircle(rX, rY, rW, rH, cPosition, cRadius);
         }
 
-        static public bool CircleToRect(Vector2 cPosition, float cRadius, Rectangle rect)
+        public static bool CircleToRect(Vector2 cPosition, float cRadius, Rectangle rect)
         {
             return RectToCircle(rect, cPosition, cRadius);
         }
@@ -251,7 +251,7 @@ namespace Monocle
 
         #region Rect
 
-        static public bool RectToCircle(float rX, float rY, float rW, float rH, Vector2 cPosition, float cRadius)
+        public static bool RectToCircle(float rX, float rY, float rW, float rH, Vector2 cPosition, float cRadius)
         {
             //Check if the rectangle contains the circle's center point
             if (Collide.RectToPoint(rX, rY, rW, rH, cPosition))
@@ -297,12 +297,12 @@ namespace Monocle
             return false;
         }
 
-        static public bool RectToCircle(Rectangle rect, Vector2 cPosition, float cRadius)
+        public static bool RectToCircle(Rectangle rect, Vector2 cPosition, float cRadius)
         {
             return RectToCircle(rect.X, rect.Y, rect.Width, rect.Height, cPosition, cRadius);
         }
 
-        static public bool RectToLine(float rX, float rY, float rW, float rH, Vector2 lineFrom, Vector2 lineTo)
+        public static bool RectToLine(float rX, float rY, float rW, float rH, Vector2 lineFrom, Vector2 lineTo)
         {
             PointSectors fromSector = Monocle.Collide.GetSector(rX, rY, rW, rH, lineFrom);
             PointSectors toSector = Monocle.Collide.GetSector(rX, rY, rW, rH, lineTo);
@@ -355,17 +355,17 @@ namespace Monocle
             return false;
         }
 
-        static public bool RectToLine(Rectangle rect, Vector2 lineFrom, Vector2 lineTo)
+        public static bool RectToLine(Rectangle rect, Vector2 lineFrom, Vector2 lineTo)
         {
             return RectToLine(rect.X, rect.Y, rect.Width, rect.Height, lineFrom, lineTo);
         }
 
-        static public bool RectToPoint(float rX, float rY, float rW, float rH, Vector2 point)
+        public static bool RectToPoint(float rX, float rY, float rW, float rH, Vector2 point)
         {
             return point.X >= rX && point.Y >= rY && point.X < rX + rW && point.Y < rY + rH;
         }
 
-        static public bool RectToPoint(Rectangle rect, Vector2 point)
+        public static bool RectToPoint(Rectangle rect, Vector2 point)
         {
             return RectToPoint(rect.X, rect.Y, rect.Width, rect.Height, point);
         }
@@ -384,7 +384,7 @@ namespace Monocle
          *      0101  0100  0110
          */
 
-        static public PointSectors GetSector(Rectangle rect, Vector2 point)
+        public static PointSectors GetSector(Rectangle rect, Vector2 point)
         {
             PointSectors sector = PointSectors.Center;
 
@@ -401,7 +401,7 @@ namespace Monocle
             return sector;
         }
 
-        static public PointSectors GetSector(float rX, float rY, float rW, float rH, Vector2 point)
+        public static PointSectors GetSector(float rX, float rY, float rW, float rH, Vector2 point)
         {
             PointSectors sector = PointSectors.Center;
 

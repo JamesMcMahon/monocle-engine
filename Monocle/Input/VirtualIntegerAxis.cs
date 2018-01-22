@@ -9,8 +9,8 @@ namespace Monocle
     public class VirtualIntegerAxis : VirtualInput
     {
         public List<VirtualAxis.Node> Nodes;
-        
-        public int Value { get; private set; }
+
+        public int Value;
         public int PreviousValue { get; private set; }
 
         public VirtualIntegerAxis()
@@ -43,7 +43,7 @@ namespace Monocle
             }
         }
 
-        static public implicit operator int(VirtualIntegerAxis axis)
+        public static implicit operator int(VirtualIntegerAxis axis)
         {
             return axis.Value;
         }

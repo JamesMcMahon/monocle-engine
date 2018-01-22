@@ -14,36 +14,53 @@ namespace Monocle
         public Vector2? Justify;
         public Action<string> OnFinish;
         public Action<string> OnLoop;
-        public Action<string> OnAnimate;
+        public Action<string> OnFrameChange;
+        public Action<string> OnLastFrame;
+        public Action<string, string> OnChange;
 
-        private MTexture atlas;
-        private string path;
+        private Atlas atlas;
+        public string Path;
         private Dictionary<string, Animation> animations;
         private Animation currentAnimation;
         private float animationTimer;
         private int width;
         private int height;
 
-        public Sprite(MTexture atlas, string path)
+        public Sprite(Atlas atlas, string path)
             : base(null, true)
         {
             this.atlas = atlas;
-            this.path = path;
-            animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
+            this.Path = path;
+            animations = new Dictionary<string, Animation>(StringComparer.OrdinalIgnoreCase);
+            CurrentAnimationID = "";
         }
 
-        public void Reset(MTexture atlas, string path)
+        public void Reset(Atlas atlas, string path)
         {
             this.atlas = atlas;
-            this.path = path;
-            animations = new Dictionary<string, Animation>(StringComparer.InvariantCultureIgnoreCase);
+            this.Path = path;
+            animations = new Dictionary<string, Animation>(StringComparer.OrdinalIgnoreCase);
 
             currentAnimation = null;
             CurrentAnimationID = "";
             OnFinish = null;
             OnLoop = null;
-            OnAnimate = null;
+            OnFrameChange = null;
+            OnChange = null;
             Animating = false;
+        }
+
+        public MTexture GetFrame(string animation, int frame)
+        {
+            return animations[animation].Frames[frame];
+        }
+
+        public Vector2 Center
+        {
+            get
+            {
+                return new Vector2(Width / 2, Height / 2);
+            }
         }
 
         public override void Update()
@@ -65,43 +82,54 @@ namespace Monocle
                     //End of Animation
                     if (CurrentAnimationFrame < 0 || CurrentAnimationFrame >= currentAnimation.Frames.Length)
                     {
-                        //Looped
-                        if (currentAnimation.Goto != null)
-                        {
-                            CurrentAnimationID = LastAnimationID = currentAnimation.Goto.Choose();
-                            currentAnimation = animations[LastAnimationID];
-                            if (CurrentAnimationFrame < 0)
-                                CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
-                            else
-                                CurrentAnimationFrame = 0;
+                        var was = CurrentAnimationID;
+                        if (OnLastFrame != null)
+                            OnLastFrame(CurrentAnimationID);
 
-                            SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
-                            OnAnimate?.Invoke(CurrentAnimationID);
-                            OnLoop?.Invoke(CurrentAnimationID);
-                        }
-                        else
+                        // only do stuff if OnLastFrame didn't just change the animation
+                        if (was == CurrentAnimationID)
                         {
-                            //Ended
-                            if (CurrentAnimationFrame < 0)
-                                CurrentAnimationFrame = 0;
-                            else
-                                CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
+                            //Looped
+                            if (currentAnimation.Goto != null)
+                            {
+                                CurrentAnimationID = currentAnimation.Goto.Choose();
 
-                            Animating = false;
-                            var id = CurrentAnimationID;
-                            CurrentAnimationID = null;
-                            currentAnimation = null;
-                            animationTimer = 0;
-                            if (OnFinish != null)
-                                OnFinish(id);
+                                if (OnChange != null)
+                                    OnChange(LastAnimationID, CurrentAnimationID);
+
+                                LastAnimationID = CurrentAnimationID;
+                                currentAnimation = animations[LastAnimationID];
+                                if (CurrentAnimationFrame < 0)
+                                    CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
+                                else
+                                    CurrentAnimationFrame = 0;
+
+                                SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
+                                if (OnLoop != null)
+                                    OnLoop(CurrentAnimationID);
+                            }
+                            else
+                            {
+                                //Ended
+                                if (CurrentAnimationFrame < 0)
+                                    CurrentAnimationFrame = 0;
+                                else
+                                    CurrentAnimationFrame = currentAnimation.Frames.Length - 1;
+
+                                Animating = false;
+                                var id = CurrentAnimationID;
+                                CurrentAnimationID = "";
+                                currentAnimation = null;
+                                animationTimer = 0;
+                                if (OnFinish != null)
+                                    OnFinish(id);
+                            }
                         }
                     }
                     else
                     {
                         //Continue Animation
                         SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
-                        if (OnAnimate != null)
-                            OnAnimate(CurrentAnimationID);
                     }
                 }
             }
@@ -109,17 +137,22 @@ namespace Monocle
 
         private void SetFrame(MTexture texture)
         {
+            if (texture == Texture)
+                return;
+
             Texture = texture;
             if (Justify.HasValue)
                 Origin = new Vector2(Texture.Width * Justify.Value.X, Texture.Height * Justify.Value.Y);
+            if (OnFrameChange != null)
+                OnFrameChange(CurrentAnimationID);
         }
 
-		public void SetAnimationFrame(int frame)
-		{
-			animationTimer = 0;
-			CurrentAnimationFrame = frame % currentAnimation.Frames.Length;
-			SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
-		}
+        public void SetAnimationFrame(int frame)
+        {
+            animationTimer = 0;
+            CurrentAnimationFrame = frame % currentAnimation.Frames.Length;
+            SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
+        }
 
         #region Define Animations
 
@@ -133,17 +166,17 @@ namespace Monocle
             };
         }
 
-		public void AddLoop(string id, string path, float delay, params int[] frames)
-		{
-			animations[id] = new Animation()
-			{
-				Delay = delay,
-				Frames = GetFrames(path, frames),
-				Goto = new Chooser<string>(id, 1f)
-			};
-		}
+        public void AddLoop(string id, string path, float delay, params int[] frames)
+        {
+            animations[id] = new Animation()
+            {
+                Delay = delay,
+                Frames = GetFrames(path, frames),
+                Goto = new Chooser<string>(id, 1f)
+            };
+        }
 
-		public void Add(string id, string path)
+        public void Add(string id, string path)
         {
             animations[id] = new Animation()
             {
@@ -212,25 +245,31 @@ namespace Monocle
                 Goto = into
             };
         }
-
+        
         private MTexture[] GetFrames(string path, int[] frames = null)
         {
             MTexture[] ret;
 
-            if (frames == null)
-                ret = atlas.GetAtlasSubtextures(this.path + path).ToArray();
+            if (frames == null || frames.Length <= 0)
+                ret = atlas.GetAtlasSubtextures(this.Path + path).ToArray();
             else
             {
-                var allFrames = atlas.GetAtlasSubtextures(this.path + path).ToArray();
+                var fullPath = this.Path + path;
                 var finalFrames = new MTexture[frames.Length];
                 for (int i = 0; i < frames.Length; i++)
-                    finalFrames[i] = allFrames[frames[i]];
+                {
+                    var frame = atlas.GetAtlasSubtexturesAt(fullPath, frames[i]);
+                    if (frame == null)
+
+                        throw new Exception("Can't find sprite " + fullPath + " with index " + frames[i]); 
+                    finalFrames[i] = frame;
+                }
                 ret = finalFrames;
             }
 
 #if DEBUG
             if (ret.Length == 0)
-                throw new Exception("No frames found for animation path '" + this.path + path + "'!");
+                throw new Exception("No frames found for animation path '" + this.Path + path + "'!");
 #endif
 
             width = Math.Max(ret[0].Width, width);
@@ -247,21 +286,34 @@ namespace Monocle
         #endregion
 
         #region Animation Playback
-
-        public void Play(string id, bool restart = false)
+        
+        public void Play(string id, bool restart = false, bool randomizeFrame = false)
         {
             if (CurrentAnimationID != id || restart)
             {
 #if DEBUG
                 if (!animations.ContainsKey(id))
-                    throw new Exception("No Animation defined for ID: " + id.ToString());
+                    throw new Exception("No Animation defined for ID: " + id);
 #endif
+                if (OnChange != null)
+                    OnChange(LastAnimationID, id);
+
                 LastAnimationID = CurrentAnimationID = id;
                 currentAnimation = animations[id];
-                animationTimer = 0;
                 Animating = currentAnimation.Delay > 0;
-                CurrentAnimationFrame = 0;
-                SetFrame(currentAnimation.Frames[0]);
+
+                if (randomizeFrame)
+                {
+                    animationTimer = Calc.Random.NextFloat(currentAnimation.Delay);
+                    CurrentAnimationFrame = Calc.Random.Next(currentAnimation.Frames.Length);
+                }
+                else
+                {
+                    animationTimer = 0;
+                    CurrentAnimationFrame = 0;
+                }
+
+                SetFrame(currentAnimation.Frames[CurrentAnimationFrame]);
             }
         }
 
@@ -271,8 +323,11 @@ namespace Monocle
             {
 #if DEBUG
                 if (!animations.ContainsKey(id))
-                    throw new Exception("No Animation defined for ID: " + id.ToString());
+                    throw new Exception("No Animation defined for ID: " + id);
 #endif
+                if (OnChange != null)
+                    OnChange(LastAnimationID, id);
+
                 LastAnimationID = CurrentAnimationID = id;
                 currentAnimation = animations[id];
 
@@ -302,11 +357,17 @@ namespace Monocle
             }
         }
 
-		public IEnumerator PlayRoutine(string id, bool restart = false)
-		{
-			Play(id, restart);
+        public IEnumerator PlayRoutine(string id, bool restart = false)
+        {
+            Play(id, restart);
             return PlayUtil();
-		}
+        }
+
+        public IEnumerator ReverseRoutine(string id, bool restart = false)
+        {
+            Reverse(id, restart);
+            return PlayUtil();
+        }
 
         private IEnumerator PlayUtil()
         {
@@ -323,14 +384,14 @@ namespace Monocle
 
         public bool Has(string id)
         {
-            return animations.ContainsKey(id);
+            return id != null && animations.ContainsKey(id);
         }
 
         public void Stop()
         {
             Animating = false;
             currentAnimation = null;
-            CurrentAnimationID = null;
+            CurrentAnimationID = "";
         }
 
         #endregion     
@@ -385,6 +446,52 @@ namespace Monocle
         }
 
         #endregion
+
+        #region Cloning from SpriteBank
+
+        internal Sprite()
+            : base(null, true)
+        {
+
+        }
+
+        internal Sprite CreateClone()
+        {
+            return CloneInto(new Sprite());
+        }
+
+        internal Sprite CloneInto(Sprite clone)
+        {
+            clone.Texture = Texture;
+            clone.Position = Position;
+            clone.Justify = Justify;
+            clone.Origin = Origin;
+
+            clone.animations = new Dictionary<string, Animation>(animations, StringComparer.OrdinalIgnoreCase);
+            clone.currentAnimation = currentAnimation;
+            clone.animationTimer = animationTimer;
+            clone.width = width;
+            clone.height = height;
+
+            clone.Animating = Animating;
+            clone.CurrentAnimationID = CurrentAnimationID;
+            clone.LastAnimationID = LastAnimationID;
+            clone.CurrentAnimationFrame = CurrentAnimationFrame;
+
+            return clone;
+        }
+
+        #endregion
+
+        public void DrawSubrect(Vector2 offset, Rectangle rectangle)
+        {
+            if (Texture != null)
+            {
+                var clip = Texture.GetRelativeRect(rectangle);
+                var clipOffset = new Vector2(-Math.Min(rectangle.X - Texture.DrawOffset.X, 0), -Math.Min(rectangle.Y - Texture.DrawOffset.Y, 0));
+                Draw.SpriteBatch.Draw(Texture.Texture, RenderPosition + offset, clip, Color, Rotation, Origin - clipOffset, Scale, Effects, 0);
+            }
+        }
 
         public void LogAnimations()
         {

@@ -5,7 +5,8 @@ namespace Monocle
 {
     public class CheatListener : Entity
     {
-        public string Input;
+        public string CurrentInput;
+        public bool Logging;
 
         private List<Tuple<char, Func<bool>>> inputs;
         private List<Tuple<string, Action>> cheats;
@@ -14,7 +15,7 @@ namespace Monocle
         public CheatListener()
         {
             Visible = false;
-            Input = "";
+            CurrentInput = "";
 
             inputs = new List<Tuple<char, Func<bool>>>();
             cheats = new List<Tuple<string, Action>>();
@@ -28,7 +29,7 @@ namespace Monocle
             {
                 if (input.Item2())
                 {
-                    Input += input.Item1;
+                    CurrentInput += input.Item1;
                     changed = true;
                 }
             }
@@ -36,17 +37,24 @@ namespace Monocle
             //Handle changes
             if (changed)
             {
-                if (Input.Length > maxInput)
-                    Input = Input.Substring(Input.Length - maxInput);
+                if (CurrentInput.Length > maxInput)
+                    CurrentInput = CurrentInput.Substring(CurrentInput.Length - maxInput);
+
+                if (Logging)
+                    Calc.Log(CurrentInput);
 
                 foreach (var cheat in cheats)
                 {
-                    if (Input.Contains(cheat.Item1))
+                    if (CurrentInput.Contains(cheat.Item1))
                     {
-                        Input = "";
+                        CurrentInput = "";
                         if (cheat.Item2 != null)
                             cheat.Item2();
                         cheats.Remove(cheat);
+
+                        if (Logging)
+                            Calc.Log("Cheat Activated: " + cheat.Item1);
+
                         break;
                     }
                 }

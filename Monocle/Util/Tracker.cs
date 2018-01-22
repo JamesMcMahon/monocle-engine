@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,12 +11,12 @@ namespace Monocle
     {
         #region Static
 
-        static public Dictionary<Type, List<Type>> TrackedEntityTypes { get; private set; }
-        static public Dictionary<Type, List<Type>> TrackedComponentTypes { get; private set; }
-        static public HashSet<Type> StoredEntityTypes { get; private set; }
-        static public HashSet<Type> StoredComponentTypes { get; private set; }
+        public static Dictionary<Type, List<Type>> TrackedEntityTypes { get; private set; }
+        public static Dictionary<Type, List<Type>> TrackedComponentTypes { get; private set; }
+        public static HashSet<Type> StoredEntityTypes { get; private set; }
+        public static HashSet<Type> StoredComponentTypes { get; private set; }
 
-        static public void Initialize()
+        public static void Initialize()
         {
             TrackedEntityTypes = new Dictionary<Type, List<Type>>();
             TrackedComponentTypes = new Dictionary<Type, List<Type>>();
@@ -83,7 +84,7 @@ namespace Monocle
             }
         }
 
-        static private List<Type> GetSubclasses(Type type)
+        private static List<Type> GetSubclasses(Type type)
         {
             List<Type> matches = new List<Type>();
 
@@ -134,6 +135,27 @@ namespace Monocle
                 return list[0] as T;
         }
 
+        public T GetNearestEntity<T>(Vector2 nearestTo) where T : Entity
+        {
+            var list = GetEntities<T>();
+
+            T nearest = null;
+            float nearestDistSq = 0;
+
+            foreach (T entity in list)
+            {
+                float distSq = Vector2.DistanceSquared(nearestTo, entity.Position);
+
+                if (nearest == null || distSq < nearestDistSq)
+                {
+                    nearest = entity;
+                    nearestDistSq = distSq;
+                }
+            }
+
+            return nearest;
+        }
+
         public List<Entity> GetEntities<T>() where T : Entity
         {
 #if DEBUG
@@ -141,7 +163,7 @@ namespace Monocle
                 throw new Exception("Entity type '" + typeof(T).Name + "' is not marked with the Tracked attribute!");
 #endif
 
-			return Entities[typeof(T)];
+            return Entities[typeof(T)];
         }
 
         public List<Entity> GetEntitiesCopy<T>() where T : Entity
@@ -182,6 +204,27 @@ namespace Monocle
                 return null;
             else
                 return list[0] as T;
+        }
+
+        public T GetNearestComponent<T>(Vector2 nearestTo) where T : Component
+        {
+            var list = GetComponents<T>();
+
+            T nearest = null;
+            float nearestDistSq = 0;
+
+            foreach (T component in list)
+            {
+                float distSq = Vector2.DistanceSquared(nearestTo, component.Entity.Position);
+
+                if (nearest == null || distSq < nearestDistSq)
+                {
+                    nearest = component;
+                    nearestDistSq = distSq;
+                }
+            }
+
+            return nearest;
         }
 
         public List<Component> GetComponents<T>() where T : Component

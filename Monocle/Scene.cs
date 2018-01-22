@@ -13,7 +13,7 @@ namespace Monocle
         public bool Focused { get; private set; }
         public EntityList Entities { get; private set; }
         public TagLists TagLists { get; private set; }
-		public RendererList RendererList { get; private set; }
+        public RendererList RendererList { get; private set; }
         public Entity HelperEntity { get; private set; }
         public Tracker Tracker { get; private set; }
 
@@ -26,7 +26,7 @@ namespace Monocle
             Tracker = new Tracker();
             Entities = new EntityList(this);
             TagLists = new TagLists();
-			RendererList = new RendererList(this);
+            RendererList = new RendererList(this);
 
             actualDepthLookup = new Dictionary<int, double>();
 
@@ -56,7 +56,7 @@ namespace Monocle
 
             Entities.UpdateLists();
             TagLists.UpdateLists();
-			RendererList.UpdateLists();
+            RendererList.UpdateLists();
         }
 
         public virtual void Update()
@@ -64,7 +64,7 @@ namespace Monocle
             if (!Paused)
             {
                 Entities.Update();
-				RendererList.Update();
+                RendererList.Update();
             }
         }
 
@@ -79,18 +79,18 @@ namespace Monocle
 
         public virtual void BeforeRender()
         {
-			RendererList.BeforeRender();
+            RendererList.BeforeRender();
         }
 
         public virtual void Render()
-		{
-			RendererList.Render();
-		}
+        {
+            RendererList.Render();
+        }
 
         public virtual void AfterRender()
-		{
-			RendererList.AfterRender();
-		}
+        {
+            RendererList.AfterRender();
+        }
 
         public virtual void HandleGraphicsReset()
         {
@@ -186,6 +186,11 @@ namespace Monocle
                 if (list[i].Collidable && list[i].CollideRect(rect))
                     return true;
             return false;
+        }
+
+        public bool CollideCheck(Rectangle rect, Entity entity)
+        {
+            return (entity.Collidable && entity.CollideRect(rect));
         }
 
         public Entity CollideFirst(Vector2 point, int tag)
@@ -429,7 +434,7 @@ namespace Monocle
 
             for (int i = 0; i < list.Count; i++)
                 if (list[i].Collidable && list[i].CollideRect(rect))
-                    list.Add(list[i] as T);
+                    hits.Add(list[i] as T);
         }
 
         public List<T> CollideAll<T>(Vector2 point) where T : Entity
@@ -839,7 +844,7 @@ namespace Monocle
         /// <param name="renderer">The Renderer to add</param>
         public void Add(Renderer renderer)
         {
-			RendererList.Add(renderer);
+            RendererList.Add(renderer);
         }
 
         /// <summary>
@@ -848,7 +853,7 @@ namespace Monocle
         /// <param name="renderer">The Renderer to remove</param>
         public void Remove(Renderer renderer)
         {
-			RendererList.Remove(renderer);
+            RendererList.Remove(renderer);
         }
 
         #endregion

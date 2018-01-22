@@ -3,11 +3,11 @@ using System.Xml;
 
 namespace Monocle
 {
-    static public class Tiler
+    public static class Tiler
     {
         public enum EdgeBehavior { True, False, Wrap };
 
-        static public int[,] Tile(bool[,] bits, Func<int> tileDecider, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
+        public static int[,] Tile(bool[,] bits, Func<int> tileDecider, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
         {
             int boundsX = bits.GetLength(0);
             int boundsY = bits.GetLength(1);
@@ -72,7 +72,7 @@ namespace Monocle
             The "mask" will also be used for tile checks! 
             A tile is solid if bits[x, y] OR mask[x, y] is solid
         */
-        static public int[,] Tile(bool[,] bits, bool[,] mask, Func<int> tileDecider, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
+        public static int[,] Tile(bool[,] bits, bool[,] mask, Func<int> tileDecider, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
         {
             int boundsX = bits.GetLength(0);
             int boundsY = bits.GetLength(1);
@@ -133,26 +133,26 @@ namespace Monocle
             return tiles;
         }
 
-        static public int[,] Tile(bool[,] bits, AutotileData autotileData, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
+        public static int[,] Tile(bool[,] bits, AutotileData autotileData, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
         {
             return Tile(bits, autotileData.TileHandler, tileOutput, tileWidth, tileHeight, edges);
         }
 
-        static public int[,] Tile(bool[,] bits, bool[,] mask, AutotileData autotileData, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
+        public static int[,] Tile(bool[,] bits, bool[,] mask, AutotileData autotileData, Action<int> tileOutput, int tileWidth, int tileHeight, EdgeBehavior edges)
         {
             return Tile(bits, mask, autotileData.TileHandler, tileOutput, tileWidth, tileHeight, edges);
         }
 
-        static public int TileX { get; private set; }
-        static public int TileY { get; private set; }
-        static public bool Left { get; private set; }
-        static public bool Right { get; private set; }
-        static public bool Up { get; private set; }
-        static public bool Down { get; private set; }
-        static public bool UpLeft { get; private set; }
-        static public bool UpRight { get; private set; }
-        static public bool DownLeft { get; private set; }
-        static public bool DownRight { get; private set; }
+        public static int TileX { get; private set; }
+        public static int TileY { get; private set; }
+        public static bool Left { get; private set; }
+        public static bool Right { get; private set; }
+        public static bool Up { get; private set; }
+        public static bool Down { get; private set; }
+        public static bool UpLeft { get; private set; }
+        public static bool UpRight { get; private set; }
+        public static bool DownLeft { get; private set; }
+        public static bool DownRight { get; private set; }
     }
 
     public class AutotileData

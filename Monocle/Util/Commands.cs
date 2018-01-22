@@ -466,6 +466,7 @@ namespace Monocle
 
         private void BuildCommandsList()
         {
+#if !CONSOLE
             //Check Monocle for Commands
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
                 foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
@@ -480,6 +481,7 @@ namespace Monocle
             foreach (var command in commands)
                 sorted.Add(command.Key);
             sorted.Sort();
+#endif
         }
 
         private void ProcessMethod(MethodInfo method)
@@ -526,9 +528,9 @@ namespace Monocle
                         {
                             defaults[i] = p.DefaultValue;
                             if (p.ParameterType == typeof(string))
-                                usage[i] += "=\"" + p.DefaultValue.ToString() + "\"";
+                                usage[i] += "=\"" + p.DefaultValue + "\"";
                             else
-                                usage[i] += "=" + p.DefaultValue.ToString();
+                                usage[i] += "=" + p.DefaultValue;
                         }
                         else
                             defaults[i] = null;
@@ -624,7 +626,7 @@ namespace Monocle
 
         #region Parsing Arguments
 
-        static private string ArgString(string arg)
+        private static string ArgString(string arg)
         {
             if (arg == null)
                 return "";
@@ -632,7 +634,7 @@ namespace Monocle
                 return arg;
         }
 
-        static private bool ArgBool(string arg)
+        private static bool ArgBool(string arg)
         {
             if (arg != null)
                 return !(arg == "0" || arg.ToLower() == "false" || arg.ToLower() == "f");
@@ -640,7 +642,7 @@ namespace Monocle
                 return false;
         }
 
-        static private int ArgInt(string arg)
+        private static int ArgInt(string arg)
         {
             try
             {
@@ -652,7 +654,7 @@ namespace Monocle
             }
         }
 
-        static private float ArgFloat(string arg)
+        private static float ArgFloat(string arg)
         {
             try
             {
@@ -669,21 +671,21 @@ namespace Monocle
         #endregion
 
         #region Built-In Commands
-
+#if !CONSOLE
         [Command("clear", "Clears the terminal")]
-        static public void Clear()
+        public static void Clear()
         {
             Engine.Commands.drawCommands.Clear();
         }
 
         [Command("exit", "Exits the game")]
-        static private void Exit()
+        private static void Exit()
         {
             Engine.Instance.Exit();
         }
 
         [Command("vsync", "Enables or disables vertical sync")]
-        static private void Vsync(bool enabled = true)
+        private static void Vsync(bool enabled = true)
         {
             Engine.Graphics.SynchronizeWithVerticalRetrace = enabled;
             Engine.Graphics.ApplyChanges();
@@ -691,20 +693,20 @@ namespace Monocle
         }
 
         [Command("fixed", "Enables or disables fixed time step")]
-        static private void Fixed(bool enabled = true)
+        private static void Fixed(bool enabled = true)
         {
             Engine.Instance.IsFixedTimeStep = enabled;
             Engine.Commands.Log("Fixed Time Step " + (enabled ? "Enabled" : "Disabled"));
         }
 
         [Command("framerate", "Sets the target framerate")]
-        static private void Framerate(float target)
+        private static void Framerate(float target)
         {
             Engine.Instance.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / target);
         }
 
         [Command("count", "Logs amount of Entities in the Scene. Pass a tagIndex to count only Entities with that tag")]
-        static private void Count(int tagIndex = -1)
+        private static void Count(int tagIndex = -1)
         {
             if (Engine.Scene == null)
             {
@@ -719,7 +721,7 @@ namespace Monocle
         }
 
         [Command("tracker", "Logs all tracked objects in the scene. Set mode to 'e' for just entities, or 'c' for just components")]
-        static private void Tracker(string mode)
+        private static void Tracker(string mode)
         {
             if (Engine.Scene == null)
             {
@@ -747,25 +749,25 @@ namespace Monocle
         }
 
         [Command("pooler", "Logs the pooled Entity counts")]
-        static private void Pooler()
+        private static void Pooler()
         {
             Engine.Pooler.Log();
         }
 
         [Command("fullscreen", "Switches to fullscreen mode")]
-        static private void Fullscreen()
+        private static void Fullscreen()
         {
             Engine.SetFullscreen();
         }
 
         [Command("window", "Switches to window mode")]
-        static private void Window(int scale = 1)
+        private static void Window(int scale = 1)
         {
-            Engine.SetWindowed(scale);
+            Engine.SetWindowed(Engine.Width * scale, Engine.Height * scale);
         }
 
         [Command("help", "Shows usage help for a given command")]
-        static private void Help(string command)
+        private static void Help(string command)
         {
             if (Engine.Commands.sorted.Contains(command))
             {
@@ -799,7 +801,7 @@ namespace Monocle
                 Engine.Commands.Log("Type 'help command' for more info on that command!");
             }
         }
-
+#endif
         #endregion
 
         private struct Line

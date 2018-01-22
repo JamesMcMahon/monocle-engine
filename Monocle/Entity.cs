@@ -45,7 +45,9 @@ namespace Monocle
         /// </summary>
         public virtual void SceneEnd(Scene scene)
         {
-
+            if (Components != null)
+                foreach (var c in Components)
+                    c.SceneEnd(scene);
         }
 
         /// <summary>
@@ -55,7 +57,9 @@ namespace Monocle
         /// <param name="scene"></param>
         public virtual void Awake(Scene scene)
         {
-
+            if (Components != null)
+                foreach (var c in Components)
+                    c.EntityAwake();
         }
 
         /// <summary>
@@ -582,7 +586,7 @@ namespace Monocle
 #if DEBUG
             if (Scene == null)
                 throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Entities.ContainsKey(typeof(T)))
+            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
                 throw new Exception("Can't collide check an Entity against an untracked Component type");
 #endif
 
@@ -691,7 +695,7 @@ namespace Monocle
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
+                 throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
             else if (!Scene.Tracker.Entities.ContainsKey(typeof(T)))
                 throw new Exception("Can't collide check an Entity against an untracked Entity type");
 #endif
@@ -797,7 +801,7 @@ namespace Monocle
             return Collide.All(this, Scene[tag], at);
         }
 
-        public List<T> CollideAll<T>() where T : Entity
+        public List<Entity> CollideAll<T>() where T : Entity
         {
 #if DEBUG
             if (Scene == null)
@@ -806,10 +810,10 @@ namespace Monocle
                 throw new Exception("Can't collide check an Entity against an untracked Entity type");
 #endif
 
-            return Collide.All(this, Scene.Tracker.Entities[typeof(T)]) as List<T>;
+            return Collide.All(this, Scene.Tracker.Entities[typeof(T)]);
         }
 
-        public List<T> CollideAll<T>(Vector2 at) where T : Entity
+        public List<Entity> CollideAll<T>(Vector2 at) where T : Entity
         {
 #if DEBUG
             if (Scene == null)
@@ -818,7 +822,20 @@ namespace Monocle
                 throw new Exception("Can't collide check an Entity against an untracked Entity type");
 #endif
 
-            return Collide.All(this, Scene.Tracker.Entities[typeof(T)], at) as List<T>;
+            return Collide.All(this, Scene.Tracker.Entities[typeof(T)], at);
+        }
+
+        public List<Entity> CollideAll<T>(Vector2 at, List<Entity> into) where T : Entity
+        {
+#if DEBUG
+            if (Scene == null)
+                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
+            else if (!Scene.Tracker.Entities.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked Entity type");
+#endif
+
+            into.Clear();
+            return Collide.All(this, Scene.Tracker.Entities[typeof(T)], into, at);
         }
 
         public List<T> CollideAllByComponent<T>() where T : Component

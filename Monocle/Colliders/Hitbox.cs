@@ -80,6 +80,13 @@ namespace Monocle
             Height = rect.Height;
         }
 
+        public void Set(float x, float y, float w, float h)
+        {
+            Position = new Vector2(x, y);
+            Width = w;
+            Height = h;
+        }
+
         /*
          *  Get edges
          */

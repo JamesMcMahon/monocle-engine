@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Monocle
 {
+    /// <summary>
+    /// Utility class for making weighted random choices from a set.
+    /// </summary>
     public class Chooser<T>
     {
         private List<Choice> choices;
@@ -14,10 +17,23 @@ namespace Monocle
             choices = new List<Choice>();
         }
 
+        /// <summary>
+        /// Initialize with a single choice with the given weight.
+        /// </summary>
         public Chooser(T firstChoice, float weight)
             : this()
         {
             Add(firstChoice, weight);
+        }
+
+        /// <summary>
+        /// Initialize with a list of choices, all with a weight of 1.
+        /// </summary>
+        public Chooser(params T[] choices)
+            : this()
+        {
+            foreach (var choice in choices)
+                Add(choice, 1);
         }
 
         public int Count
@@ -47,11 +63,12 @@ namespace Monocle
             }
         }
 
-        public void Add(T choice, float weight)
+        public Chooser<T> Add(T choice, float weight)
         {
             weight = Math.Max(weight, 0);
             choices.Add(new Choice(choice, weight));
             TotalWeight += weight;
+            return this;
         }
 
         public T Choose()
@@ -104,7 +121,7 @@ namespace Monocle
         /// </summary>
         /// <param name="data">Choices to parse. Format: "choice0:weight,choice1:weight,..."</param>
         /// <returns></returns>
-        static public Chooser<TT> FromString<TT>(string data) where TT : IConvertible
+        public static Chooser<TT> FromString<TT>(string data) where TT : IConvertible
         {
             var chooser = new Chooser<TT>();
             string[] choices = data.Split(',');

@@ -58,7 +58,7 @@ namespace Monocle
             }
         }
 
-        static public implicit operator Vector2(VirtualJoystick joystick)
+        public static implicit operator Vector2(VirtualJoystick joystick)
         {
             return joystick.Value;
         }

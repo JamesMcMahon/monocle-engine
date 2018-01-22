@@ -7,22 +7,22 @@ using System.Text;
 
 namespace Monocle
 {
-	public class TileGrid : Component
-	{
+    public class TileGrid : Component
+    {
         public Vector2 Position;
         public Color Color = Color.White;
-		public int VisualExtend = 0;
-        public MTexture[,] Tiles;
+        public int VisualExtend = 0;
+        public VirtualMap<MTexture> Tiles;
         public Camera ClipCamera;
         public float Alpha = 1f;
 
         public TileGrid(int tileWidth, int tileHeight, int tilesX, int tilesY) 
             : base(false, true)
-		{
-			TileWidth = tileWidth;
-			TileHeight = tileHeight;
-            Tiles = new MTexture[tilesX, tilesY];
-		}
+        {
+            TileWidth = tileWidth;
+            TileHeight = tileHeight;
+            Tiles = new VirtualMap<MTexture>(tilesX, tilesY);
+        }
 
         #region Properties
 
@@ -40,7 +40,7 @@ namespace Monocle
         {
             get
             {
-                return Tiles.GetLength(0);
+                return Tiles.Columns;
             }
         }
 
@@ -48,7 +48,7 @@ namespace Monocle
         {
             get
             {
-                return Tiles.GetLength(1);
+                return Tiles.Rows;
             }
         }
 
@@ -77,11 +77,11 @@ namespace Monocle
             int newHeight = TilesY + up + down;
             if (newWidth <= 0 || newHeight <= 0)
             {
-                Tiles = new MTexture[0, 0];
+                Tiles = new VirtualMap<MTexture>(0, 0);
                 return;
             }
 
-            MTexture[,] newTiles = new MTexture[newWidth, newHeight];
+            var newTiles = new VirtualMap<MTexture>(newWidth, newHeight);
 
             //Center
             for (int x = 0; x < TilesX; x++)
@@ -120,31 +120,32 @@ namespace Monocle
         }
 
         public void FillRect(int x, int y, int columns, int rows, MTexture tile)
-		{
-			int left = Math.Max(0, x);
-			int top = Math.Max(0, y);
-			int right = Math.Min(TilesX, x + columns);
-			int bottom = Math.Min(TilesY, y + rows);
+        {
+            int left = Math.Max(0, x);
+            int top = Math.Max(0, y);
+            int right = Math.Min(TilesX, x + columns);
+            int bottom = Math.Min(TilesY, y + rows);
 
-			for (int tx = left; tx < right; tx++)
-				for (int ty = top; ty < bottom; ty++)
-					Tiles[tx, ty] = tile;
-		}
+            for (int tx = left; tx < right; tx++)
+                for (int ty = top; ty < bottom; ty++)
+                    Tiles[tx, ty] = tile;
+        }
 
-		public void Clear()
-		{
-			for (int tx = 0; tx < TilesX; tx++)
-				for (int ty = 0; ty < TilesY; ty++)
-					Tiles[tx, ty] = null;
-		}
+        public void Clear()
+        {
+            for (int tx = 0; tx < TilesX; tx++)
+                for (int ty = 0; ty < TilesY; ty++)
+                    Tiles[tx, ty] = null;
+        }
 
-		public override void Render()
-		{
-			var pos = Entity.Position + Position;
+        public Rectangle GetClippedRenderTiles()
+        {
+            var pos = Entity.Position + Position;
 
             int left, top, right, bottom;
             if (ClipCamera == null)
             {
+                //throw new Exception("NULL CLIP: " + Entity.GetType().ToString());
                 left = -VisualExtend;
                 top = -VisualExtend;
                 right = TilesX + VisualExtend;
@@ -153,25 +154,43 @@ namespace Monocle
             else
             {
                 var camera = ClipCamera;
-                left = (int)Math.Max(-VisualExtend, Math.Floor((camera.Left - pos.X) / TileWidth));
-                top = (int)Math.Max(-VisualExtend, Math.Floor((camera.Top - pos.Y) / TileHeight));
-                right = (int)Math.Min(TilesX + VisualExtend, Math.Ceiling((camera.Right - pos.X) / TileWidth));
-                bottom = (int)Math.Min(TilesY + VisualExtend, Math.Ceiling((camera.Bottom - pos.Y) / TileHeight));
+                left = (int)Math.Max(0, Math.Floor((camera.Left - pos.X) / TileWidth) - VisualExtend);
+                top = (int)Math.Max(0, Math.Floor((camera.Top - pos.Y) / TileHeight) - VisualExtend);
+                right = (int)Math.Min(TilesX, Math.Ceiling((camera.Right - pos.X) / TileWidth) + VisualExtend);
+                bottom = (int)Math.Min(TilesY, Math.Ceiling((camera.Bottom - pos.Y) / TileHeight) + VisualExtend);
             }
 
-            Color color = Color * Alpha;
-            for (int tx = left; tx < right; tx++)
-            {
-                for (int ty = top; ty < bottom; ty++)
+            // clamp
+            left = Math.Max(left, 0);
+            top = Math.Max(top, 0);
+            right = Math.Min(right, TilesX);
+            bottom = Math.Min(bottom, TilesY);
+
+            return new Rectangle(left, top, right - left, bottom - top);
+        }
+
+        public override void Render()
+        {
+            RenderAt(Entity.Position + Position);
+        }
+
+        public void RenderAt(Vector2 position)
+        {
+            if (Alpha <= 0)
+                return;
+
+            var clip = GetClippedRenderTiles();
+            var color = Color * Alpha;
+            MTexture tile;
+
+            for (int tx = clip.Left; tx < clip.Right; tx++)
+                for (int ty = clip.Top; ty < clip.Bottom; ty++)
                 {
-                    int checkX = Calc.Clamp(tx, 0, TilesX);
-                    int checkY = Calc.Clamp(ty, 0, TilesY);
-
-                    if (Tiles[checkX, checkY] != null)
-                        Tiles[checkX, checkY].Draw(pos + new Vector2(tx * TileWidth, ty * TileHeight), Vector2.Zero, color);
+                    tile = Tiles[tx, ty];
+                    if (tile != null)
+                        tile.Draw(position + new Vector2(tx * TileWidth, ty * TileHeight), Vector2.Zero, color);
                 }
-            }
-		}
+        }
 
-	}
+    }
 }
