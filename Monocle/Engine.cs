@@ -41,7 +41,6 @@ namespace Monocle
         public static float DeltaTime { get; private set; }
         public static float RawDeltaTime { get; private set; }
         public static float TimeRate = 1f;
-        public static float TimeRateB = 1f;
         public static float FreezeTimer;
         public static int FPS;
         private TimeSpan counterElapsed = TimeSpan.Zero;
@@ -197,7 +196,7 @@ namespace Monocle
         protected override void Update(GameTime gameTime)
         {
             RawDeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            DeltaTime = RawDeltaTime * TimeRate * TimeRateB;
+            DeltaTime = RawDeltaTime * TimeRate;
 
             //Update input
             MInput.Update();
