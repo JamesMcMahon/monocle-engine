@@ -219,7 +219,7 @@ namespace Monocle
 
             //Update current scene
             if (FreezeTimer > 0)
-                FreezeTimer = Math.Max(FreezeTimer - DeltaTime, 0);
+                FreezeTimer = Math.Max(FreezeTimer - RawDeltaTime, 0);
             else if (scene != null)
             {
                 scene.BeforeUpdate();
