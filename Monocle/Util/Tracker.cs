@@ -13,15 +13,19 @@ namespace Monocle
 
         public static Dictionary<Type, List<Type>> TrackedEntityTypes { get; private set; }
         public static Dictionary<Type, List<Type>> TrackedComponentTypes { get; private set; }
+        public static Dictionary<Type, List<Type>> TrackedCollidableComponentTypes { get; private set; }
         public static HashSet<Type> StoredEntityTypes { get; private set; }
         public static HashSet<Type> StoredComponentTypes { get; private set; }
+        public static HashSet<Type> StoredCollidableComponentTypes { get; private set; }
 
         public static void Initialize()
         {
             TrackedEntityTypes = new Dictionary<Type, List<Type>>();
             TrackedComponentTypes = new Dictionary<Type, List<Type>>();
+            TrackedCollidableComponentTypes = new Dictionary<Type, List<Type>>();
             StoredEntityTypes = new HashSet<Type>();
             StoredComponentTypes = new HashSet<Type>();
+            StoredCollidableComponentTypes = new HashSet<Type>();
 
             foreach (var type in Assembly.GetEntryAssembly().GetTypes())
             {
@@ -77,6 +81,31 @@ namespace Monocle
                                 }
                             }
                         }
+
+                        if (typeof(CollidableComponent).IsAssignableFrom(type))
+                        {
+                            if (!type.IsAbstract)
+                            {
+                                if (!TrackedCollidableComponentTypes.ContainsKey(type))
+                                    TrackedCollidableComponentTypes.Add(type, new List<Type>());
+                                TrackedCollidableComponentTypes[type].Add(type);
+                            }
+
+                            StoredCollidableComponentTypes.Add(type);
+
+                            if (inherited)
+                            {
+                                foreach (var subclass in GetSubclasses(type))
+                                {
+                                    if (!subclass.IsAbstract)
+                                    {
+                                        if (!TrackedCollidableComponentTypes.ContainsKey(subclass))
+                                            TrackedCollidableComponentTypes.Add(subclass, new List<Type>());
+                                        TrackedCollidableComponentTypes[subclass].Add(type);
+                                    }
+                                }
+                            }
+                        }
                     }
                     else
                         throw new Exception("Type '" + type.Name + "' cannot be Tracked because it does not derive from Entity or Component");
@@ -99,6 +128,7 @@ namespace Monocle
 
         public Dictionary<Type, List<Entity>> Entities { get; private set; }
         public Dictionary<Type, List<Component>> Components { get; private set; }
+        public Dictionary<Type, List<CollidableComponent>> CollidableComponents { get; private set; }
 
         public Tracker()
         {
@@ -109,6 +139,10 @@ namespace Monocle
             Components = new Dictionary<Type, List<Component>>(TrackedComponentTypes.Count);
             foreach (var type in StoredComponentTypes)
                 Components.Add(type, new List<Component>());
+
+            CollidableComponents = new Dictionary<Type, List<CollidableComponent>>(TrackedComponentTypes.Count);
+            foreach (var type in StoredCollidableComponentTypes)
+                CollidableComponents.Add(type, new List<CollidableComponent>());
         }
 
         public bool IsEntityTracked<T>() where T : Entity
@@ -118,7 +152,7 @@ namespace Monocle
 
         public bool IsComponentTracked<T>() where T : Component
         {
-            return Components.ContainsKey(typeof(T));
+            return Components.ContainsKey(typeof(T)) || CollidableComponents.ContainsKey(typeof(T));
         }
 
         public T GetEntity<T>() where T : Entity
@@ -291,6 +325,9 @@ namespace Monocle
             if (TrackedComponentTypes.TryGetValue(type, out trackAs))
                 foreach (var track in trackAs)
                     Components[track].Add(component);
+            if (TrackedCollidableComponentTypes.TryGetValue(type, out trackAs))
+                foreach (var track in trackAs)
+                    CollidableComponents[track].Add(component as CollidableComponent);
         }
 
         internal void ComponentRemoved(Component component)
@@ -301,23 +338,50 @@ namespace Monocle
             if (TrackedComponentTypes.TryGetValue(type, out trackAs))
                 foreach (var track in trackAs)
                     Components[track].Remove(component);
+            if (TrackedCollidableComponentTypes.TryGetValue(type, out trackAs))
+                foreach (var track in trackAs)
+                    CollidableComponents[track].Remove(component as CollidableComponent);
         }
 
         public void LogEntities()
         {
-            foreach (var kv in Entities)
+            if (Entities.Count == 0)
+                Engine.Commands.Log("n/a", Color.Red);
+            else
             {
-                string output = kv.Key.Name + " : " + kv.Value.Count;
-                Engine.Commands.Log(output);
+                foreach (var kv in Entities)
+                {
+                    string output = kv.Key.Name + " : " + kv.Value.Count;
+                    Engine.Commands.Log(output);
+                }
             }
         }
 
         public void LogComponents()
         {
-            foreach (var kv in Components)
+            if (Components.Count == 0)
+                Engine.Commands.Log("n/a", Color.Red);
+            else
             {
-                string output = kv.Key.Name + " : " + kv.Value.Count;
-                Engine.Commands.Log(output);
+                foreach (var kv in Components)
+                {
+                    string output = kv.Key.Name + " : " + kv.Value.Count;
+                    Engine.Commands.Log(output);
+                }
+            }
+        }
+
+        public void LogCollidableComponents()
+        {
+            if (CollidableComponents.Count == 0)
+                Engine.Commands.Log("n/a", Color.Red);
+            else
+            {
+                foreach (var kv in CollidableComponents)
+                {
+                    string output = kv.Key.Name + " : " + kv.Value.Count;
+                    Engine.Commands.Log(output);
+                }
             }
         }
     }

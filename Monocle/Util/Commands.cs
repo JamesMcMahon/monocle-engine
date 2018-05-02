@@ -720,7 +720,7 @@ namespace Monocle
                 Engine.Commands.Log(Engine.Scene.TagLists[tagIndex].Count.ToString());
         }
 
-        [Command("tracker", "Logs all tracked objects in the scene. Set mode to 'e' for just entities, or 'c' for just components")]
+        [Command("tracker", "Logs all tracked objects in the scene. Set mode to 'e' for just entities, 'c' for just components, or 'cc' for just collidable components")]
         private static void Tracker(string mode)
         {
             if (Engine.Scene == null)
@@ -736,6 +736,8 @@ namespace Monocle
                     Engine.Scene.Tracker.LogEntities();
                     Engine.Commands.Log("-- Components --");
                     Engine.Scene.Tracker.LogComponents();
+                    Engine.Commands.Log("-- Collidable Components --");
+                    Engine.Scene.Tracker.LogCollidableComponents();
                     break;
 
                 case "e":
@@ -744,6 +746,10 @@ namespace Monocle
 
                 case "c":
                     Engine.Scene.Tracker.LogComponents();
+                    break;
+
+                case "cc":
+                    Engine.Scene.Tracker.LogCollidableComponents();
                     break;
             }
         }

@@ -28,6 +28,23 @@ namespace Monocle
             return ret;
         }
 
+        public static bool Check(Entity a, CollidableComponent b)
+        {
+            if (a.Collider == null || b.Collider == null)
+                return false;
+            else
+                return b.Collidable && b.Entity.Collidable && a.Collider.Collide(b);
+        }
+
+        public static bool Check(Entity a, CollidableComponent b, Vector2 at)
+        {
+            Vector2 old = a.Position;
+            a.Position = at;
+            bool ret = Check(a, b);
+            a.Position = old;
+            return ret;
+        }
+
         #endregion
 
         #region Entity vs Entity Enumerable

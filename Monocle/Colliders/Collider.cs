@@ -5,22 +5,36 @@ namespace Monocle
 {
     public abstract class Collider
     {
-        public Entity Entity { get; private set; }
+        public Entity Entity { get; internal set; }
+        public Component Component { get; private set; }
         public Vector2 Position;
 
         internal virtual void Added(Entity entity)
         {
             Entity = entity;
+            Component = null;
+        }
+
+        internal virtual void Added(Component component)
+        {
+            Entity = component.Entity;
+            Component = component;
         }
 
         internal virtual void Removed()
         {
             Entity = null;
+            Component = null;
         }
 
         public bool Collide(Entity entity)
         {
             return Collide(entity.Collider);
+        }
+
+        public bool Collide(CollidableComponent component)
+        {
+            return Collide(component.Collider);
         }
 
         public bool Collide(Collider collider)

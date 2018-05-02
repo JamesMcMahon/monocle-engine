@@ -1,4 +1,6 @@
-﻿
+﻿using Microsoft.Xna.Framework;
+using System;
+
 namespace Monocle
 {
     public class Component
@@ -15,7 +17,7 @@ namespace Monocle
 
         public virtual void Added(Entity entity)
         {
-            Entity = entity;
+            Entity = entity; 
             if (Scene != null)
                 Scene.Tracker.ComponentAdded(this);
         }
@@ -90,7 +92,7 @@ namespace Monocle
 
         public Scene Scene
         {
-            get { return Entity != null ? Entity.Scene : null; }
+            get { return Entity?.Scene; }
         }
     }
 }

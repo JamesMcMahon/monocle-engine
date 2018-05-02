@@ -172,7 +172,7 @@ namespace Monocle
                     return;
 #if DEBUG
                 if (value.Entity != null)
-                    throw new Exception("Setting an Entity's Collider to a Collider already in use by another Entity");
+                    throw new Exception("Setting an Entity's Collider to a Collider already in use by another object");
 #endif
                 if (collider != null)
                     collider.Removed();
@@ -186,10 +186,10 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return 0;
                 else
-                    return Collider.Width;
+                    return collider.Width;
             }
         }
 
@@ -197,10 +197,10 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return 0;
                 else
-                    return Collider.Height;
+                    return collider.Height;
             }
         }
 
@@ -208,18 +208,18 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return X;
                 else
-                    return Position.X + Collider.Left;
+                    return Position.X + collider.Left;
             }
 
             set
             {
-                if (Collider == null)
+                if (collider == null)
                     Position.X = value;
                 else
-                    Position.X = value - Collider.Left;
+                    Position.X = value - collider.Left;
             }
         }
 
@@ -227,18 +227,18 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return Position.X;
                 else
-                    return Position.X + Collider.Right;
+                    return Position.X + collider.Right;
             }
 
             set
             {
-                if (Collider == null)
+                if (collider == null)
                     Position.X = value;
                 else
-                    Position.X = value - Collider.Right;
+                    Position.X = value - collider.Right;
             }
         }
 
@@ -246,18 +246,18 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return Position.Y;
                 else
-                    return Position.Y + Collider.Top;
+                    return Position.Y + collider.Top;
             }
 
             set
             {
-                if (Collider == null)
+                if (collider == null)
                     Position.Y = value;
                 else
-                    Position.Y = value - Collider.Top;
+                    Position.Y = value - collider.Top;
             }
         }
 
@@ -265,18 +265,18 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return Position.Y;
                 else
-                    return Position.Y + Collider.Bottom;
+                    return Position.Y + collider.Bottom;
             }
 
             set
             {
-                if (Collider == null)
+                if (collider == null)
                     Position.Y = value;
                 else
-                    Position.Y = value - Collider.Bottom;
+                    Position.Y = value - collider.Bottom;
             }
         }
 
@@ -284,18 +284,18 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return Position.X;
                 else
-                    return Position.X + Collider.CenterX;
+                    return Position.X + collider.CenterX;
             }
 
             set
             {
-                if (Collider == null)
+                if (collider == null)
                     Position.X = value;
                 else
-                    Position.X = value - Collider.CenterX;
+                    Position.X = value - collider.CenterX;
             }
         }
 
@@ -303,18 +303,18 @@ namespace Monocle
         {
             get
             {
-                if (Collider == null)
+                if (collider == null)
                     return Position.Y;
                 else
-                    return Position.Y + Collider.CenterY;
+                    return Position.Y + collider.CenterY;
             }
 
             set
             {
-                if (Collider == null)
+                if (collider == null)
                     Position.Y = value;
                 else
-                    Position.Y = value - Collider.CenterY;
+                    Position.Y = value - collider.CenterY;
             }
         }
 
@@ -518,6 +518,16 @@ namespace Monocle
             return Collide.Check(this, other, at);
         }
 
+        public bool CollideCheck(CollidableComponent other)
+        {
+            return Collide.Check(this, other);
+        }
+
+        public bool CollideCheck(CollidableComponent other, Vector2 at)
+        {
+            return Collide.Check(this, other, at);
+        }
+
         public bool CollideCheck(BitTag tag)
         {
 #if DEBUG
@@ -557,7 +567,7 @@ namespace Monocle
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
+                throw new Exception("Can't collide check an Entity against tracked objects when it is not a member of a Scene");
             else if (!Scene.Tracker.Entities.ContainsKey(typeof(T)))
                 throw new Exception("Can't collide check an Entity against an untracked Entity type");
             else if (!Scene.Tracker.Entities.ContainsKey(typeof(Exclude)))
@@ -581,22 +591,22 @@ namespace Monocle
             return ret;
         }
 
-        public bool CollideCheckByComponent<T>() where T : Component
+        public bool CollideCheckByComponent<T>() where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
             else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
-
-            foreach (var c in Scene.Tracker.Components[typeof(T)])
-                if (Collide.Check(this, c.Entity))
+            
+            foreach (var c in Scene.Tracker.CollidableComponents[typeof(T)])
+                if (Collide.Check(this, c))
                     return true;
             return false;
         }
 
-        public bool CollideCheckByComponent<T>(Vector2 at) where T : Component
+        public bool CollideCheckByComponent<T>(Vector2 at) where T : CollidableComponent
         {
             Vector2 old = Position;
             Position = at;
@@ -643,17 +653,17 @@ namespace Monocle
             return false;
         }
 
-        public bool CollideCheckOutsideByComponent<T>(Vector2 at) where T : Component
+        public bool CollideCheckOutsideByComponent<T>(Vector2 at) where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
-                if (!Collide.Check(this, component.Entity) && Collide.Check(this, component.Entity, at))
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
+                if (!Collide.Check(this, component) && Collide.Check(this, component, at))
                     return true;
             return false;
         }
@@ -702,32 +712,32 @@ namespace Monocle
             return Collide.First(this, Scene.Tracker.Entities[typeof(T)], at) as T;
         }
 
-        public T CollideFirstByComponent<T>() where T : Component
+        public T CollideFirstByComponent<T>() where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
-                if (Collide.Check(this, component.Entity))
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
+                if (Collide.Check(this, component))
                     return component as T;
             return null;
         }
 
-        public T CollideFirstByComponent<T>(Vector2 at) where T : Component
+        public T CollideFirstByComponent<T>(Vector2 at) where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
-                if (Collide.Check(this, component.Entity, at))
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
+                if (Collide.Check(this, component, at))
                     return component as T;
             return null;
         }
@@ -764,17 +774,17 @@ namespace Monocle
             return null;
         }
 
-        public T CollideFirstOutsideByComponent<T>(Vector2 at) where T : Component
+        public T CollideFirstOutsideByComponent<T>(Vector2 at) where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
-                if (!Collide.Check(this, component.Entity) && Collide.Check(this, component.Entity, at))
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
+                if (!Collide.Check(this, component) && Collide.Check(this, component, at))
                     return component as T;
             return null;
         }
@@ -838,23 +848,23 @@ namespace Monocle
             return Collide.All(this, Scene.Tracker.Entities[typeof(T)], into, at);
         }
 
-        public List<T> CollideAllByComponent<T>() where T : Component
+        public List<T> CollideAllByComponent<T>() where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
             List<T> list = new List<T>();
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
-                if (Collide.Check(this, component.Entity))
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
+                if (Collide.Check(this, component))
                     list.Add(component as T);
             return list;
         }
 
-        public List<T> CollideAllByComponent<T>(Vector2 at) where T : Component
+        public List<T> CollideAllByComponent<T>(Vector2 at) where T : CollidableComponent
         {
             Vector2 old = Position;
             Position = at;
@@ -957,19 +967,19 @@ namespace Monocle
             return hit;
         }
 
-        public bool CollideDoByComponent<T>(Action<T> action) where T : Component
+        public bool CollideDoByComponent<T>(Action<T> action) where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
             bool hit = false;
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
             {
-                if (CollideCheck(component.Entity))
+                if (CollideCheck(component))
                 {
                     action(component as T);
                     hit = true;
@@ -978,22 +988,22 @@ namespace Monocle
             return hit;
         }
 
-        public bool CollideDoByComponent<T>(Action<T> action, Vector2 at) where T : Component
+        public bool CollideDoByComponent<T>(Action<T> action, Vector2 at) where T : CollidableComponent
         {
 #if DEBUG
             if (Scene == null)
-                throw new Exception("Can't collide check an Entity against tracked Entities when it is not a member of a Scene");
-            else if (!Scene.Tracker.Components.ContainsKey(typeof(T)))
-                throw new Exception("Can't collide check an Entity against an untracked Component type");
+                throw new Exception("Can't collide check an Entity against tracked CollidableComponents when it is not a member of a Scene");
+            else if (!Scene.Tracker.CollidableComponents.ContainsKey(typeof(T)))
+                throw new Exception("Can't collide check an Entity against an untracked CollidableComponent type");
 #endif
 
             bool hit = false;
             var was = Position;
             Position = at;
 
-            foreach (var component in Scene.Tracker.Components[typeof(T)])
+            foreach (var component in Scene.Tracker.CollidableComponents[typeof(T)])
             {
-                if (CollideCheck(component.Entity))
+                if (CollideCheck(component))
                 {
                     action(component as T);
                     hit = true;

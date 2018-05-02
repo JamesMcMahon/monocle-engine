@@ -43,9 +43,11 @@
     <Compile Include="Colliders\ColliderList.cs" />
     <Compile Include="Colliders\Grid.cs" />
     <Compile Include="Colliders\Hitbox.cs" />
+    <Compile Include="Components\CollidableComponent.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Graphics\GraphicsComponent.cs" />
     <Compile Include="Components\Graphics\Image.cs" />
+    <Compile Include="Components\Graphics\ParticleEmitter.cs" />
     <Compile Include="Components\Graphics\PixelText.cs" />
     <Compile Include="Components\Graphics\Sprite.cs" />
     <Compile Include="Components\Graphics\Spritesheet.cs" />
@@ -66,7 +68,9 @@
     <Compile Include="Components\Logic\Wiggler.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="Graphics\Atlas.cs" />
     <Compile Include="Graphics\MTexture.cs" />
+    <Compile Include="Graphics\SpriteBank.cs" />
     <Compile Include="Graphics\SpriteData.cs" />
     <Compile Include="Graphics\Tileset.cs" />
     <Compile Include="Input\MInput.cs" />
@@ -108,6 +112,7 @@
     <Compile Include="Util\SpecEntity.cs" />
     <Compile Include="Util\Tiler.cs" />
     <Compile Include="Util\Tracker.cs" />
+    <Compile Include="Util\VirtualMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Monocle\MonocleDefault.spritefont" />
